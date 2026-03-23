@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E&M Billing Checklist — Colorectal Surgery</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8faf9; color: #0f1a16; font-size: 14px; }
+
+.layout { display: grid; grid-template-columns: 1fr 300px; min-height: 100vh; }
+.left { padding: 20px; overflow-y: auto; }
+.right { background: #0a3d2e; padding: 20px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+
+h1 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.subtitle { font-size: 12px; color: #4a6358; margin-bottom: 20px; }
+
+/* Section cards */
+.section { background: white; border-radius: 12px; border: 1px solid rgba(15,110,86,0.12); overflow: hidden; margin-bottom: 14px; }
+.section-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid rgba(15,110,86,0.12); }
+.section-title { font-size: 13px; font-weight: 600; }
+.section-hint { font-size: 11px; color: #8aada0; padding: 8px 14px; border-bottom: 1px solid rgba(15,110,86,0.08); background: #f8faf9; }
+
+/* Clickable items */
+.item { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid rgba(15,110,86,0.08); cursor: pointer; transition: background 0.1s; user-select: none; }
+.item:last-child { border-bottom: none; }
+.item:hover { background: #f0faf5; }
+.item.active { background: #e1f5ee; }
+.item.active .item-name { color: #0F6E56; font-weight: 500; }
+
+.checkbox { width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid #c0d4cc; background: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.1s; }
+.item.active .checkbox { background: #0F6E56; border-color: #0F6E56; }
+.checkbox-tick { color: white; font-size: 13px; font-weight: 700; display: none; }
+.item.active .checkbox-tick { display: block; }
+
+.radio-dot { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #c0d4cc; background: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.1s; }
+.item.active .radio-dot { background: #2563EB; border-color: #2563EB; }
+.radio-inner { width: 8px; height: 8px; border-radius: 50%; background: white; display: none; }
+.item.active .radio-inner { display: block; }
+
+.item-text { flex: 1; }
+.item-name { font-size: 13px; line-height: 1.4; }
+.item-sub { font-size: 11px; color: #8aada0; margin-top: 2px; }
+.item-cpt { font-family: monospace; font-size: 12px; font-weight: 600; color: #0F6E56; min-width: 52px; text-align: right; }
+.item-rvu { font-size: 11px; color: #8aada0; text-align: right; min-width: 52px; }
+
+.badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+.badge-blue { background: #EFF6FF; color: #1D4ED8; }
+.badge-green { background: #E1F5EE; color: #0F6E56; }
+.badge-amber { background: #FEF3C7; color: #92400E; }
+.badge-gray { background: #F3F4F6; color: #374151; }
+.badge-purple { background: #EDE9FE; color: #5B21B6; }
+
+/* Procedure summary */
+.proc-summary { display: none; padding: 10px 14px; background: #f0faf5; border-top: 1px solid rgba(15,110,86,0.12); }
+.proc-summary.visible { display: block; }
+.proc-summary-title { font-size: 11px; font-weight: 600; color: #0F6E56; margin-bottom: 6px; }
+.proc-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 3px 0; }
+.proc-code { font-family: monospace; font-weight: 600; color: #0F6E56; }
+.proc-reimb { font-weight: 600; color: #0F6E56; }
+.proc-mod25 { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(15,110,86,0.12); }
+.proc-mod25-label { font-size: 11px; font-weight: 600; color: #0F6E56; }
+
+/* Time input */
+.time-row { padding: 11px 14px; display: flex; align-items: center; gap: 12px; }
+.time-label { font-size: 13px; flex: 1; }
+.time-input { width: 70px; padding: 7px 10px; border: 1px solid #c0d4cc; border-radius: 8px; font-size: 14px; text-align: center; font-family: inherit; }
+.time-input:focus { outline: none; border-color: #0F6E56; }
+.time-hint { font-size: 11px; color: #8aada0; padding: 4px 14px 10px; }
+
+/* Config row */
+.config-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.config-group label { font-size: 11px; font-weight: 600; color: #4a6358; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 4px; }
+.config-select { width: 100%; padding: 8px 10px; border: 1px solid rgba(15,110,86,0.2); border-radius: 8px; font-size: 13px; font-family: inherit; background: white; color: #0f1a16; }
+
+/* Right sidebar */
+.live-code { font-family: monospace; font-size: 28px; font-weight: 700; color: white; margin-bottom: 2px; }
+.live-level { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 14px; }
+.live-reimb-label { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.live-reimb { font-size: 26px; font-weight: 600; color: #2EC48F; margin-bottom: 14px; }
+.live-section { margin-bottom: 14px; }
+.live-section-title { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+
+.pips { display: flex; gap: 4px; margin-bottom: 14px; }
+.pip { height: 5px; flex: 1; border-radius: 3px; background: rgba(255,255,255,0.12); }
+.pip.on-1, .pip.on-2 { background: rgba(255,255,255,0.4); }
+.pip.on-3 { background: #2EC48F; }
+.pip.on-4 { background: #F59E0B; }
+.pip.on-5 { background: #EF4444; }
+
+.mdm-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
+.mdm-label { color: rgba(255,255,255,0.4); }
+.mdm-val { color: white; font-weight: 500; }
+
+.mods-row { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 14px; }
+.mod-chip { font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+.mod-25 { background: #FEF3C7; color: #92400E; }
+.mod-57 { background: #FEF3C7; color: #92400E; }
+.mod-24 { background: #FEF3C7; color: #92400E; }
+.mod-95 { background: #EDE9FE; color: #5B21B6; }
+.mod-gt { background: #EDE9FE; color: #5B21B6; }
+
+.alert-box { border-radius: 8px; padding: 8px 10px; font-size: 11px; line-height: 1.5; margin-bottom: 6px; }
+.alert-warn { background: rgba(245,158,11,0.15); color: #FCD34D; }
+.alert-ok { background: rgba(46,196,143,0.15); color: #6EE7B7; }
+.alert-info { background: rgba(37,99,235,0.15); color: #93C5FD; }
+
+.reset-btn { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px; font-size: 12px; cursor: pointer; margin-top: 8px; font-family: inherit; }
+.reset-btn:hover { background: rgba(255,255,255,0.15); }
+
+.disclaimer { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 14px; line-height: 1.6; }
+
+/* Payer estimates */
+.payer-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; }
+.payer-name { color: rgba(255,255,255,0.5); }
+.payer-amt { color: white; font-weight: 500; }
+.payer-row.current .payer-name { color: #2EC48F; }
+.payer-row.current .payer-amt { color: #2EC48F; font-weight: 600; }
+
+@media (max-width: 640px) {
+  .layout { grid-template-columns: 1fr; }
+  .right { position: static; height: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- LEFT: CHECKLIST -->
+  <div class="left">
+    <h1>E&amp;M Billing Checklist</h1>
+    <p class="subtitle">Colorectal Surgery · Check items that apply · Live result updates on the right</p>
+
+    <!-- Config -->
+    <div class="config-row">
+      <div class="config-group">
+        <label>Patient type</label>
+        <select class="config-select" id="patType" onchange="calc()">
+          <option value="new">New patient</option>
+          <option value="est" selected>Established patient</option>
+        </select>
+      </div>
+      <div class="config-group">
+        <label>Visit type</label>
+        <select class="config-select" id="visitType" onchange="calc()">
+          <option value="office">Office visit</option>
+          <option value="tele">Telemedicine</option>
+          <option value="postop_related">Post-op (related)</option>
+          <option value="postop_unrelated">Post-op (unrelated)</option>
+        </select>
+      </div>
+      <div class="config-group">
+        <label>Provider</label>
+        <select class="config-select" id="provider" onchange="calc()">
+          <option value="md">Physician only</option>
+          <option value="shared_md">Shared — MD performed substantial portion</option>
+          <option value="shared_pa">Shared — PA performed, MD attested</option>
+        </select>
+      </div>
+      <div class="config-group">
+        <label>Payer</label>
+        <select class="config-select" id="payer" onchange="calc()">
+          <option value="medicare">Medicare</option>
+          <option value="medicaid">Medicaid</option>
+          <option value="bcbs">BCBS</option>
+          <option value="commercial">Commercial</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 1. Problems -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">1 — Problem complexity</div>
+        <span class="badge badge-blue" id="badge-prob">—</span>
+      </div>
+      <div id="prob-group">
+        <div class="item" data-group="prob" data-val="1" onclick="selectRadio(this)">
+          <div class="radio-dot"><div class="radio-inner"></div></div>
+          <div class="item-text">
+            <div class="item-name">Minimal / self-limited problem</div>
+            <div class="item-sub">Wound check, suture removal, prescription refill</div>
+          </div>
+        </div>
+        <div class="item" data-group="prob" data-val="2" onclick="selectRadio(this)">
+          <div class="radio-dot"><div class="radio-inner"></div></div>
+          <div class="item-text">
+            <div class="item-name">Low — stable chronic illness</div>
+            <div class="item-sub">Well-controlled HTN, DM, hyperlipidemia</div>
+          </div>
+        </div>
+        <div class="item" data-group="prob" data-val="3" onclick="selectRadio(this)">
+          <div class="radio-dot"><div class="radio-inner"></div></div>
+          <div class="item-text">
+            <div class="item-name">Moderate — chronic illness with exacerbation or new problem</div>
+            <div class="item-sub">Crohn's flare, diverticulitis, new polyps, IBD management change</div>
+          </div>
+        </div>
+        <div class="item" data-group="prob" data-val="4" onclick="selectRadio(this)">
+          <div class="radio-dot"><div class="radio-inner"></div></div>
+          <div class="item-text">
+            <div class="item-name">High — severe illness / threat to life or function</div>
+            <div class="item-sub">Cancer staging, bowel obstruction, new cancer diagnosis, sepsis</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Data -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">2 — Data reviewed &amp; ordered</div>
+        <span class="badge badge-blue" id="badge-data">—</span>
+      </div>
+      <div class="section-hint">Check all that apply — 2+ from Category A, or 1 from B or C = Moderate data</div>
+      <div class="item" data-group="data-a" onclick="toggleCheck(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Ordered or reviewed labs</div>
+          <div class="item-sub">CBC, CMP, CEA, tumor markers, cultures</div>
+        </div>
+      </div>
+      <div class="item" data-group="data-a" onclick="toggleCheck(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Ordered or reviewed imaging / pathology</div>
+          <div class="item-sub">CT, MRI, PET scan, colonoscopy pathology</div>
+        </div>
+      </div>
+      <div class="item" data-group="data-a" onclick="toggleCheck(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Reviewed external records</div>
+          <div class="item-sub">Outside hospital records, prior surgeon notes, oncology records</div>
+        </div>
+      </div>
+      <div class="item" data-group="data-b" onclick="toggleCheck(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Independently interpreted a test result</div>
+          <div class="item-sub">Personally reviewed the CT scan or pathology slide yourself</div>
+        </div>
+      </div>
+      <div class="item" data-group="data-c" onclick="toggleCheck(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Discussed case with another provider</div>
+          <div class="item-sub">Tumor board, GI consult, oncology discussion, anesthesia pre-op</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Risk -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">3 — Risk of complications / morbidity</div>
+        <span class="badge badge-blue" id="badge-risk">—</span>
+      </div>
+      <div id="risk-group">
+        <div class="item" data-group="risk" data-val="1" onclick="selectRadio(this)">
+          <div class="radio-dot"><div class="radio-inner"></div></div>
+          <div class="item-text">
+            <div class="item-name">Minimal — OTC medications only, no identified risk factors</div>
+            <div class="item-sub">Stool softeners, hemorrhoid cream, Tylenol</div>
+          </div>
+        </div>
+        <div class="item" data-group="risk" data-val="2" onclick="selectRadio(this)">
+          <div class="radio-dot"><div class="radio-inner"></div></div>
+          <div class="item-text">
+            <div class="item-name">Low — OTC or Rx drugs, minor surgery without risk factors</div>
+            <div class="item-sub">Fiber supplement, topical nitroglycerin, scheduling colonoscopy</div>
+          </div>
+        </div>
+        <div class="item" data-group="risk" data-val="3" onclick="selectRadio(this)">
+          <div class="radio-dot"><div class="radio-inner"></div></div>
+          <div class="item-text">
+            <div class="item-name">Moderate — prescription drug management, minor surgery with risk factors</div>
+            <div class="item-sub">Starting biologics for Crohn's, scheduling LAR or colectomy, post-op complication management</div>
+          </div>
+        </div>
+        <div class="item" data-group="risk" data-val="4" onclick="selectRadio(this)">
+          <div class="radio-dot"><div class="radio-inner"></div></div>
+          <div class="item-text">
+            <div class="item-name">High — drug therapy requiring intensive monitoring, decision to hospitalize, major surgery</div>
+            <div class="item-sub">Cancer treatment decisions, emergency surgery, bowel obstruction, new cancer diagnosis</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. PROCEDURES -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">4 — Clinic procedures performed today</div>
+        <span class="badge badge-green" id="badge-proc">None selected</span>
+      </div>
+      <div class="section-hint">Select all procedures performed. Modifier 25 will be applied automatically to the E&amp;M code.</div>
+
+      <div class="item" data-proc="46600" data-rvu="0.73" onclick="toggleProc(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Anoscopy</div>
+          <div class="item-sub">Diagnostic anoscopy</div>
+        </div>
+        <div class="item-cpt">46600</div>
+        <div class="item-rvu">0.73 RVU</div>
+      </div>
+
+      <div class="item" data-proc="46606" data-rvu="1.08" onclick="toggleProc(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Anoscopy with biopsy</div>
+          <div class="item-sub">Anoscopy with biopsy of lesion</div>
+        </div>
+        <div class="item-cpt">46606</div>
+        <div class="item-rvu">1.08 RVU</div>
+      </div>
+
+      <div class="item" data-proc="45300" data-rvu="1.35" onclick="toggleProc(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Rigid proctoscopy</div>
+          <div class="item-sub">Proctosigmoidoscopy, rigid; diagnostic</div>
+        </div>
+        <div class="item-cpt">45300</div>
+        <div class="item-rvu">1.35 RVU</div>
+      </div>
+
+      <div class="item" data-proc="45330" data-rvu="1.92" onclick="toggleProc(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Flexible sigmoidoscopy</div>
+          <div class="item-sub">Flexible sigmoidoscopy; diagnostic</div>
+        </div>
+        <div class="item-cpt">45330</div>
+        <div class="item-rvu">1.92 RVU</div>
+      </div>
+
+      <div class="item" data-proc="45331" data-rvu="2.31" onclick="toggleProc(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Flexible sigmoidoscopy with biopsy</div>
+          <div class="item-sub">Flexible sigmoidoscopy with biopsy, single or multiple</div>
+        </div>
+        <div class="item-cpt">45331</div>
+        <div class="item-rvu">2.31 RVU</div>
+      </div>
+
+      <div class="item" data-proc="46607" data-rvu="2.10" onclick="toggleProc(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">High resolution anoscopy (HRA)</div>
+          <div class="item-sub">Anoscopy with high resolution magnification</div>
+        </div>
+        <div class="item-cpt">46607</div>
+        <div class="item-rvu">2.10 RVU</div>
+      </div>
+
+      <div class="item" data-proc="57410" data-rvu="0.89" onclick="toggleProc(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Speculum vaginal exam</div>
+          <div class="item-sub">Pelvic examination in office</div>
+        </div>
+        <div class="item-cpt">57410</div>
+        <div class="item-rvu">0.89 RVU</div>
+      </div>
+
+      <div class="item" data-proc="46221" data-rvu="1.65" onclick="toggleProc(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Internal hemorrhoid banding</div>
+          <div class="item-sub">Hemorrhoidectomy, internal, by rubber band ligation</div>
+        </div>
+        <div class="item-cpt">46221</div>
+        <div class="item-rvu">1.65 RVU</div>
+      </div>
+
+      <div class="item" data-proc="46040" data-rvu="3.12" onclick="toggleProc(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">I&amp;D perianal abscess</div>
+          <div class="item-sub">Incision and drainage of perianal abscess</div>
+        </div>
+        <div class="item-cpt">46040</div>
+        <div class="item-rvu">3.12 RVU</div>
+      </div>
+
+      <div class="item" data-proc="OTHER" data-rvu="0" onclick="toggleProc(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Other procedure</div>
+          <div class="item-sub">Procedure not listed above — Modifier 25 still applies</div>
+        </div>
+        <div class="item-cpt" style="color:#8aada0;">varies</div>
+        <div class="item-rvu">—</div>
+      </div>
+
+      <!-- Selected procedures summary -->
+      <div class="proc-summary" id="proc-summary">
+        <div class="proc-summary-title">Selected procedures</div>
+        <div id="proc-list"></div>
+        <div class="proc-mod25">
+          <span class="proc-mod25-label">✓ Modifier 25 automatically applied to E&amp;M</span>
+          <span class="badge badge-amber">Mod 25</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Time -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">5 — Time-based billing (optional)</div>
+        <span class="badge badge-gray" id="badge-time">—</span>
+      </div>
+      <div class="time-row">
+        <div class="item-text">
+          <div class="item-name">Total time with patient (minutes)</div>
+        </div>
+        <input class="time-input" type="number" id="timeInput" min="1" max="120" placeholder="0" oninput="calc()">
+      </div>
+      <div class="time-hint" id="time-hint">Enter total time — if higher than MDM level, time-based code will be used</div>
+    </div>
+
+    <!-- 6. Modifiers -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">6 — Additional modifiers</div>
+        <span class="badge badge-purple" id="badge-mods">0</span>
+      </div>
+
+      <div class="item" data-mod="57" onclick="toggleCheck(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Modifier 57 — Decision for major surgery made today</div>
+          <div class="item-sub">Patient consented for colectomy, LAR, APR, or other 90-day global surgery today</div>
+        </div>
+      </div>
+      <div class="item" data-mod="24" onclick="toggleCheck(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Modifier 24 — Post-op visit, unrelated problem</div>
+          <div class="item-sub">Visit is in global period but problem is unrelated to the surgery</div>
+        </div>
+      </div>
+      <div class="item" data-mod="95" onclick="toggleCheck(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Modifier 95 — Telemedicine (commercial payers)</div>
+          <div class="item-sub">Synchronous audio/video visit</div>
+        </div>
+      </div>
+      <div class="item" data-mod="GT" onclick="toggleCheck(this)">
+        <div class="checkbox"><span class="checkbox-tick">✓</span></div>
+        <div class="item-text">
+          <div class="item-name">Modifier GT — Telemedicine (Medicare)</div>
+          <div class="item-sub">Interactive audio/video, HIPAA-compliant platform</div>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:11px;color:#8aada0;padding-bottom:20px;">Estimates based on 2024 Medicare conversion factor (~$38/RVU). Always validate with a certified coder before claim submission.</p>
+  </div>
+
+  <!-- RIGHT: LIVE RESULT -->
+  <div class="right">
+    <div style="font-size:11px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;">Live billing result</div>
+
+    <div class="live-code" id="res-code">—</div>
+    <div class="live-level" id="res-level">Complete checklist to see recommendation</div>
+
+    <div class="pips">
+      <div class="pip" id="pip1"></div>
+      <div class="pip" id="pip2"></div>
+      <div class="pip" id="pip3"></div>
+      <div class="pip" id="pip4"></div>
+      <div class="pip" id="pip5"></div>
+    </div>
+
+    <div class="mods-row" id="res-mods"></div>
+
+    <div class="live-reimb-label">Est. reimbursement</div>
+    <div class="live-reimb" id="res-reimb">—</div>
+
+    <div class="live-section">
+      <div class="live-section-title">MDM breakdown</div>
+      <div class="mdm-row"><span class="mdm-label">Problems</span><span class="mdm-val" id="mdm-prob">—</span></div>
+      <div class="mdm-row"><span class="mdm-label">Data</span><span class="mdm-val" id="mdm-data">—</span></div>
+      <div class="mdm-row"><span class="mdm-label">Risk</span><span class="mdm-val" id="mdm-risk">—</span></div>
+      <div class="mdm-row" style="border-top:1px solid rgba(255,255,255,0.1);padding-top:6px;margin-top:4px;">
+        <span class="mdm-label" style="color:rgba(255,255,255,0.6);font-weight:500;">Overall MDM</span>
+        <span class="mdm-val" id="mdm-overall" style="color:#2EC48F;">—</span>
+      </div>
+    </div>
+
+    <div class="live-section" id="proc-result" style="display:none;">
+      <div class="live-section-title">Procedures</div>
+      <div id="proc-result-list"></div>
+      <div class="mdm-row" style="border-top:1px solid rgba(255,255,255,0.1);padding-top:6px;margin-top:4px;">
+        <span class="mdm-label">Procedure total</span>
+        <span class="mdm-val" id="proc-total-reimb">—</span>
+      </div>
+    </div>
+
+    <div class="live-section">
+      <div class="live-section-title">Payer comparison</div>
+      <div class="payer-row" id="prow-medicare"><span class="payer-name">Medicare</span><span class="payer-amt" id="pay-medicare">—</span></div>
+      <div class="payer-row" id="prow-medicaid"><span class="payer-name">Medicaid</span><span class="payer-amt" id="pay-medicaid">—</span></div>
+      <div class="payer-row" id="prow-bcbs"><span class="payer-name">BCBS</span><span class="payer-amt" id="pay-bcbs">—</span></div>
+      <div class="payer-row" id="prow-commercial"><span class="payer-name">Commercial</span><span class="payer-amt" id="pay-commercial">—</span></div>
+    </div>
+
+    <div id="alerts-list"></div>
+
+    <button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+    <button class="reset-btn" style="margin-top:6px;color:rgba(255,255,255,0.9);" onclick="window.print()">🖨 Print / Save as PDF</button>
+    <p class="disclaimer">Real-time calculation using 2021 AMA MDM guidelines. MDM scoring is advisory — always validate before submitting claims.</p>
+  </div>
+
+</div>
+
+<script>
+// ===== DATA =====
+const CODES = {
+  new: [
+    {code:'99202', desc:'New patient, straightforward', level:2, rvu:0.93},
+    {code:'99203', desc:'New patient, low complexity',   level:3, rvu:1.60},
+    {code:'99204', desc:'New patient, moderate complexity', level:4, rvu:2.60},
+    {code:'99205', desc:'New patient, high complexity',  level:5, rvu:3.50}
+  ],
+  est: [
+    {code:'99211', desc:'Established, minimal',       level:1, rvu:0.18},
+    {code:'99212', desc:'Established, straightforward', level:2, rvu:0.70},
+    {code:'99213', desc:'Established, low complexity', level:3, rvu:1.30},
+    {code:'99214', desc:'Established, moderate complexity', level:4, rvu:1.92},
+    {code:'99215', desc:'Established, high complexity', level:5, rvu:2.80}
+  ]
+};
+
+const TIME_NEW = [{min:15,lvl:2},{min:29,lvl:3},{min:44,lvl:4},{min:59,lvl:5}];
+const TIME_EST = [{min:10,lvl:2},{min:19,lvl:3},{min:29,lvl:4},{min:39,lvl:5}];
+const MDM_NAMES = ['—','Straightforward','Low','Moderate','High'];
+const CF = 38;
+const PAYER_MULT = {medicare:1.0, medicaid:0.65, bcbs:1.18, commercial:1.32};
+
+// ===== INTERACTION HANDLERS =====
+function selectRadio(el) {
+  var group = el.getAttribute('data-group');
+  var items = document.querySelectorAll('[data-group="' + group + '"]');
+  for (var i = 0; i < items.length; i++) {
+    items[i].classList.remove('active');
+  }
+  el.classList.add('active');
+  calc();
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('active');
+  calc();
+}
+
+function toggleProc(el) {
+  el.classList.toggle('active');
+  calc();
+}
+
+function resetAll() {
+  var allItems = document.querySelectorAll('.item.active');
+  for (var i = 0; i < allItems.length; i++) {
+    allItems[i].classList.remove('active');
+  }
+  document.getElementById('timeInput').value = '';
+  calc();
+}
+
+// ===== MAIN CALCULATION =====
+function calc() {
+  var patType = document.getElementById('patType').value;
+  var visitType = document.getElementById('visitType').value;
+  var provider = document.getElementById('provider').value;
+  var payer = document.getElementById('payer').value;
+  var timeVal = parseInt(document.getElementById('timeInput').value) || 0;
+
+  // MDM: Problems
+  var probEl = document.querySelector('[data-group="prob"].active');
+  var probVal = probEl ? parseInt(probEl.getAttribute('data-val')) : 0;
+
+  // MDM: Data
+  var dataA = document.querySelectorAll('[data-group="data-a"].active').length;
+  var dataB = document.querySelectorAll('[data-group="data-b"].active').length;
+  var dataC = document.querySelectorAll('[data-group="data-c"].active').length;
+  var dataVal = (dataA >= 2 || dataB >= 1 || dataC >= 1) ? 3 : (dataA === 1 ? 2 : 1);
+
+  // MDM: Risk
+  var riskEl = document.querySelector('[data-group="risk"].active');
+  var riskVal = riskEl ? parseInt(riskEl.getAttribute('data-val')) : 0;
+
+  // MDM overall = second lowest of the three (both must meet level)
+  var vals = [probVal, dataVal, riskVal].filter(function(v) { return v > 0; }).sort(function(a,b) { return a-b; });
+  var mdmLevel = vals.length >= 2 ? vals[1] : (vals.length === 1 ? vals[0] : 0);
+  var mdmEmLevel = mdmLevel >= 1 ? mdmLevel + 1 : 0;
+
+  // Time-based
+  var timeEmLevel = 0;
+  var timeTable = patType === 'new' ? TIME_NEW : TIME_EST;
+  if (timeVal > 0) {
+    for (var i = timeTable.length - 1; i >= 0; i--) {
+      if (timeVal >= timeTable[i].min) {
+        timeEmLevel = timeTable[i].lvl;
+        break;
+      }
+    }
+  }
+
+  // Final E&M level
+  var emLevel = Math.max(mdmEmLevel, timeEmLevel);
+  var basis = (timeEmLevel > mdmEmLevel && timeVal > 0) ? 'Time-based' : 'MDM-based';
+
+  // Post-op bundling
+  if (visitType === 'postop_related') emLevel = 0;
+
+  // Find matching code
+  var codeList = CODES[patType] || CODES.est;
+  var codeObj = null;
+  if (emLevel > 0) {
+    var maxLevel = codeList[codeList.length - 1].level;
+    var targetLevel = Math.min(emLevel, maxLevel);
+    for (var j = 0; j < codeList.length; j++) {
+      if (codeList[j].level === targetLevel) { codeObj = codeList[j]; break; }
+    }
+    if (!codeObj) codeObj = codeList[codeList.length - 1];
+  }
+
+  // Procedures
+  var procEls = document.querySelectorAll('[data-proc].active');
+  var procs = [];
+  for (var k = 0; k < procEls.length; k++) {
+    var pe = procEls[k];
+    procs.push({
+      code: pe.getAttribute('data-proc'),
+      rvu: parseFloat(pe.getAttribute('data-rvu')) || 0,
+      name: pe.querySelector('.item-name').textContent
+    });
+  }
+  var hasProc = procs.length > 0;
+  var procRvu = 0;
+  for (var p = 0; p < procs.length; p++) {
+    if (procs[p].code !== 'OTHER') procRvu += procs[p].rvu;
+  }
+
+  // Modifiers
+  var mods = [];
+  if (hasProc) mods.push({code:'25', cls:'mod-25'});
+  if (document.querySelector('[data-mod="57"].active')) mods.push({code:'57', cls:'mod-57'});
+  if (document.querySelector('[data-mod="24"].active')) mods.push({code:'24', cls:'mod-24'});
+  if (document.querySelector('[data-mod="95"].active')) mods.push({code:'95', cls:'mod-95'});
+  if (document.querySelector('[data-mod="GT"].active'))  mods.push({code:'GT', cls:'mod-gt'});
+
+  // PA rate adjustment
+  var rateAdj = provider === 'shared_pa' ? 0.85 : 1.0;
+
+  // Reimbursement
+  var emRvu = codeObj ? codeObj.rvu * rateAdj : 0;
+  var emAmt = Math.round(emRvu * CF * PAYER_MULT[payer]);
+  var procAmt = Math.round(procRvu * CF * PAYER_MULT[payer]);
+  var totalAmt = emAmt + procAmt;
+
+  // ===== UPDATE UI =====
+
+  // Code display
+  if (visitType === 'postop_related') {
+    document.getElementById('res-code').textContent = 'Bundled';
+    document.getElementById('res-level').textContent = 'Post-op in global period — not separately billable';
+    document.getElementById('res-reimb').textContent = '$0';
+  } else if (codeObj) {
+    var codeStr = codeObj.code;
+    if (mods.length > 0) codeStr += ' -' + mods.map(function(m) { return m.code; }).join('-');
+    document.getElementById('res-code').textContent = codeStr;
+    document.getElementById('res-level').textContent = codeObj.desc + ' (' + basis + ')' + (provider === 'shared_pa' ? ' · 85% rate' : '');
+    document.getElementById('res-reimb').textContent = '$' + totalAmt.toLocaleString();
+  } else {
+    document.getElementById('res-code').textContent = '—';
+    document.getElementById('res-level').textContent = 'Complete checklist to see recommendation';
+    document.getElementById('res-reimb').textContent = '—';
+  }
+
+  // Level pips
+  var lvl = codeObj ? codeObj.level : 0;
+  for (var pip = 1; pip <= 5; pip++) {
+    var pipEl = document.getElementById('pip' + pip);
+    pipEl.className = 'pip';
+    if (pip <= lvl) pipEl.classList.add('on-' + pip);
+  }
+
+  // Modifier chips
+  var modsHtml = '';
+  for (var m = 0; m < mods.length; m++) {
+    modsHtml += '<span class="mod-chip ' + mods[m].cls + '">Mod ' + mods[m].code + '</span>';
+  }
+  document.getElementById('res-mods').innerHTML = modsHtml;
+
+  // MDM display
+  var mdmNames = ['—','Straightforward','Low','Moderate','High'];
+  document.getElementById('mdm-prob').textContent = probVal ? (mdmNames[probVal] || 'High') : '—';
+  document.getElementById('mdm-data').textContent = dataVal ? (mdmNames[dataVal] || 'High') : '—';
+  document.getElementById('mdm-risk').textContent = riskVal ? (mdmNames[riskVal] || 'High') : '—';
+  document.getElementById('mdm-overall').textContent = mdmLevel ? (mdmNames[mdmLevel] || 'High') : '—';
+
+  // Section badges
+  document.getElementById('badge-prob').textContent = probVal ? (mdmNames[probVal] || 'High') : '—';
+  document.getElementById('badge-data').textContent = dataVal ? (mdmNames[dataVal] || 'High') : '—';
+  document.getElementById('badge-risk').textContent = riskVal ? (mdmNames[riskVal] || 'High') : '—';
+  document.getElementById('badge-mods').textContent = mods.length;
+
+  // Time badge
+  var timeBadge = document.getElementById('badge-time');
+  timeBadge.textContent = timeVal > 0 ? timeVal + ' min' : '—';
+
+  // Time hint
+  var timeHints = patType === 'new'
+    ? '15–29 min → 99202  ·  30–44 → 99203  ·  45–59 → 99204  ·  60–74 → 99205'
+    : '10–19 min → 99212  ·  20–29 → 99213  ·  30–39 → 99214  ·  40–54 → 99215';
+  document.getElementById('time-hint').textContent = timeHints;
+
+  // Procedure badge and summary
+  var procBadge = document.getElementById('badge-proc');
+  var procSummary = document.getElementById('proc-summary');
+  var procList = document.getElementById('proc-list');
+
+  if (hasProc) {
+    procBadge.textContent = procs.length + ' selected';
+    procBadge.className = 'badge badge-green';
+    procSummary.classList.add('visible');
+    var procListHtml = '';
+    for (var pr = 0; pr < procs.length; pr++) {
+      var proc = procs[pr];
+      var procReimbStr = proc.rvu > 0 ? '$' + Math.round(proc.rvu * CF * PAYER_MULT[payer]) : '—';
+      procListHtml += '<div class="proc-row">';
+      procListHtml += '<span><span class="proc-code">' + (proc.code === 'OTHER' ? 'CPT varies' : proc.code) + '</span> — ' + proc.name + '</span>';
+      procListHtml += '<span class="proc-reimb">' + procReimbStr + '</span>';
+      procListHtml += '</div>';
+    }
+    procList.innerHTML = procListHtml;
+  } else {
+    procBadge.textContent = 'None selected';
+    procBadge.className = 'badge badge-gray';
+    procSummary.classList.remove('visible');
+    procList.innerHTML = '';
+  }
+
+  // Right panel procedure section
+  var procResult = document.getElementById('proc-result');
+  var procResultList = document.getElementById('proc-result-list');
+  if (hasProc) {
+    procResult.style.display = 'block';
+    var prHtml = '';
+    for (var pr2 = 0; pr2 < procs.length; pr2++) {
+      var proc2 = procs[pr2];
+      var amt2 = proc2.rvu > 0 ? '$' + Math.round(proc2.rvu * CF * PAYER_MULT[payer]) : '—';
+      prHtml += '<div class="mdm-row"><span class="mdm-label">' + (proc2.code === 'OTHER' ? 'Other' : proc2.code) + '</span><span class="mdm-val">' + amt2 + '</span></div>';
+    }
+    procResultList.innerHTML = prHtml;
+    document.getElementById('proc-total-reimb').textContent = procAmt > 0 ? '$' + procAmt : '—';
+  } else {
+    procResult.style.display = 'none';
+  }
+
+  // Payer comparison
+  var payers = ['medicare','medicaid','bcbs','commercial'];
+  for (var py = 0; py < payers.length; py++) {
+    var pyKey = payers[py];
+    var pyAmt = codeObj ? Math.round((emRvu + procRvu) * CF * PAYER_MULT[pyKey]) : null;
+    document.getElementById('pay-' + pyKey).textContent = pyAmt !== null ? '$' + pyAmt : '—';
+    document.getElementById('prow-' + pyKey).className = 'payer-row' + (pyKey === payer ? ' current' : '');
+  }
+
+  // Alerts
+  var alerts = [];
+  if (visitType === 'postop_related') {
+    alerts.push({type:'warn', msg:'Post-op visit in global period — bundled, not separately billable. Use "unrelated" only if the problem is truly unrelated to the surgery.'});
+  }
+  if (visitType === 'postop_unrelated' && !document.querySelector('[data-mod="24"].active')) {
+    alerts.push({type:'warn', msg:'Post-op unrelated visit requires Modifier 24 — check it in Section 6.'});
+  }
+  if (hasProc && probVal <= 1) {
+    alerts.push({type:'warn', msg:'Mod 25 applied — straightforward E&M on procedure day may face scrutiny. Ensure the E&M is significant and separately documented.'});
+  }
+  if (document.querySelector('[data-mod="57"].active') && riskVal < 3) {
+    alerts.push({type:'warn', msg:'Modifier 57 requires moderate-high risk MDM — decision for major surgery should be clearly documented.'});
+  }
+  if (timeVal > 0 && timeEmLevel > mdmEmLevel) {
+    alerts.push({type:'ok', msg:'Time (' + timeVal + ' min) supports a higher level than MDM. Using time as basis.'});
+  }
+  if (provider === 'shared_pa') {
+    alerts.push({type:'info', msg:'Shared visit: bill at 85% under PA NPI per 2023 Medicare split/shared rules.'});
+  }
+  if (hasProc) {
+    alerts.push({type:'ok', msg:'Modifier 25 applied automatically for ' + procs.length + ' procedure' + (procs.length > 1 ? 's' : '') + ' performed today.'});
+  }
+
+  var alertColors = {warn:'alert-warn', ok:'alert-ok', info:'alert-info'};
+  var alertHtml = '';
+  for (var al = 0; al < alerts.length; al++) {
+    alertHtml += '<div class="alert-box ' + alertColors[alerts[al].type] + '">' + alerts[al].msg + '</div>';
+  }
+  document.getElementById('alerts-list').innerHTML = alertHtml;
+}
+
+// Run on load
+calc();
+</script>
+</body>
+</html>
