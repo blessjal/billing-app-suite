@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SurgiBill">
+<meta name="theme-color" content="#0a3d2e">
+<link rel="manifest" href="/manifest.json">
+<title>SurgiBill — Surgical Billing Suite</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#fff;--bg2:#f7f7f5;--bg3:#f0efe9;
+  --text:#1a1a1a;--text2:#555;--text3:#999;
+  --border:rgba(0,0,0,0.11);--border2:rgba(0,0,0,0.22);
+  --gd:#0a3d2e;--g8:#0F6E56;--g7:#1D9E75;--g6:#2EC48F;
+  --gbg:#EAF3DE;--gtxt:#27500A;
+  --bbg:#E6F1FB;--btxt:#0C447C;
+  --abg:#FAEEDA;--atxt:#633806;
+  --pbg:#EEEDFE;--ptxt:#3C3489;
+  --tbg:#E1F5EE;--ttxt:#085041;
+  --grbg:#F1EFE8;--grtxt:#444441;
+  --rebg:#FCEBEB;--retxt:#791F1F;
+  --r:8px;--rlg:12px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1c1e;--bg2:#242424;--bg3:#2e2e2e;
+  --text:#f0f0ee;--text2:#aaa;--text3:#666;
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+  --gbg:#173404;--gtxt:#C0DD97;--bbg:#042C53;--btxt:#B5D4F4;
+  --abg:#412402;--atxt:#FAC775;--pbg:#26215C;--ptxt:#CECBF6;
+  --tbg:#04342C;--ttxt:#9FE1CB;--grbg:#2C2C2A;--grtxt:#D3D1C7;
+  --rebg:#501313;--retxt:#F7C1C1;
+}}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;background:var(--gd);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;}
+.login-wrap.gone{display:none;}
+.login-logo{font-size:42px;font-weight:700;color:#fff;letter-spacing:-1px;margin-bottom:4px;text-align:center;}
+.login-logo span{color:#2EC48F;}
+.login-tagline{font-size:13px;color:rgba(255,255,255,0.38);margin-bottom:36px;text-align:center;}
+.login-card{background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.12);border-radius:20px;padding:28px 24px;width:100%;max-width:400px;}
+.login-title{font-size:18px;font-weight:600;color:#fff;margin-bottom:3px;}
+.login-sub{font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:22px;}
+.ll{font-size:11px;font-weight:600;color:rgba(255,255,255,0.38);text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:4px;}
+.li{width:100%;padding:12px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.13);border-radius:var(--r);font-size:14px;font-family:'DM Sans',sans-serif;color:#fff;margin-bottom:12px;}
+.li::placeholder{color:rgba(255,255,255,0.2);}
+.li:focus{outline:none;border-color:#2EC48F;}
+.lbtn{width:100%;background:#1D9E75;color:#fff;border:none;padding:14px;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;}
+.lbtn:active{opacity:0.85;}
+.lbtn:disabled{opacity:0.38;}
+.ltog{text-align:center;margin-top:14px;font-size:13px;color:rgba(255,255,255,0.35);}
+.ltog span{color:#2EC48F;cursor:pointer;font-weight:500;}
+.lerr{background:rgba(220,38,38,0.15);border:0.5px solid rgba(220,38,38,0.3);border-radius:var(--r);padding:9px 12px;font-size:13px;color:#FCA5A5;margin-bottom:12px;display:none;}
+.lerr.show{display:block;}
+.ldisc{font-size:11px;color:rgba(255,255,255,0.2);text-align:center;margin-top:18px;line-height:1.6;}
+
+/* APP */
+.app{display:none;flex-direction:column;min-height:100vh;}
+.app.on{display:flex;}
+
+/* TOP NAV */
+.tnav{background:var(--gd);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:50px;flex-shrink:0;}
+.tnav-l{display:flex;align-items:center;gap:4px;}
+.wm{font-size:17px;font-weight:700;color:#fff;letter-spacing:-0.5px;cursor:pointer;padding:7px 10px;border-radius:var(--r);}
+.wm span{color:#2EC48F;}
+.ntab{background:transparent;border:none;color:rgba(255,255,255,0.45);padding:7px 13px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;}
+.ntab:hover{color:#fff;background:rgba(255,255,255,0.08);}
+.ntab.on{color:#fff;background:rgba(255,255,255,0.14);}
+.tnav-r{display:flex;align-items:center;gap:8px;}
+.upill{font-size:12px;color:rgba(255,255,255,0.38);background:rgba(255,255,255,0.07);padding:5px 11px;border-radius:20px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sout{font-size:12px;color:rgba(255,255,255,0.32);cursor:pointer;padding:5px 8px;}
+.sout:hover{color:#fff;}
+
+/* SCREENS */
+.screens{flex:1;}
+.sc{display:none;}
+.sc.on{display:block;}
+
+/* HOME */
+.hh{background:var(--gd);padding:40px 32px 52px;}
+.hhi{max-width:1100px;margin:0 auto;}
+.hht{font-size:34px;font-weight:700;color:#fff;letter-spacing:-0.8px;line-height:1.12;margin-bottom:8px;}
+.hht span{color:#2EC48F;}
+.hhs{font-size:15px;color:rgba(255,255,255,0.38);max-width:500px;line-height:1.65;}
+.hb{max-width:1100px;margin:0 auto;padding:32px 24px;}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px;}
+.tc{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rlg);padding:22px;cursor:pointer;transition:border-color 0.15s,transform 0.12s;display:flex;flex-direction:column;gap:11px;}
+.tc:hover{border-color:var(--g7);transform:translateY(-2px);}
+.tci{width:50px;height:50px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;}
+.tig{background:var(--tbg);}
+.tia{background:var(--abg);}
+.tib{background:var(--bbg);}
+.tcn{font-size:16px;font-weight:600;letter-spacing:-0.2px;}
+.tcd{font-size:13px;color:var(--text2);line-height:1.55;}
+.tctags{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px;}
+.ttag{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500;}
+.ttg{background:var(--tbg);color:var(--ttxt);}
+.tta{background:var(--abg);color:var(--atxt);}
+.ttb{background:var(--bbg);color:var(--btxt);}
+.tcArr{font-size:16px;color:var(--text3);text-align:right;margin-top:auto;}
+.qrow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.qbtn{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--rlg);padding:14px;cursor:pointer;text-align:left;}
+.qbtn:hover{background:var(--bg3);}
+.qbi{font-size:20px;margin-bottom:5px;}
+.qbl{font-size:13px;font-weight:600;display:block;color:var(--text);}
+.qbs{font-size:11px;color:var(--text3);}
+
+/* TWO-COL TOOL PAGE */
+.tpage{display:grid;grid-template-columns:1fr 310px;min-height:calc(100vh - 50px);}
+.tmain{padding:26px 28px 48px;border-right:0.5px solid var(--border);overflow-y:auto;}
+.tsidebar{background:var(--gd);padding:20px 16px;position:sticky;top:0;height:calc(100vh - 50px);overflow-y:auto;display:flex;flex-direction:column;}
+
+/* Tool main */
+.tpt{font-size:20px;font-weight:700;letter-spacing:-0.4px;margin-bottom:3px;}
+.tps{font-size:13px;color:var(--text2);margin-bottom:20px;}
+.cstrip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;padding-bottom:18px;border-bottom:0.5px solid var(--border);}
+.cs3{grid-template-columns:repeat(3,1fr);}
+.cs2{grid-template-columns:1fr 1fr;}
+label.fl{font-size:11px;color:var(--text2);display:block;margin-bottom:3px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;}
+select,input[type=number],textarea{width:100%;padding:8px 10px;border:0.5px solid var(--border);border-radius:var(--r);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--bg);}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--g7);}
+textarea{resize:vertical;line-height:1.65;}
+.sec{margin-bottom:22px;}
+.sect{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:9px;display:flex;align-items:center;gap:8px;}
+.sbdg{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;text-transform:none;letter-spacing:0;}
+.cgl{font-size:11px;color:var(--text3);font-weight:500;padding:4px 0 2px;text-transform:uppercase;letter-spacing:0.05em;}
+.ci{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border:0.5px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all 0.1s;user-select:none;background:var(--bg);margin-bottom:4px;}
+.ci:hover{border-color:var(--border2);background:var(--bg2);}
+.ci.ck{background:var(--gbg);border-color:rgba(63,139,17,0.25);}
+.ci.ck .clbl{color:var(--gtxt);}
+.ci.cka{background:var(--abg);border-color:rgba(186,117,23,0.25);}
+.ci.cka .clbl{color:var(--atxt);}
+.ci.ckb{background:var(--bbg);border-color:rgba(24,95,165,0.25);}
+.ci.ckb .clbl{color:var(--btxt);}
+.ci.ckp{background:var(--pbg);border-color:rgba(83,74,183,0.25);}
+.ci.ckp .clbl{color:var(--ptxt);}
+.cb{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;background:var(--bg);}
+.ci.ck .cb{background:#3B6D11;border-color:#3B6D11;}
+.ci.cka .cb{background:#854F0B;border-color:#854F0B;}
+.ci.ckb .cb{background:#185FA5;border-color:#185FA5;}
+.ci.ckp .cb{background:#533AB7;border-color:#533AB7;}
+.ctk{color:white;font-size:11px;font-weight:700;display:none;}
+.ci.ck .ctk,.ci.cka .ctk,.ci.ckb .ctk,.ci.ckp .ctk{display:block;}
+.cc{flex:1;}
+.clbl{font-size:13px;font-weight:500;line-height:1.4;}
+.csub{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.4;}
+.ri{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border:0.5px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all 0.1s;user-select:none;background:var(--bg);margin-bottom:4px;}
+.ri:hover{border-color:var(--border2);background:var(--bg2);}
+.ri.sel{background:var(--bbg);border-color:rgba(24,95,165,0.25);}
+.ri.sel .clbl{color:var(--btxt);}
+.rdot{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;background:var(--bg);}
+.ri.sel .rdot{background:#185FA5;border-color:#185FA5;}
+.rin{width:7px;height:7px;border-radius:50%;background:white;display:none;}
+.ri.sel .rin{display:block;}
+.trow{display:flex;align-items:center;gap:10px;padding:9px 12px;border:0.5px solid var(--border);border-radius:var(--r);background:var(--bg);margin-bottom:4px;}
+.trow label{font-size:13px;font-weight:500;flex:1;}
+.trow input{width:72px;text-align:center;}
+.thint{font-size:11px;color:var(--text2);margin-top:2px;padding:0 2px;}
+.abtn{width:100%;background:var(--gd);color:#fff;border:none;padding:12px;border-radius:var(--rlg);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;}
+.abtn:active{opacity:0.85;}
+.abtn:disabled{opacity:0.38;}
+.spin{width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:sp 0.7s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;}
+.chip{background:var(--tbg);border:0.5px solid rgba(31,158,117,0.3);color:var(--ttxt);padding:5px 11px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.chip:hover{background:var(--gbg);}
+
+/* RESULTS PANEL */
+.rp{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--rlg);overflow:hidden;margin-top:14px;}
+.rps{border-bottom:0.5px solid var(--border);}
+.rps:last-child{border-bottom:none;}
+.rpst{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;padding:8px 14px 4px;}
+.rpr{padding:8px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:flex-start;gap:10px;}
+.rpr:last-child{border-bottom:none;}
+.rpc{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;min-width:68px;}
+.rpd{flex:1;font-size:13px;color:var(--text2);line-height:1.5;}
+.rprvu{font-size:11px;color:var(--text3);min-width:44px;text-align:right;}
+.badge{font-size:11px;padding:2px 7px;border-radius:20px;font-weight:500;white-space:nowrap;}
+.bg{background:var(--gbg);color:var(--gtxt);}
+.bb{background:var(--bbg);color:var(--btxt);}
+.ba{background:var(--abg);color:var(--atxt);}
+.bp{background:var(--pbg);color:var(--ptxt);}
+.bgr{background:var(--grbg);color:var(--grtxt);}
+.brow{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
+.disc{font-size:11px;color:var(--text3);padding:12px 14px;line-height:1.6;text-align:center;}
+
+/* SIDEBAR */
+.slbl{font-size:10px;font-weight:700;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:8px;}
+.sdiv{height:0.5px;background:rgba(255,255,255,0.1);margin:14px 0;}
+.src{background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.11);border-radius:var(--rlg);padding:15px;margin-bottom:14px;}
+.scode{font-family:'DM Mono',monospace;font-size:30px;font-weight:700;color:#fff;margin-bottom:2px;letter-spacing:-0.5px;}
+.sdesc{font-size:12px;color:rgba(255,255,255,0.42);margin-bottom:11px;line-height:1.4;}
+.slvlrow{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.spips{display:flex;gap:3px;flex:1;}
+.spip{height:5px;flex:1;border-radius:3px;background:rgba(255,255,255,0.11);transition:background 0.18s;}
+.spip.on-1,.spip.on-2{background:rgba(255,255,255,0.35);}
+.spip.on-3{background:#2EC48F;}
+.spip.on-4{background:#F59E0B;}
+.spip.on-5{background:#EF4444;}
+.slvllbl{font-size:11px;color:rgba(255,255,255,0.38);white-space:nowrap;}
+.srvu{font-size:12px;color:rgba(255,255,255,0.38);margin-bottom:4px;}
+.sreimb{font-size:24px;font-weight:700;color:#2EC48F;margin-bottom:1px;}
+.sreimbl{font-size:11px;color:rgba(255,255,255,0.28);}
+.smods{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px;}
+.smc{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:600;background:rgba(206,203,246,0.18);color:#CECBF6;}
+.smc-a{background:rgba(250,199,117,0.18);color:#FAC775;}
+.smc-b{background:rgba(181,212,244,0.18);color:#B5D4F4;}
+.mdmtbl{display:flex;flex-direction:column;gap:5px;margin-bottom:4px;}
+.mdmr{display:flex;align-items:center;gap:8px;}
+.mdml{font-size:11px;color:rgba(255,255,255,0.38);width:64px;flex-shrink:0;}
+.mdmv{font-size:11px;font-weight:600;color:#fff;flex:1;}
+.mdmovr{border-top:0.5px solid rgba(255,255,255,0.1);padding-top:7px;margin-top:4px;display:flex;justify-content:space-between;}
+.mdmol{font-size:12px;font-weight:600;color:rgba(255,255,255,0.55);}
+.mdmov{font-size:12px;font-weight:700;color:#2EC48F;}
+.ptbl{display:flex;flex-direction:column;gap:1px;}
+.pr{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;border-radius:var(--r);}
+.pr.act{background:rgba(46,196,143,0.14);}
+.pn{font-size:12px;color:rgba(255,255,255,0.48);}
+.pr.act .pn{color:#2EC48F;font-weight:600;}
+.pa{font-size:13px;font-weight:700;color:#fff;}
+.pr.act .pa{color:#2EC48F;}
+.sal{display:flex;flex-direction:column;gap:4px;}
+.sa{font-size:11px;padding:7px 9px;border-radius:var(--r);display:flex;gap:6px;align-items:flex-start;line-height:1.4;}
+.saw{background:rgba(245,158,11,0.15);color:#FDE68A;}
+.sao{background:rgba(46,196,143,0.15);color:#6EE7B7;}
+.sai{background:rgba(96,165,250,0.15);color:#93C5FD;}
+.sat{background:rgba(167,139,250,0.15);color:#C4B5FD;}
+.sbtn{width:100%;border:none;padding:9px;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:6px;}
+.sbtn-p{background:#fff;color:var(--gd);}
+.sbtn-r{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.55);border:0.5px solid rgba(255,255,255,0.14);}
+.sbtn:active{opacity:0.8;}
+.push{margin-top:auto;padding-top:14px;}
+
+@media print{.tnav,.chips,.push{display:none!important;}.tsidebar{position:static;height:auto;background:#0a3d2e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.tpage{grid-template-columns:1fr 280px;}}
+@media(max-width:960px){.tpage{grid-template-columns:1fr;}.tsidebar{position:static;height:auto;}.tgrid{grid-template-columns:1fr 1fr;}.qrow{grid-template-columns:1fr 1fr;}.cstrip{grid-template-columns:1fr 1fr;}.ntab:not(.on){display:none;}}
+@media(max-width:560px){.tgrid,.qrow{grid-template-columns:1fr;}.hh{padding:28px 20px 36px;}.hht{font-size:26px;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="lw">
+  <div class="login-logo">Surgi<span>Bill</span></div>
+  <div class="login-tagline">Surgical Billing Suite · Colorectal Surgery</div>
+  <div class="login-card">
+    <div class="login-title" id="ltit">Welcome back</div>
+    <div class="login-sub" id="lsub">Sign in to your account</div>
+    <div class="lerr" id="lerr"></div>
+    <label class="ll">Email</label>
+    <input class="li" type="email" id="lem" placeholder="you@practice.com" autocomplete="email">
+    <label class="ll">Password</label>
+    <input class="li" type="password" id="lpw" placeholder="••••••••" autocomplete="current-password">
+    <button class="lbtn" id="lbtn" onclick="doLogin()">
+      <span id="lbtxt">Sign in</span>
+      <span id="lbsp" style="display:none;" class="spin"></span>
+    </button>
+    <div class="ltog" id="ltog">No account? <span onclick="togMode()">Create one</span></div>
+    <div class="ldisc">SurgiBill is a coding assistance tool. De-identify all patient data before use.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="aw">
+  <div class="tnav">
+    <div class="tnav-l">
+      <div class="wm" onclick="showSc('home')">Surgi<span>Bill</span></div>
+      <button class="ntab" id="nt-home" onclick="showSc('home')">Home</button>
+      <button class="ntab" id="nt-surg" onclick="showSc('surg')">🔪 Surgical Billing</button>
+      <button class="ntab" id="nt-ema" onclick="showSc('ema')">📋 E&amp;M Analyzer</button>
+      <button class="ntab" id="nt-cl" onclick="showSc('cl')">✅ E&amp;M Checklist</button>
+    </div>
+    <div class="tnav-r">
+      <span class="upill" id="upill"></span>
+      <span class="sout" onclick="doLogout()">Sign out</span>
+    </div>
+  </div>
+
+  <div class="screens">
+
+    <!-- HOME -->
+    <div class="sc on" id="sc-home">
+      <div class="hh"><div class="hhi">
+        <div class="hht">Optimize every claim<br><span>you submit.</span></div>
+        <div class="hhs">AI-powered CPT coding, E&amp;M level optimization, and real-time billing verification for colorectal surgery.</div>
+      </div></div>
+      <div class="hb">
+        <div class="tgrid">
+          <div class="tc" onclick="showSc('surg')">
+            <div class="tci tig">🔪</div>
+            <div><div class="tcn">Surgical Billing</div><div class="tcd">Paste an operative report — get CPT codes, modifiers, ICD-10, and payer reimbursement estimates instantly.</div></div>
+            <div class="tctags"><span class="ttag ttg">AI-powered</span><span class="ttag ttg">CPT + ICD-10</span><span class="ttag ttg">RVU estimates</span></div>
+            <div class="tcArr">→</div>
+          </div>
+          <div class="tc" onclick="showSc('ema')">
+            <div class="tci tia">📋</div>
+            <div><div class="tcn">E&amp;M Note Analyzer</div><div class="tcd">Paste a clinic note — get E&amp;M level, MDM scoring, modifiers (25, 57, shared, tele), and HCC codes.</div></div>
+            <div class="tctags"><span class="ttag tta">AI-powered</span><span class="ttag tta">MDM scoring</span><span class="ttag tta">HCC codes</span></div>
+            <div class="tcArr">→</div>
+          </div>
+          <div class="tc" onclick="showSc('cl')">
+            <div class="tci tib">✅</div>
+            <div><div class="tcn">E&amp;M Checklist</div><div class="tcd">Interactive real-time checklist — check off items, get the code, MDM breakdown, all payer estimates, and alerts instantly.</div></div>
+            <div class="tctags"><span class="ttag ttb">Instant</span><span class="ttag ttb">Live sidebar</span><span class="ttag ttb">No AI needed</span></div>
+            <div class="tcArr">→</div>
+          </div>
+        </div>
+        <div class="qrow">
+          <button class="qbtn" onclick="showSc('surg');loadSS('colectomy')"><div class="qbi">🫀</div><span class="qbl">Colectomy</span><span class="qbs">Sample operative report</span></button>
+          <button class="qbtn" onclick="showSc('ema');loadES('new-consult')"><div class="qbi">🩺</div><span class="qbl">New consult</span><span class="qbs">Sample clinic note</span></button>
+          <button class="qbtn" onclick="showSc('ema');loadES('postop')"><div class="qbi">📅</div><span class="qbl">Post-op visit</span><span class="qbs">Global period example</span></button>
+          <button class="qbtn" onclick="showSc('cl')"><div class="qbi">⚡</div><span class="qbl">Quick E&amp;M check</span><span class="qbs">No note needed</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SURGICAL BILLING -->
+    <div class="sc" id="sc-surg">
+      <div class="tpage">
+        <div class="tmain">
+          <div class="tpt">🔪 Surgical Billing</div>
+          <div class="tps">Paste an operative report to get CPT codes, modifiers, ICD-10, and reimbursement estimates</div>
+          <div class="cstrip">
+            <div><label class="fl">Specialty</label>
+              <select id="ss-sp"><option value="colorectal" selected>Colorectal Surgery</option><option value="general_surgery">General Surgery</option><option value="orthopedics">Orthopedics</option><option value="spine">Spine</option><option value="gynecology">Gynecology</option><option value="urology">Urology</option><option value="vascular">Vascular</option><option value="neurosurgery">Neurosurgery</option></select>
+            </div>
+            <div><label class="fl">Payer</label>
+              <select id="ss-py"><option value="medicare">Medicare</option><option value="medicaid">Medicaid</option><option value="bcbs">BCBS</option><option value="united">UnitedHealthcare</option><option value="aetna">Aetna</option><option value="commercial">Commercial</option></select>
+            </div>
+            <div><label class="fl">Facility</label>
+              <select id="ss-fc"><option value="hospital_outpatient">Hospital Outpatient</option><option value="hospital_inpatient">Hospital Inpatient</option><option value="asc">ASC</option></select>
+            </div>
+            <div style="display:flex;align-items:flex-end;">
+              <button class="abtn" id="ss-btn" onclick="runSurg()" style="margin:0;">
+                <span id="ss-lbl">Analyze &amp; Code</span><span id="ss-sp2" style="display:none;" class="spin"></span>
+              </button>
+            </div>
+          </div>
+          <div class="sec">
+            <label class="fl">Operative report</label>
+            <textarea id="ss-note" style="height:220px;" placeholder="Paste operative report here…"></textarea>
+            <div class="chips">
+              <span class="chip" onclick="loadSS('colectomy')">Colectomy</span>
+              <span class="chip" onclick="loadSS('lap-chole')">Lap Chole</span>
+              <span class="chip" onclick="loadSS('fistula')">Fistula/Seton</span>
+              <span class="chip" onclick="loadSS('hemorrhoid')">Hemorrhoidectomy</span>
+            </div>
+          </div>
+          <div id="ss-out"></div>
+          <div class="disc">Estimates use 2024 Medicare conversion factor (~$38/RVU). Always validate with a certified coder before submission.</div>
+        </div>
+        <div class="tsidebar">
+          <div class="slbl">Billing result</div>
+          <div class="src">
+            <div class="scode" id="sb-ss-code">—</div>
+            <div class="sdesc" id="sb-ss-desc">Run analysis to see results</div>
+            <div class="srvu" id="sb-ss-rvu"></div>
+            <div class="sreimb" id="sb-ss-reimb"></div>
+            <div class="sreimbl" id="sb-ss-reimbl"></div>
+            <div class="smods" id="sb-ss-mods"></div>
+          </div>
+          <div class="sdiv"></div>
+          <div class="slbl">Payer estimates</div>
+          <div class="ptbl" id="sb-ss-pay"><div style="font-size:12px;color:rgba(255,255,255,0.28);">Run analysis to see estimates</div></div>
+          <div class="sdiv"></div>
+          <div class="slbl">Compliance alerts</div>
+          <div class="sal" id="sb-ss-al"><div style="font-size:12px;color:rgba(255,255,255,0.28);">No analysis yet</div></div>
+          <div class="push">
+            <button class="sbtn sbtn-p" onclick="window.print()">🖨 Print / Save PDF</button>
+            <button class="sbtn sbtn-r" onclick="rstSurg()">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- E&M ANALYZER -->
+    <div class="sc" id="sc-ema">
+      <div class="tpage">
+        <div class="tmain">
+          <div class="tpt">📋 E&amp;M Note Analyzer</div>
+          <div class="tps">Paste a clinic note to get E&amp;M level, MDM scoring, modifiers, HCC codes, and documentation gaps</div>
+          <div class="cstrip">
+            <div><label class="fl">Patient type</label><select id="em-pt"><option value="new">New patient</option><option value="established" selected>Established</option></select></div>
+            <div><label class="fl">Visit type</label><select id="em-vt"><option value="office">Office visit</option><option value="telemedicine">Telemedicine</option><option value="postop_related">Post-op (related)</option><option value="postop_unrelated">Post-op (unrelated)</option></select></div>
+            <div><label class="fl">Provider</label><select id="em-pv"><option value="physician">Physician only</option><option value="shared_md">Shared — MD led</option><option value="shared_pa">Shared — PA led</option></select></div>
+            <div><label class="fl">Payer</label><select id="em-py"><option value="medicare">Medicare</option><option value="medicaid">Medicaid</option><option value="bcbs">BCBS</option><option value="commercial">Commercial</option></select></div>
+          </div>
+          <div class="cstrip cs2" style="margin-top:-10px;padding-top:0;border-top:none;">
+            <div><label class="fl">Procedure today</label><select id="em-pc"><option value="none">No procedure</option><option value="minor">Minor procedure</option><option value="major_decision">Decision for major surgery</option></select></div>
+            <div><label class="fl">Time (minutes)</label><input type="number" id="em-tm" placeholder="e.g. 30" min="1" max="120"></div>
+          </div>
+          <div class="sec">
+            <label class="fl">Clinic note</label>
+            <textarea id="em-note" style="height:200px;" placeholder="Paste clinic note, SOAP note, or office visit documentation here…"></textarea>
+            <div class="chips">
+              <span class="chip" onclick="loadES('new-consult')">New consult</span>
+              <span class="chip" onclick="loadES('postop')">Post-op</span>
+              <span class="chip" onclick="loadES('shared')">Shared visit</span>
+              <span class="chip" onclick="loadES('tele')">Telemedicine</span>
+            </div>
+          </div>
+          <button class="abtn" id="em-btn" onclick="runEM()">
+            <span id="em-lbl">Analyze E&amp;M Billing</span><span id="em-sp" style="display:none;" class="spin"></span>
+          </button>
+          <div id="em-out" style="margin-top:14px;"></div>
+          <div class="disc">MDM scoring is advisory. Always validate E&amp;M level with a certified coder before submission.</div>
+        </div>
+        <div class="tsidebar">
+          <div class="slbl">E&amp;M result</div>
+          <div class="src">
+            <div class="scode" id="sb-em-code">—</div>
+            <div class="sdesc" id="sb-em-desc">Run analysis to see results</div>
+            <div class="srvu" id="sb-em-rvu"></div>
+            <div class="sreimb" id="sb-em-reimb"></div>
+            <div class="sreimbl" id="sb-em-reimbl"></div>
+            <div class="smods" id="sb-em-mods"></div>
+          </div>
+          <div class="sdiv"></div>
+          <div class="slbl">MDM breakdown</div>
+          <div class="mdmtbl">
+            <div class="mdmr"><span class="mdml">Problems</span><span class="mdmv" id="sb-em-mp">—</span></div>
+            <div class="mdmr"><span class="mdml">Data</span><span class="mdmv" id="sb-em-md">—</span></div>
+            <div class="mdmr"><span class="mdml">Risk</span><span class="mdmv" id="sb-em-mr">—</span></div>
+            <div class="mdmovr"><span class="mdmol">Overall MDM</span><span class="mdmov" id="sb-em-mo">—</span></div>
+          </div>
+          <div class="sdiv"></div>
+          <div class="slbl">Payer estimates</div>
+          <div class="ptbl" id="sb-em-pay"><div style="font-size:12px;color:rgba(255,255,255,0.28);">Run analysis to see estimates</div></div>
+          <div class="sdiv"></div>
+          <div class="slbl">Alerts &amp; tips</div>
+          <div class="sal" id="sb-em-al"><div style="font-size:12px;color:rgba(255,255,255,0.28);">No analysis yet</div></div>
+          <div class="push">
+            <button class="sbtn sbtn-p" onclick="window.print()">🖨 Print / Save PDF</button>
+            <button class="sbtn sbtn-r" onclick="rstEM()">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- E&M CHECKLIST -->
+    <div class="sc" id="sc-cl">
+      <div class="tpage">
+        <div class="tmain">
+          <div class="tpt">✅ E&amp;M Billing Checklist</div>
+          <div class="tps">Check items that apply — billing level, payer estimates, and alerts update in real time on the right</div>
+          <div class="cstrip">
+            <div><label class="fl">Patient type</label><select id="cl-pt" onchange="clCalc()"><option value="new">New patient</option><option value="established" selected>Established</option></select></div>
+            <div><label class="fl">Visit type</label><select id="cl-vt" onchange="clCalc()"><option value="office">Office visit</option><option value="telemedicine">Telemedicine</option><option value="postop_related">Post-op — related</option><option value="postop_unrelated">Post-op — unrelated</option><option value="hospital">Hospital inpatient</option></select></div>
+            <div><label class="fl">Provider</label><select id="cl-pv" onchange="clCalc()"><option value="physician">Physician only</option><option value="shared_md">Shared — MD substantial</option><option value="shared_pa">Shared — PA performed</option><option value="incident_to">Incident-to (PA)</option></select></div>
+            <div><label class="fl">Payer</label><select id="cl-py" onchange="clCalc()"><option value="medicare">Medicare</option><option value="medicaid">Medicaid</option><option value="bcbs">BCBS</option><option value="commercial">Commercial</option></select></div>
+          </div>
+
+          <div class="sec">
+            <div class="sect">1 — Problems &amp; diagnoses <span class="sbdg badge bb" id="cl-pb">—</span></div>
+            <div class="cgl">Select the highest level that applies</div>
+            <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px;">
+              <div class="ri" data-group="prob" data-val="1" onclick="clRad(this)"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">Minimal / self-limited problem</div><div class="csub">Suture removal, wound check, prescription refill</div></div></div>
+              <div class="ri" data-group="prob" data-val="2" onclick="clRad(this)"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">Low — stable chronic illness(es)</div><div class="csub">Well-controlled HTN, DM, hyperlipidemia; minor acute illness</div></div></div>
+              <div class="ri" data-group="prob" data-val="3" onclick="clRad(this)"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">Moderate — chronic illness with exacerbation / new problem requiring workup</div><div class="csub">Crohn's flare, diverticulitis, new colorectal polyps, IBD management change</div></div></div>
+              <div class="ri" data-group="prob" data-val="4" onclick="clRad(this)"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">High — severe chronic illness / acute threat to life or function</div><div class="csub">Colorectal cancer staging, bowel obstruction, new cancer dx, sepsis, abscess</div></div></div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sect">2 — Data reviewed &amp; ordered <span class="sbdg badge bb" id="cl-db">—</span></div>
+            <div class="cgl">Category A — Tests, documents, history (check all that apply)</div>
+            <div style="margin-top:4px;">
+              <div class="ci" data-group="data-a" onclick="clChk(this,'ckb')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Reviewed and/or ordered labs</div><div class="csub">CBC, CMP, CEA, tumor markers, cultures, etc.</div></div></div>
+              <div class="ci" data-group="data-a" onclick="clChk(this,'ckb')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Reviewed and/or ordered imaging / pathology</div><div class="csub">CT, MRI, PET, colonoscopy pathology, endoscopy results</div></div></div>
+              <div class="ci" data-group="data-a" onclick="clChk(this,'ckb')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Reviewed external records / history from other provider</div><div class="csub">Outside hospital records, prior surgeon notes, oncology records</div></div></div>
+              <div class="ci" data-group="data-a" onclick="clChk(this,'ckb')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Obtained history from someone other than patient</div><div class="csub">Family member, caregiver, interpreter-assisted history</div></div></div>
+            </div>
+            <div class="cgl" style="margin-top:8px;">Category B — Independent interpretation</div>
+            <div style="margin-top:4px;"><div class="ci" data-group="data-b" onclick="clChk(this,'ckb')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Independently interpreted test not reported by another provider</div><div class="csub">Personally reviewed the CT scan or pathology slide, not just the report</div></div></div></div>
+            <div class="cgl" style="margin-top:8px;">Category C — Discussion with other providers</div>
+            <div style="margin-top:4px;"><div class="ci" data-group="data-c" onclick="clChk(this,'ckb')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Discussion / consultation with external provider about management</div><div class="csub">Tumor board, GI consult, oncology discussion, anesthesia pre-op</div></div></div></div>
+          </div>
+
+          <div class="sec">
+            <div class="sect">3 — Risk of complications / morbidity <span class="sbdg badge bb" id="cl-rb">—</span></div>
+            <div class="cgl">Select the highest risk level that applies</div>
+            <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px;">
+              <div class="ri" data-group="risk" data-val="1" onclick="clRad(this)"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">Minimal — OTC medications, minor surgery, no risk factors</div><div class="csub">Hemorrhoid cream, stool softeners, suture removal</div></div></div>
+              <div class="ri" data-group="risk" data-val="2" onclick="clRad(this)"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">Low — OTC/prescription drugs, minor surgery with no risk factors</div><div class="csub">Fiber supplement, topical nitroglycerin, scheduling colonoscopy</div></div></div>
+              <div class="ri" data-group="risk" data-val="3" onclick="clRad(this)"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">Moderate — prescription drug management, minor surgery with risk factors, new diagnosis</div><div class="csub">Starting biologics for Crohn's, scheduling LAR or colectomy, managing post-op complications</div></div></div>
+              <div class="ri" data-group="risk" data-val="4" onclick="clRad(this)"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">High — drug therapy with intensive monitoring, major surgery with risk factors, hospitalization</div><div class="csub">Cancer treatment decisions, emergency surgery, complex multi-system management, bowel obstruction</div></div></div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sect">4 — Time-based billing (alternative to MDM) <span class="sbdg badge bp" id="cl-tb">—</span></div>
+            <div class="trow"><label>Total time with patient (minutes)</label><input type="number" id="cl-time" min="1" max="120" placeholder="0" oninput="clCalc()"></div>
+            <div class="thint" id="cl-th">Enter total time including face-to-face and care coordination on the date of the encounter.</div>
+          </div>
+
+          <div class="sec">
+            <div class="sect">5 — Modifiers <span class="sbdg badge bp" id="cl-mb">0 modifiers</span></div>
+            <div class="cgl">Modifier 25 — Same-day procedure</div>
+            <div class="ci" data-mod="25" onclick="clChk(this,'cka')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Procedure performed today AND E&amp;M was significant and separately identifiable</div><div class="csub">Flex sig, anoscopy, botox injection, lesion removal at same visit. E&amp;M must go beyond routine pre/post-procedure assessment.</div></div></div>
+            <div class="cgl" style="margin-top:8px;">Modifier 57 — Decision for major surgery</div>
+            <div class="ci" data-mod="57" onclick="clChk(this,'cka')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Decision for major surgery (90-day global) made at this visit</div><div class="csub">Consented and scheduled for colectomy, LAR, APR, ostomy reversal. Document the decision discussion.</div></div></div>
+            <div class="cgl" style="margin-top:8px;">Post-operative modifiers</div>
+            <div class="ci" data-mod="24" onclick="clChk(this,'cka')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Modifier 24 — Post-op visit for unrelated problem (in global period)</div><div class="csub">Problem completely unrelated to the surgery. Must document clearly.</div></div></div>
+            <div class="ci" data-mod="58" onclick="clChk(this,'cka')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Modifier 58 — Staged or planned procedure during global period</div><div class="csub">Planned second-stage procedure, ostomy takedown after initial resection</div></div></div>
+            <div class="ci" data-mod="79" onclick="clChk(this,'cka')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Modifier 79 — Unrelated procedure during global period</div><div class="csub">Procedure unrelated to the original surgery</div></div></div>
+            <div class="cgl" style="margin-top:8px;">Shared / split visit (Medicare)</div>
+            <div class="ci" data-mod="SA" onclick="clChk(this,'ckb')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Modifier SA — NP/PA services, bill under supervising physician NPI</div><div class="csub">Physician must personally perform or supervise the substantial portion of the visit</div></div></div>
+            <div class="cgl" style="margin-top:8px;">Telemedicine modifiers</div>
+            <div class="ci" data-mod="95" onclick="clChk(this,'ckp')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Modifier 95 — Synchronous telemedicine (commercial / most payers)</div><div class="csub">Real-time audio/video. Document patient location, consent, and platform.</div></div></div>
+            <div class="ci" data-mod="GT" onclick="clChk(this,'ckp')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Modifier GT — Telemedicine via interactive audio/video (Medicare)</div><div class="csub">Medicare-specific. Document patient consent and HIPAA-compliant platform.</div></div></div>
+          </div>
+
+          <div class="sec">
+            <div class="sect">6 — Documentation requirements <span class="sbdg badge bg" id="cl-docb">0 / 6</span></div>
+            <div class="ci" data-doc onclick="clChk(this,'ck')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Chief complaint and HPI documented</div><div class="csub">Onset, location, duration, character, associated signs, modifying factors, context</div></div></div>
+            <div class="ci" data-doc onclick="clChk(this,'ck')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Assessment and plan documents each problem addressed</div><div class="csub">Each diagnosis listed with corresponding plan — supports MDM complexity</div></div></div>
+            <div class="ci" data-doc onclick="clChk(this,'ck')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Data reviewed is explicitly named in the note</div><div class="csub">"Reviewed CT abdomen from 3/10/26 showing…" not just "reviewed imaging"</div></div></div>
+            <div class="ci" data-doc onclick="clChk(this,'ck')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Total time documented (if using time-based billing)</div><div class="csub">"Total time spent: 35 minutes including counseling and care coordination"</div></div></div>
+            <div class="ci" data-doc onclick="clChk(this,'ck')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Counseling content documented (if time spent counseling)</div><div class="csub">What was discussed, patient questions answered, understanding confirmed</div></div></div>
+            <div class="ci" data-doc onclick="clChk(this,'ck')"><div class="cb"><span class="ctk">✓</span></div><div class="cc"><div class="clbl">Physician signature, date, and attestation (for shared visits)</div><div class="csub">Shared visits: "I personally examined the patient and agree with the above assessment and plan"</div></div></div>
+          </div>
+          <div class="disc">Real-time calculation based on 2021 AMA MDM guidelines. Validate final level with a certified coder before submitting.</div>
+        </div>
+
+        <!-- CHECKLIST SIDEBAR -->
+        <div class="tsidebar">
+          <div class="slbl">Live billing result</div>
+          <div class="src">
+            <div class="scode" id="cl-sb-code">—</div>
+            <div class="sdesc" id="cl-sb-desc">Complete checklist to see recommendation</div>
+            <div class="slvlrow">
+              <div class="spips"><div class="spip" id="p1"></div><div class="spip" id="p2"></div><div class="spip" id="p3"></div><div class="spip" id="p4"></div><div class="spip" id="p5"></div></div>
+              <span class="slvllbl" id="cl-lvl">—</span>
+            </div>
+            <div class="srvu" id="cl-sb-rvu"></div>
+            <div class="sreimb" id="cl-sb-reimb">—</div>
+            <div class="sreimbl" id="cl-sb-basis"></div>
+            <div class="smods" id="cl-sb-mods"></div>
+          </div>
+          <div class="sdiv"></div>
+          <div class="slbl">MDM breakdown</div>
+          <div class="mdmtbl">
+            <div class="mdmr"><span class="mdml">Problems</span><span class="mdmv" id="cl-mp">—</span></div>
+            <div class="mdmr"><span class="mdml">Data</span><span class="mdmv" id="cl-md">—</span></div>
+            <div class="mdmr"><span class="mdml">Risk</span><span class="mdmv" id="cl-mr">—</span></div>
+            <div class="mdmovr"><span class="mdmol">Overall MDM</span><span class="mdmov" id="cl-mo">—</span></div>
+          </div>
+          <div class="sdiv"></div>
+          <div class="slbl">Payer estimates</div>
+          <div class="ptbl" id="cl-pay"><div style="font-size:12px;color:rgba(255,255,255,0.28);">Complete checklist to see estimates</div></div>
+          <div class="sdiv"></div>
+          <div class="slbl">Alerts &amp; tips</div>
+          <div class="sal" id="cl-al"><div class="sa sai">ℹ Complete the checklist to see alerts</div></div>
+          <div class="push">
+            <button class="sbtn sbtn-p" onclick="window.print()">🖨 Print / Save PDF</button>
+            <button class="sbtn sbtn-r" onclick="clReset()">Reset checklist</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// AUTH
+let tok=localStorage.getItem('sb_t')||'', email=localStorage.getItem('sb_e')||'', isUp=false;
+function chkAuth(){if(tok)showApp();}
+function showApp(){document.getElementById('lw').classList.add('gone');const aw=document.getElementById('aw');aw.classList.add('on');document.getElementById('upill').textContent=email;clCalc();if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});}
+function togMode(){isUp=!isUp;document.getElementById('ltit').textContent=isUp?'Create account':'Welcome back';document.getElementById('lsub').textContent=isUp?'Join your practice team':'Sign in to your account';document.getElementById('lbtxt').textContent=isUp?'Create account':'Sign in';document.getElementById('ltog').innerHTML=isUp?'Already have an account? <span onclick="togMode()">Sign in</span>':"No account? <span onclick=\"togMode()\">Create one</span>";}
+async function doLogin(){const em=document.getElementById('lem').value.trim(),pw=document.getElementById('lpw').value;const er=document.getElementById('lerr');er.classList.remove('show');if(!em||!pw){showE('Please enter your email and password.');return;}const b=document.getElementById('lbtn');b.disabled=true;document.getElementById('lbtxt').textContent=isUp?'Creating…':'Signing in…';document.getElementById('lbsp').style.display='inline-block';try{const r=await fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,password:pw,action:isUp?'signup':'login'})});const d=await r.json();if(d.error){showE(d.error);return;}tok=d.token;email=em;localStorage.setItem('sb_t',tok);localStorage.setItem('sb_e',email);showApp();}catch(e){showE('Connection error.');}finally{b.disabled=false;document.getElementById('lbtxt').textContent=isUp?'Create account':'Sign in';document.getElementById('lbsp').style.display='none';}}
+function showE(m){const e=document.getElementById('lerr');e.textContent=m;e.classList.add('show');}
+function doLogout(){localStorage.removeItem('sb_t');localStorage.removeItem('sb_e');tok='';email='';document.getElementById('aw').classList.remove('on');document.getElementById('lw').classList.remove('gone');}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!document.getElementById('lw').classList.contains('gone'))doLogin();});
+
+// NAV
+function showSc(id){document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));document.getElementById('sc-'+id)?.classList.add('on');document.getElementById('nt-'+id)?.classList.add('on');}
+
+// API
+async function callAPI(body){const r=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({...body,model:'claude-sonnet-4-20250514',max_tokens:1500})});const d=await r.json();if(r.status===401){doLogout();throw new Error('Session expired.');}if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));const raw=d.content.map(i=>i.text||'').join('');return JSON.parse(raw.replace(/```json|```/g,'').trim());}
+
+// SAMPLES
+const SSD={colectomy:`PROCEDURE: Laparoscopic Right Hemicolectomy with Intracorporeal Anastomosis\nDIAGNOSIS: Ascending colon adenocarcinoma T3N0\nPROCEDURE: Five trocars placed. Medial-to-lateral dissection. Ileocolic vessels divided at origin. Hepatic flexure mobilized. Ileum and transverse colon divided with linear stapler. Intracorporeal side-to-side anastomosis. Mesenteric defect closed. Specimen via Pfannenstiel incision.\nLymph nodes: 22. EBL: 80mL. Complications: None.`,'lap-chole':`PROCEDURE: Laparoscopic Cholecystectomy with IOC\nDIAGNOSIS: Acute cholecystitis with cholelithiasis\nPROCEDURE: Open Hasson technique. Pneumoperitoneum 15mmHg. Three 5mm trocars RUQ. Critical view of safety achieved. IOC via cystic duct — no filling defects, normal biliary anatomy. Cystic duct and artery clipped and divided. Gallbladder removed.\nEBL: Minimal. Complications: None.`,fistula:`PROCEDURE: EUA, Seton Placement for Transsphincteric Anal Fistula\nDIAGNOSIS: Complex transsphincteric anal fistula, Crohn's disease\nPROCEDURE: Prone jackknife. EUA performed. Single transsphincteric tract at 6 o'clock, internal opening at dentate line. Given sphincter involvement and Crohn's, loose seton placed through tract.\nEBL: Minimal. Complications: None.`,hemorrhoid:`PROCEDURE: Closed Hemorrhoidectomy (Ferguson)\nDIAGNOSIS: Grade III internal hemorrhoids with external component\nPROCEDURE: Prone jackknife. Three column hemorrhoidectomy — Ferguson technique. Hemorrhoidal complexes at 3, 7, 11 o'clock excised with elliptical incisions. Mucosa closed with running 2-0 Vicryl.\nEBL: Minimal. Complications: None.`};
+const ESD={'new-consult':`New patient. Referred for rectal bleeding x3 months.\nHPI: 67M, BRBPR, pencil stools, 12 lb weight loss. Family hx colon cancer (father, 55). PMH: HTN, DM2, hyperlipidemia.\nEXAM: BP 138/82. Abdomen: mild LLQ tenderness. DRE: palpable mass 6cm from anal verge.\nA/P: 1. Rectal mass — high suspicion rectal adenocarcinoma. Urgent CT CAP, MRI pelvis, CEA, colonoscopy. Extensive counseling x45min.\n2. HTN — continue lisinopril. 3. DM2 — A1c ordered.\nTOTAL TIME: 55 minutes`,postop:`Established. POD14 laparoscopic LAR.\nS: Doing well. 4-5 loose stools/day, improving. Incisions healing. No fever.\nO: Afebrile. BP 124/78. Incisions intact. Hgb 10.2.\nA/P: 1. S/P lap LAR POD14 — recovering well.\n2. Post-op anemia — iron started.\n3. Pathology reviewed: pT3N1 rectal adenocarcinoma. Discussed adjuvant chemo planning.\nTOTAL TIME: 20 minutes`,shared:`SHARED VISIT — PA conducted H&P, attending reviewed and personally examined patient.\nEstablished, Crohn's perianal fistula. Improved on infliximab. Pain 3/10, minimal drainage.\nATTENDING: Personally examined patient. Agree. Continue infliximab. MRI pelvis in 3 months. Surgical options discussed if biologics fail. Total time 30 min, majority counseling.`,tele:`TELEMEDICINE. Verbal consent. HIPAA platform.\nEstablished, 2yr post right hemicolectomy Stage II. CEA 1.8 stable.\nA/P: 1. Surveillance on track — CT CAP + CEA at 6 months. 2. Schedule surveillance colonoscopy. 3. HTN stable.\nTOTAL TIME: 22 minutes`};
+function loadSS(k){document.getElementById('ss-note').value=SSD[k]||'';}
+function loadES(k){document.getElementById('em-note').value=ESD[k]||'';const c={'new-consult':{p:'new',v:'office',pv:'physician',t:'55'},postop:{p:'established',v:'postop_related',pv:'physician',t:'20'},shared:{p:'established',v:'office',pv:'shared_pa',t:'30'},tele:{p:'established',v:'telemedicine',pv:'physician',t:'22'}};if(c[k]){document.getElementById('em-pt').value=c[k].p;document.getElementById('em-vt').value=c[k].v;document.getElementById('em-pv').value=c[k].pv;document.getElementById('em-tm').value=c[k].t;}}
+
+// SURGICAL
+async function runSurg(){const note=document.getElementById('ss-note').value.trim();if(!note){alert('Please paste an operative report.');return;}const sp=document.getElementById('ss-sp').value,py=document.getElementById('ss-py').value,fc=document.getElementById('ss-fc').value;sBusy('ss',true);document.getElementById('ss-out').innerHTML='';
+try{const d=await callAPI({system:`You are a CPC specializing in ${sp} billing for ${py} at ${fc}. Return ONLY valid JSON: {"cpt_codes":[{"code":"","description":"","category":"","primary":true,"modifiers":[{"code":"","description":""}],"rvu":0,"bundling_risk":false,"documentation_note":""}],"total_rvus":0,"estimated_reimbursement":"$0","risk_level":"Low","icd10_codes":[{"code":"","description":"","type":"Principal"}],"alerts":[],"optimization_tips":[],"payer_breakdown":[{"payer":"","estimated":"","note":""}]}. Include all billable CPT codes, modifiers, ICD-10, 2024 Medicare RVUs, estimated_reimbursement=total_rvus×38, 4-row payer_breakdown, risk_level Low/Moderate/High, 3-5 optimization_tips.`,messages:[{role:'user',content:`${sp}/${py}/${fc}\n\n${note.substring(0,5500)}`}]});
+if(d){document.getElementById('sb-ss-code').textContent=d.cpt_codes?.[0]?.code||'—';document.getElementById('sb-ss-desc').textContent=d.cpt_codes?.[0]?.description||'';document.getElementById('sb-ss-rvu').textContent=d.total_rvus+' total RVUs';document.getElementById('sb-ss-reimb').textContent=d.estimated_reimbursement||'—';document.getElementById('sb-ss-reimbl').textContent='Estimated reimbursement ('+py+')';document.getElementById('sb-ss-mods').innerHTML=(d.cpt_codes||[]).flatMap(c=>(c.modifiers||[]).map(m=>`<span class="smc">Mod ${m.code}</span>`)).join('');
+document.getElementById('sb-ss-pay').innerHTML=(d.payer_breakdown||[]).map(p=>{const act=p.payer.toLowerCase().includes(py);return`<div class="pr ${act?'act':''}"><span class="pn">${p.payer}</span><span class="pa">${p.estimated}</span></div>`;}).join('');
+const alH=[...(d.alerts||[]).map(a=>`<div class="sa saw">▲ ${a}</div>`),...(d.optimization_tips||[]).map(t=>`<div class="sa sao">✓ ${t}</div>`)];document.getElementById('sb-ss-al').innerHTML=alH.join('')||'<div class="sa sao">✓ No compliance issues detected</div>';
+const cptH=(d.cpt_codes||[]).map(c=>`<div class="rpr"><div style="flex:1;"><div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:2px;"><span class="rpc">${c.code}</span><span class="badge bb">${c.category}</span>${c.primary?'<span class="badge bg">Primary</span>':'<span class="badge bgr">Add-on</span>'}${c.bundling_risk?'<span class="badge ba">Bundle risk</span>':''}</div><div class="rpd">${c.description}</div>${(c.modifiers||[]).length?`<div class="brow">${c.modifiers.map(m=>`<span class="badge bp">Mod ${m.code} — ${m.description}</span>`).join('')}</div>`:''} ${c.documentation_note?`<div style="font-size:11px;color:var(--text3);margin-top:3px;">📝 ${c.documentation_note}</div>`:''}</div><div class="rprvu">${c.rvu} RVU</div></div>`).join('');
+const icdH=(d.icd10_codes||[]).map(i=>`<div class="rpr"><span class="rpc" style="font-size:12px;">${i.code}</span><span class="rpd">${i.description}</span><span class="badge ${i.type==='Principal'?'bb':'bgr'}">${i.type}</span></div>`).join('');
+document.getElementById('ss-out').innerHTML=`<div class="rp"><div class="rps"><div class="rpst">CPT codes &amp; modifiers</div>${cptH}</div>${icdH?`<div class="rps"><div class="rpst">ICD-10 diagnosis codes</div>${icdH}</div>`:''}</div>`;}}
+catch(e){document.getElementById('ss-out').innerHTML=`<div style="padding:14px;color:#DC2626;font-size:13px;">${e.message}</div>`;}
+finally{sBusy('ss',false);}}
+function rstSurg(){document.getElementById('ss-note').value='';document.getElementById('ss-out').innerHTML='';['sb-ss-code','sb-ss-desc','sb-ss-rvu','sb-ss-reimb','sb-ss-reimbl'].forEach(i=>{const e=document.getElementById(i);if(e)e.textContent=i.includes('code')?'—':i.includes('desc')?'Run analysis to see results':'';});document.getElementById('sb-ss-mods').innerHTML='';document.getElementById('sb-ss-pay').innerHTML='<div style="font-size:12px;color:rgba(255,255,255,0.28);">Run analysis to see estimates</div>';document.getElementById('sb-ss-al').innerHTML='<div style="font-size:12px;color:rgba(255,255,255,0.28);">No analysis yet</div>';}
+
+// E&M ANALYZER
+async function runEM(){const note=document.getElementById('em-note').value.trim();if(!note){alert('Please paste a clinic note.');return;}const pt=document.getElementById('em-pt').value,vt=document.getElementById('em-vt').value,pv=document.getElementById('em-pv').value,py=document.getElementById('em-py').value,pc=document.getElementById('em-pc').value,tm=document.getElementById('em-tm').value;sBusy('em',true);document.getElementById('em-out').innerHTML='';
+try{const d=await callAPI({system:`You are a CPC specializing in colorectal surgery E&M coding. Patient:${pt}, Visit:${vt}, Provider:${pv}, Payer:${py}, Procedure:${pc}, Time:${tm||'nd'}min. Return ONLY valid JSON: {"em_code":{"code":"","description":"","level":"","rationale":"","basis":""},"estimated_reimbursement":"$0","risk_level":"Low","modifiers":[{"code":"","name":"","rationale":"","documentation_required":""}],"mdm":{"problems":{"level":"","detail":""},"data":{"level":"","detail":""},"risk":{"level":"","detail":""},"overall_level":"","supported_code":""},"time_recommendation":"","icd10_codes":[{"code":"","description":"","type":"Principal"}],"hcc_codes":[{"icd_code":"","description":"","hcc_category":"","raf_weight":""}],"documentation_gaps":[],"alerts":[],"optimization_tips":[],"payer_breakdown":[{"payer":"","estimated":"","note":""}]}. Use 2024 AMA E&M guidelines. Apply correct modifiers.`,messages:[{role:'user',content:`${pt}/${vt}/${pv}/${py} Time:${tm||'nd'}min\n\n${note.substring(0,5500)}`}]});
+if(d){const em=d.em_code||{},mdm=d.mdm||{};
+document.getElementById('sb-em-code').textContent=em.code||'—';document.getElementById('sb-em-desc').textContent=(em.description||'')+(em.basis?` (${em.basis})`:'');document.getElementById('sb-em-rvu').textContent=em.level||'';document.getElementById('sb-em-reimb').textContent=d.estimated_reimbursement||'—';document.getElementById('sb-em-reimbl').textContent='Estimated reimbursement ('+py+')';document.getElementById('sb-em-mods').innerHTML=(d.modifiers||[]).map(m=>`<span class="smc smc-a">Mod ${m.code}</span>`).join('');
+document.getElementById('sb-em-mp').textContent=mdm.problems?.level||'—';document.getElementById('sb-em-md').textContent=mdm.data?.level||'—';document.getElementById('sb-em-mr').textContent=mdm.risk?.level||'—';document.getElementById('sb-em-mo').textContent=mdm.overall_level?(mdm.overall_level+' → '+mdm.supported_code):'—';
+document.getElementById('sb-em-pay').innerHTML=(d.payer_breakdown||[]).map(p=>{const act=p.payer.toLowerCase().includes(py);return`<div class="pr ${act?'act':''}"><span class="pn">${p.payer}</span><span class="pa">${p.estimated}</span></div>`;}).join('');
+const alH=[...(d.alerts||[]).map(a=>`<div class="sa saw">▲ ${a}</div>`),...(d.documentation_gaps||[]).map(g=>`<div class="sa sai">→ ${g}</div>`),...(d.optimization_tips||[]).map(t=>`<div class="sa sao">✓ ${t}</div>`)];document.getElementById('sb-em-al').innerHTML=alH.join('')||'<div class="sa sao">✓ No issues detected</div>';
+const modH=(d.modifiers||[]).map(m=>`<div class="rpr" style="flex-direction:column;gap:3px;"><div style="display:flex;align-items:center;gap:6px;"><span class="badge bp">Mod ${m.code}</span><strong style="font-size:13px;">${m.name}</strong></div><div class="rpd">${m.rationale}</div>${m.documentation_required?`<div style="font-size:11px;color:var(--atxt);">📝 ${m.documentation_required}</div>`:''}</div>`).join('');
+const mdmH=mdm.overall_level?`<div class="rpr" style="flex-direction:column;gap:5px;"><div style="display:flex;justify-content:space-between;"><span style="font-size:12px;color:var(--text2);">Problems</span><strong>${mdm.problems?.level||'—'}</strong></div><div style="font-size:11px;color:var(--text3);">${mdm.problems?.detail||''}</div><div style="display:flex;justify-content:space-between;margin-top:4px;"><span style="font-size:12px;color:var(--text2);">Data</span><strong>${mdm.data?.level||'—'}</strong></div><div style="font-size:11px;color:var(--text3);">${mdm.data?.detail||''}</div><div style="display:flex;justify-content:space-between;margin-top:4px;"><span style="font-size:12px;color:var(--text2);">Risk</span><strong>${mdm.risk?.level||'—'}</strong></div><div style="font-size:11px;color:var(--text3);">${mdm.risk?.detail||''}</div><div style="border-top:0.5px solid var(--border);padding-top:6px;margin-top:6px;display:flex;justify-content:space-between;"><strong>Overall MDM → ${mdm.supported_code}</strong><strong style="color:var(--g8);">${mdm.overall_level}</strong></div>${d.time_recommendation?`<div style="font-size:12px;color:var(--g8);">⏱ ${d.time_recommendation}</div>`:''}</div>`:'';
+const icdH=(d.icd10_codes||[]).map(i=>`<div class="rpr"><span class="rpc" style="font-size:12px;">${i.code}</span><span class="rpd">${i.description}</span><span class="badge ${i.type==='Principal'?'bb':'bgr'}">${i.type}</span></div>`).join('');
+const hccH=(d.hcc_codes||[]).map(h=>`<div class="rpr"><span class="rpc" style="font-size:11px;color:var(--btxt);">${h.icd_code}</span><span class="rpd">${h.description}<br><span style="font-size:10px;">HCC ${h.hcc_category} · RAF +${h.raf_weight}</span></span></div>`).join('');
+document.getElementById('em-out').innerHTML=`<div class="rp">${modH?`<div class="rps"><div class="rpst">Modifiers</div>${modH}</div>`:''} ${mdmH?`<div class="rps"><div class="rpst">MDM breakdown</div>${mdmH}</div>`:''} ${icdH?`<div class="rps"><div class="rpst">ICD-10 codes</div>${icdH}</div>`:''} ${hccH?`<div class="rps"><div class="rpst">HCC risk adjustment</div>${hccH}</div>`:''}</div>`;}}
+catch(e){document.getElementById('em-out').innerHTML=`<div style="padding:14px;color:#DC2626;font-size:13px;">${e.message}</div>`;}
+finally{sBusy('em',false);}}
+function rstEM(){document.getElementById('em-note').value='';document.getElementById('em-out').innerHTML='';['sb-em-code','sb-em-desc','sb-em-rvu','sb-em-reimb','sb-em-reimbl'].forEach(i=>{const e=document.getElementById(i);if(e)e.textContent=i.includes('code')?'—':i.includes('desc')?'Run analysis to see results':'';});['sb-em-mods'].forEach(i=>document.getElementById(i).innerHTML='');['sb-em-mp','sb-em-md','sb-em-mr','sb-em-mo'].forEach(i=>document.getElementById(i).textContent='—');document.getElementById('sb-em-pay').innerHTML='<div style="font-size:12px;color:rgba(255,255,255,0.28);">Run analysis to see estimates</div>';document.getElementById('sb-em-al').innerHTML='<div style="font-size:12px;color:rgba(255,255,255,0.28);">No analysis yet</div>';}
+
+function sBusy(id,on){document.getElementById(id+'-btn').disabled=on;document.getElementById(id+'-lbl').textContent=on?'Analyzing…':(id==='ss'?'Analyze & Code':'Analyze E&M Billing');document.getElementById(id+'-sp'+(id==='ss'?'2':'')).style.display=on?'inline-block':'none';}
+
+// CHECKLIST
+const CEM={new:[{c:'99202',d:'New, straightforward',l:2,r:0.93},{c:'99203',d:'New, low',l:3,r:1.60},{c:'99204',d:'New, moderate',l:4,r:2.60},{c:'99205',d:'New, high',l:5,r:3.50}],established:[{c:'99211',d:'Est, minimal',l:1,r:0.18},{c:'99212',d:'Est, straightforward',l:2,r:0.70},{c:'99213',d:'Est, low',l:3,r:1.30},{c:'99214',d:'Est, moderate',l:4,r:1.92},{c:'99215',d:'Est, high',l:5,r:2.80}]};
+const CTN=[{m:15,l:2},{m:29,l:3},{m:44,l:4},{m:59,l:5}],CTE=[{m:10,l:2},{m:19,l:3},{m:29,l:4},{m:39,l:5}];
+const CMDM=['—','Straightforward','Low','Moderate','High'],CPM={medicare:1,medicaid:0.65,bcbs:1.18,commercial:1.32},CF=38;
+function clRad(el){document.querySelectorAll(`[data-group="${el.dataset.group}"]`).forEach(r=>r.classList.remove('sel'));el.classList.add('sel');clCalc();}
+function clChk(el,cls){el.classList.toggle(cls);clCalc();}
+function clReset(){document.querySelectorAll('#sc-cl .ri.sel').forEach(e=>e.classList.remove('sel'));document.querySelectorAll('#sc-cl .ci').forEach(e=>e.classList.remove('ck','cka','ckb','ckp'));document.getElementById('cl-time').value='';clCalc();}
+function clCalc(){
+  const pt=document.getElementById('cl-pt')?.value||'established',vt=document.getElementById('cl-vt')?.value||'office',pv=document.getElementById('cl-pv')?.value||'physician',py=document.getElementById('cl-py')?.value||'medicare';
+  const tv=parseInt(document.getElementById('cl-time')?.value)||0;
+  const pv2=parseInt(document.querySelector('[data-group="prob"].sel')?.dataset.val||0);
+  const rv=parseInt(document.querySelector('[data-group="risk"].sel')?.dataset.val||0);
+  const da=document.querySelectorAll('[data-group="data-a"].ckb').length,db=document.querySelectorAll('[data-group="data-b"].ckb').length,dc=document.querySelectorAll('[data-group="data-c"].ckb').length;
+  let dv=da>=2||db>=1||dc>=1?3:da===1?2:1;
+  const mv=[pv2,dv,rv].filter(v=>v>0).sort((a,b)=>a-b);
+  let ml=mv.length>=2?mv[1]:mv.length===1?mv[0]:0,mel=ml>=1?ml+1:0;
+  let tel=0;const tt=pt==='new'?CTN:CTE;
+  if(tv>0){for(let i=tt.length-1;i>=0;i--){if(tv>=tt[i].m){tel=tt[i].l;break;}}}
+  let el2=Math.max(mel,tel);const basis=tel>mel&&tv>0?'Time-based':'MDM-based';
+  if(vt==='postop_related')el2=0;
+  const codes=CEM[pt]||CEM.established,co=el2>0?(codes.find(c=>c.l===Math.min(el2,codes[codes.length-1].l))||codes[codes.length-1]):null;
+  const mods=[];
+  if(document.querySelector('[data-mod="25"].cka'))mods.push({c:'25',s:'smc-a'});
+  if(document.querySelector('[data-mod="57"].cka'))mods.push({c:'57',s:'smc-a'});
+  if(document.querySelector('[data-mod="24"].cka'))mods.push({c:'24',s:'smc-a'});
+  if(document.querySelector('[data-mod="58"].cka'))mods.push({c:'58',s:'smc-a'});
+  if(document.querySelector('[data-mod="79"].cka'))mods.push({c:'79',s:'smc-a'});
+  if(document.querySelector('[data-mod="SA"].ckb'))mods.push({c:'SA',s:'smc-b'});
+  if(document.querySelector('[data-mod="95"].ckp'))mods.push({c:'95',s:'smc'});
+  if(document.querySelector('[data-mod="GT"].ckp'))mods.push({c:'GT',s:'smc'});
+  const ra=pv==='shared_pa'?0.85:1.0;
+  if(co&&vt!=='postop_related'){const rvu=(co.r*ra).toFixed(2),reimb=Math.round(co.r*ra*CF*CPM[py]);document.getElementById('cl-sb-code').textContent=co.c+(mods.length?' -'+mods.map(m=>m.c).join('-'):'');document.getElementById('cl-sb-desc').textContent=co.d+` (${basis})`;document.getElementById('cl-sb-rvu').textContent=rvu+' RVU'+(pv==='shared_pa'?' · 85% PA rate':'');document.getElementById('cl-sb-reimb').textContent='$'+reimb.toLocaleString();document.getElementById('cl-sb-basis').textContent='Estimated reimbursement ('+py+')';}
+  else if(vt==='postop_related'){document.getElementById('cl-sb-code').textContent='Bundled';document.getElementById('cl-sb-desc').textContent='Post-op in global period — not separately billable unless unrelated to surgery';document.getElementById('cl-sb-rvu').textContent='';document.getElementById('cl-sb-reimb').textContent='$0';document.getElementById('cl-sb-basis').textContent='';}
+  else{document.getElementById('cl-sb-code').textContent='—';document.getElementById('cl-sb-desc').textContent='Complete the checklist to see recommendation';document.getElementById('cl-sb-rvu').textContent='';document.getElementById('cl-sb-reimb').textContent='—';document.getElementById('cl-sb-basis').textContent='';}
+  const lvl=co?co.l:0;for(let i=1;i<=5;i++){const p=document.getElementById('p'+i);if(p){p.className='spip';if(i<=lvl)p.classList.add('on-'+i);}}
+  document.getElementById('cl-lvl').textContent=lvl?['—','Level 1','Level 2','Level 3','Level 4','Level 5'][lvl]:'—';
+  document.getElementById('cl-sb-mods').innerHTML=mods.map(m=>`<span class="smc ${m.s}">Mod ${m.c}</span>`).join('');
+  document.getElementById('cl-mb').textContent=mods.length+(mods.length===1?' modifier':' modifiers');
+  document.getElementById('cl-mp').textContent=pv2?CMDM[pv2]||'High':'—';
+  document.getElementById('cl-md').textContent=dv?CMDM[dv]||'High':'—';
+  document.getElementById('cl-mr').textContent=rv?CMDM[rv]||'High':'—';
+  document.getElementById('cl-mo').textContent=ml?CMDM[ml]||'High':'—';
+  document.getElementById('cl-pb').textContent=pv2?CMDM[pv2]||'High':'—';
+  document.getElementById('cl-db').textContent=dv?CMDM[dv]||'High':'—';
+  document.getElementById('cl-rb').textContent=rv?CMDM[rv]||'High':'—';
+  document.getElementById('cl-tb').textContent=tv?tv+' min':'—';
+  const dc2=document.querySelectorAll('[data-doc].ck').length,dt=document.querySelectorAll('[data-doc]').length;
+  const db2=document.getElementById('cl-docb');db2.textContent=`${dc2} / ${dt}`;db2.className=`sbdg badge ${dc2===dt?'bg':dc2>=4?'ba':'bgr'}`;
+  if(co&&vt!=='postop_related'){document.getElementById('cl-pay').innerHTML=[{n:'Medicare',k:'medicare'},{n:'Medicaid',k:'medicaid'},{n:'BCBS',k:'bcbs'},{n:'Commercial',k:'commercial'}].map(p=>{const amt=Math.round(co.r*ra*CF*CPM[p.k]),act=py===p.k;return`<div class="pr ${act?'act':''}"><span class="pn">${p.n}${act?' ←':''}</span><span class="pa">$${amt.toLocaleString()}</span></div>`;}).join('');}
+  else{document.getElementById('cl-pay').innerHTML='<div style="font-size:12px;color:rgba(255,255,255,0.28);">Complete checklist to see estimates</div>';}
+  const al=[];
+  if(vt==='postop_related')al.push({t:'warn',m:'Post-op in global period — bundled. Only separately billable if unrelated to surgery.'});
+  if(vt==='postop_unrelated'&&!mods.find(m=>m.c==='24'))al.push({t:'warn',m:'Post-op unrelated visit requires Modifier 24 — check the box above'});
+  if(mods.find(m=>m.c==='25')&&pv2<=1)al.push({t:'warn',m:'Mod 25: straightforward complexity may not support a separate E&M on procedure day'});
+  if(mods.find(m=>m.c==='57')&&rv<3)al.push({t:'warn',m:'Mod 57: Decision for major surgery should support moderate-high risk MDM'});
+  if(tv>0&&tel>mel)al.push({t:'ok',m:`Time-based billing (${tv} min) supports a higher level than MDM — use time as the basis`});
+  if(tv>0&&mel>tel)al.push({t:'tip',m:`MDM supports a higher level than time — use MDM as basis or document additional time`});
+  if(pv==='shared_pa')al.push({t:'info',m:'Shared visit billed at 85% under PA NPI per 2023 Medicare split/shared rules'});
+  if(pv==='shared_md')al.push({t:'ok',m:'Physician performed substantial portion — bill under physician NPI at 100% rate'});
+  if(dc2<dt)al.push({t:'warn',m:`Documentation: ${dt-dc2} item${dt-dc2>1?'s':''} not yet confirmed — complete before claim submission`});
+  if(el2>=4&&!tv)al.push({t:'tip',m:'High-level E&M: document total time in the note to preserve time-based billing as a backup'});
+  if(mods.find(m=>m.c==='25'))al.push({t:'tip',m:'Mod 25: document "the E&M was significant and separately identifiable from the procedure performed"'});
+  if(mods.find(m=>m.c==='57'))al.push({t:'tip',m:'Mod 57: document "decision for surgery made at this visit" and note informed consent discussion'});
+  if(al.length===0)al.push({t:'ok',m:'No compliance issues detected'});
+  const ac={warn:'saw',ok:'sao',info:'sai',tip:'sat'},ai={warn:'▲',ok:'✓',info:'ℹ',tip:'💡'};
+  document.getElementById('cl-al').innerHTML=al.map(a=>`<div class="sa ${ac[a.t]}">${ai[a.t]} ${a.m}</div>`).join('');
+  const tbl=pt==='new'?[{r:'15–29',c:'99202'},{r:'30–44',c:'99203'},{r:'45–59',c:'99204'},{r:'60–74',c:'99205'}]:[{r:'10–19',c:'99212'},{r:'20–29',c:'99213'},{r:'30–39',c:'99214'},{r:'40–54',c:'99215'}];
+  document.getElementById('cl-th').textContent='Time ranges: '+tbl.map(t=>`${t.r} min → ${t.c}`).join(' · ');}
+
+// INIT
+chkAuth();
+</script>
+</body>
+</html>
