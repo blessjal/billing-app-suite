@@ -6,62 +6,41 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).end();
 
   const { email, password, action } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required' });
-  }
-
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_ANON_KEY;
+  const accessCode = process.env.ACCESS_CODE;
 
-  // Phase 2: Supabase full auth (when configured)
-  if (supabaseUrl && supabaseKey) {
-    try {
-      const endpoint = action === 'signup'
-        ? supabaseUrl + '/auth/v1/signup'
-        : supabaseUrl + '/auth/v1/token?grant_type=password';
-
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': supabaseKey },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (data.error || data.error_description) {
-        return res.status(401).json({ error: data.error_description || data.msg || data.error || 'Authentication failed' });
-      }
-
-      if (action === 'signup' && !data.access_token) {
-        return res.status(200).json({
-          token: 'pending',
-          user: { email },
-          message: 'Account created! Check your email to confirm, then sign in.'
-        });
-      }
-
-      return res.status(200).json({ token: data.access_token, user: data.user });
-    } catch (error) {
-      return res.status(500).json({ error: 'Auth service error: ' + error.message });
+  // Phase 1: access code mode — password must equal the access code
+  // The token returned IS the access code, so it persists in localStorage correctly
+  if (!supabaseUrl) {
+    if (!accessCode) {
+      // No auth configured at all — allow any login for dev/testing
+      return res.status(200).json({ token: 'dev-token', user: { email } });
     }
+    if (password === accessCode) {
+      return res.status(200).json({ token: accessCode, user: { email } });
+    }
+    return res.status(401).json({ error: 'Incorrect access code. Please check with your administrator.' });
   }
 
-  // Phase 1: Access code mode
-  const accessCode = process.env.ACCESS_CODE || '';
+  // Phase 2: Supabase email/password auth
+  try {
+    const endpoint = action === 'signup'
+      ? `${supabaseUrl}/auth/v1/signup`
+      : `${supabaseUrl}/auth/v1/token?grant_type=password`;
 
-  if (!accessCode) {
-    return res.status(500).json({
-      error: 'App not configured. Ask your administrator to set ACCESS_CODE in Vercel environment variables.'
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': supabaseKey },
+      body: JSON.stringify({ email, password }),
     });
-  }
+    const data = await response.json();
 
-  if (password === accessCode) {
-    return res.status(200).json({
-      token: Buffer.from(email + ':' + accessCode).toString('base64'),
-      user: { email }
-    });
+    if (data.error || data.error_description || data.msg) {
+      return res.status(401).json({ error: data.error_description || data.msg || data.error || 'Authentication failed' });
+    }
+    return res.status(200).json({ token: data.access_token, user: data.user });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
-
-  return res.status(401).json({ error: 'Incorrect password. Please use the access code provided by your administrator.' });
 };
