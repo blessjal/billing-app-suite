@@ -6,16 +6,27 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).end();
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return res.status(500).json({ error: 'Server not configured' });
+  if (!apiKey) return res.status(500).json({ error: 'Server not configured — ANTHROPIC_API_KEY missing' });
 
-  // Access code check (Phase 1 — internal)
+  // Auth check — supports both Phase 1 (access code) and Phase 2 (Supabase)
   const accessCode = process.env.ACCESS_CODE;
+  const supabaseConfigured = !!process.env.SUPABASE_URL;
   const authHeader = req.headers['authorization'] || '';
-  const userCode = authHeader.replace('Bearer ', '').trim();
+  const userToken = authHeader.replace('Bearer ', '').trim();
 
-  if (accessCode && userCode !== accessCode) {
-    return res.status(401).json({ error: 'Invalid access code' });
+  // Only enforce auth if ACCESS_CODE or Supabase is configured
+  if (accessCode && !supabaseConfigured) {
+    // Phase 1: token must equal the access code
+    if (userToken !== accessCode) {
+      return res.status(401).json({ error: 'Invalid access code' });
+    }
+  } else if (supabaseConfigured) {
+    // Phase 2: just require a token to be present
+    if (!userToken) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
   }
+  // If neither is set, allow through (useful for testing)
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
