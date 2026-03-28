@@ -1321,29 +1321,30 @@ function updateSpecialtyChips(approachChange){
     }
   }
 
-  // Render procedure chips filtered by selected approach
+  // Render procedure chips — store notes in global map, reference by index
+  window._procNotes = window._procNotes || {};
   const curApp = _curApproach[sp];
-  procChips.innerHTML = procs.map(p => {
+  procChips.innerHTML = procs.map((p, idx) => {
     if(!p.approaches) return '';
-    // Find matching approach note, or default to first
     let note = '';
     let chipLabel = p.n;
     if(curApp) {
       const match = p.approaches.find(a=>a.label===curApp);
       if(match) { note = match.t; chipLabel = p.n + ' (' + match.short + ')'; }
-      else {
-        // This proc doesn't have that approach — show with first approach label
-        note = p.approaches[0].t;
-        chipLabel = p.n + ' (' + p.approaches[0].short + ')';
-      }
+      else { note = p.approaches[0].t; chipLabel = p.n + ' (' + p.approaches[0].short + ')'; }
     } else {
-      // No approach selected — show first approach as default
       note = p.approaches[0].t;
       chipLabel = p.n;
     }
-    const escaped = note.replace(/\/g,'\\').replace(/`/g,'\`').replace(/\$/g,'\$');
-    return `<span class="chip" onclick="document.getElementById('ss-note').value=\`${escaped}\`">${chipLabel}</span>`;
+    const key = sp + '_' + idx;
+    window._procNotes[key] = note;
+    return `<span class="chip" onclick="loadProcNote('${key}')">${chipLabel}</span>`;
   }).join('');
+}
+
+function loadProcNote(key){
+  const note = window._procNotes && window._procNotes[key];
+  if(note) document.getElementById('ss-note').value = note;
 }
 
 function selectApproach(sp, label){
