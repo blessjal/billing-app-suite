@@ -605,7 +605,7 @@ function doLogout(){localStorage.removeItem('sb_t');localStorage.removeItem('sb_
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!document.getElementById('lw').classList.contains('gone'))doLogin();});
 
 // NAV
-function showSc(id){document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));document.getElementById('sc-'+id)?.classList.add('on');document.getElementById('nt-'+id)?.classList.add('on');if(id==='surg')updateSpecialtyChips();}
+function showSc(id){document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));document.getElementById('sc-'+id)?.classList.add('on');document.getElementById('nt-'+id)?.classList.add('on');}
 
 // API
 async function callAPI(body){const r=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({...body,model:'claude-sonnet-4-20250514',max_tokens:1500})});const d=await r.json();if(r.status===401){doLogout();throw new Error('Session expired.');}if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));const raw=d.content.map(i=>i.text||'').join('');return JSON.parse(raw.replace(/```json|```/g,'').trim());}
@@ -1294,7 +1294,7 @@ function updateSpecialtyChips(approachChange){
   const procs = SPEC_PROCS[sp]||SPEC_PROCS.colorectal;
   const procChips = document.getElementById('ss-proc-chips');
   const approachBtns = document.getElementById('ss-approach-btns');
-  if(!procChips || !approachBtns) { setTimeout(()=>updateSpecialtyChips(approachChange),100); return; }
+  if(!procChips) return;
 
   // Collect all unique approach labels across this specialty
   const allApproaches = [];
