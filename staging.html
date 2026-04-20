@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a3d2e">
+<title>Staging & Surgical Planning — SurgiBill</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#fff;--bg2:#f7f7f5;--bg3:#f0efe9;--text:#1a1a1a;--text2:#555;--text3:#999;--border:rgba(0,0,0,0.11);--border2:rgba(0,0,0,0.22);--gd:#0a3d2e;--g8:#0F6E56;--g7:#1D9E75;--g6:#2EC48F;--gbg:#EAF3DE;--gtxt:#27500A;--bbg:#E6F1FB;--btxt:#0C447C;--abg:#FAEEDA;--atxt:#633806;--pbg:#EEEDFE;--ptxt:#3C3489;--tbg:#E1F5EE;--ttxt:#085041;--rebg:#FCEBEB;--retxt:#791F1F;--r:8px;--rlg:12px;}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1c1e;--bg2:#242424;--bg3:#2e2e2e;--text:#f0f0ee;--text2:#aaa;--text3:#666;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);--gbg:#173404;--gtxt:#C0DD97;--bbg:#042C53;--btxt:#B5D4F4;--abg:#412402;--atxt:#FAC775;--pbg:#26215C;--ptxt:#CECBF6;--tbg:#04342C;--ttxt:#9FE1CB;--rebg:#501313;--retxt:#F7C1C1;}}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
+.tnav{background:var(--gd);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:50px;flex-shrink:0;}
+.tnav-l{display:flex;align-items:center;gap:4px;}
+.wm{font-size:17px;font-weight:700;color:#fff;letter-spacing:-0.5px;cursor:pointer;padding:7px 10px;border-radius:var(--r);text-decoration:none;}.wm span{color:#2EC48F;}
+.ntab{background:transparent;border:none;color:rgba(255,255,255,0.45);padding:7px 13px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;}.ntab:hover{color:#fff;background:rgba(255,255,255,0.08);}.ntab.on{color:#fff;background:rgba(255,255,255,0.14);}
+.page{display:flex;flex-direction:column;min-height:100vh;}
+.tpage{display:grid;grid-template-columns:1fr 320px;flex:1;}
+.tmain{padding:22px 24px 48px;overflow-y:auto;}
+.tsidebar{background:var(--gd);padding:20px 16px;position:sticky;top:0;height:calc(100vh - 50px);overflow-y:auto;display:flex;flex-direction:column;}
+.ed-title{font-size:20px;font-weight:700;letter-spacing:-0.4px;margin-bottom:2px;}
+.ed-sub{font-size:13px;color:var(--text2);margin-bottom:18px;}
+label.fl{font-size:11px;color:var(--text2);display:block;margin-bottom:3px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;}
+select,input[type=text],input[type=date],input[type=number],textarea{width:100%;padding:8px 10px;border:0.5px solid var(--border);border-radius:var(--r);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--bg);}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--g7);}
+textarea{resize:vertical;line-height:1.65;}
+.sec{margin-bottom:18px;}
+.sect{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.pat-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:18px;padding-bottom:16px;border-bottom:0.5px solid var(--border);}
+.fgroup{margin-bottom:10px;}
+.ri{display:flex;align-items:flex-start;gap:10px;padding:8px 11px;border:0.5px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all 0.1s;user-select:none;background:var(--bg);margin-bottom:3px;}
+.ri:hover{border-color:var(--border2);background:var(--bg2);}
+.ri.sel{background:var(--bbg);border-color:rgba(24,95,165,0.25);}
+.ri.sel .clbl{color:var(--btxt);}
+.ri.sel-g{background:var(--gbg);border-color:rgba(63,139,17,0.25);}
+.ri.sel-g .clbl{color:var(--gtxt);}
+.ri.sel-a{background:var(--abg);border-color:rgba(186,117,23,0.25);}
+.ri.sel-a .clbl{color:var(--atxt);}
+.ri.sel-r{background:var(--rebg);border-color:rgba(121,31,31,0.25);}
+.ri.sel-r .clbl{color:var(--retxt);}
+.rdot{width:17px;height:17px;border:1.5px solid var(--border2);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;background:var(--bg);}
+.ri.sel .rdot,.ri.sel-g .rdot,.ri.sel-a .rdot,.ri.sel-r .rdot{background:#185FA5;border-color:#185FA5;}
+.ri.sel-g .rdot{background:#3B6D11;border-color:#3B6D11;}
+.ri.sel-a .rdot{background:#854F0B;border-color:#854F0B;}
+.ri.sel-r .rdot{background:#791F1F;border-color:#791F1F;}
+.rin{width:6px;height:6px;border-radius:50%;background:white;display:none;}
+.ri.sel .rin,.ri.sel-g .rin,.ri.sel-a .rin,.ri.sel-r .rin{display:block;}
+.cc{flex:1;}.clbl{font-size:13px;font-weight:500;line-height:1.4;}.csub{font-size:11px;color:var(--text2);margin-top:1px;line-height:1.4;}
+.ci{display:flex;align-items:flex-start;gap:10px;padding:8px 11px;border:0.5px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all 0.1s;user-select:none;background:var(--bg);margin-bottom:3px;}
+.ci:hover{border-color:var(--border2);background:var(--bg2);}
+.ci.ck{background:var(--gbg);border-color:rgba(63,139,17,0.25);}.ci.ck .clbl{color:var(--gtxt);}
+.cb{width:17px;height:17px;border:1.5px solid var(--border2);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;background:var(--bg);font-size:10px;color:transparent;}
+.ci.ck .cb{background:#3B6D11;border-color:#3B6D11;color:#fff;}
+.consent-box{background:var(--tbg);border:1px solid rgba(8,80,65,0.2);border-radius:var(--rlg);padding:16px;margin-top:12px;}
+.consent-box h4{font-size:13px;font-weight:600;color:var(--ttxt);margin-bottom:8px;}
+.consent-box p,.consent-box li{font-size:12px;color:var(--ttxt);line-height:1.6;}
+.consent-box ul{padding-left:18px;margin:6px 0;}
+.abtn{width:100%;background:var(--gd);color:#fff;border:none;padding:12px;border-radius:var(--rlg);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;}.abtn:active{opacity:0.85;}
+/* Sidebar */
+.slbl{font-size:10px;font-weight:700;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:8px;}
+.sdiv{height:0.5px;background:rgba(255,255,255,0.1);margin:14px 0;}
+.src{background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.11);border-radius:var(--rlg);padding:15px;margin-bottom:10px;}
+.scode{font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;letter-spacing:-0.3px;}
+.sdesc{font-size:12px;color:rgba(255,255,255,0.42);line-height:1.5;}
+.snote-pre{background:rgba(0,0,0,0.25);border-radius:var(--r);padding:12px;font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.75);white-space:pre-wrap;line-height:1.6;max-height:350px;overflow-y:auto;margin-top:8px;}
+.ptbl{display:flex;flex-direction:column;gap:1px;}
+.pr{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;border-radius:var(--r);}
+.pr.act{background:rgba(46,196,143,0.14);}
+.pn{font-size:12px;color:rgba(255,255,255,0.48);}.pr.act .pn{color:#2EC48F;font-weight:600;}
+.pa{font-size:13px;font-weight:700;color:#fff;}.pr.act .pa{color:#2EC48F;}
+.sbtn{width:100%;border:none;padding:9px;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:6px;}
+.sbtn-p{background:#fff;color:var(--gd);}.sbtn-g{background:#1D9E75;color:#fff;}.sbtn-r{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.55);border:0.5px solid rgba(255,255,255,0.14);}.sbtn:active{opacity:0.8;}
+.push{margin-top:auto;padding-top:14px;}
+.disc{font-size:11px;color:var(--text3);padding:12px;line-height:1.6;text-align:center;margin-top:12px;}
+.tabrow{display:flex;gap:2px;background:var(--bg2);border-radius:var(--r);padding:3px;margin-bottom:18px;}
+.tab{flex:1;padding:8px 12px;border-radius:6px;border:none;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;background:transparent;color:var(--text2);text-align:center;}
+.tab.on{background:var(--bg);color:var(--text);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.08);}
+@media(max-width:960px){.tpage{grid-template-columns:1fr;}.tsidebar{position:static;height:auto;}.pat-strip{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.pat-strip{grid-template-columns:1fr;}}
+@media print{.tnav,.push,.abtn,.tabrow{display:none!important;}.tsidebar{position:static;height:auto;background:#0a3d2e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.tpage{grid-template-columns:1fr 280px;}}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="tnav">
+<div class="tnav-l">
+<a class="wm" href="/index.html">Surgi<span>Bill</span></a>
+<a class="ntab" href="/index.html">Home</a>
+<a class="ntab" href="/index.html" onclick="localStorage.setItem('sb-nav','surg')">🔪 Surgical</a>
+<a class="ntab" href="/index.html" onclick="localStorage.setItem('sb-nav','ema')">📋 E&M</a>
+<a class="ntab" href="/checklist.html">✅ Checklist</a>
+<a class="ntab" href="/procedures.html">🩺 Procedures</a>
+<a class="ntab on" href="/staging.html">🎗 Staging</a>
+</div>
+</div>
+<div class="tpage">
+<div class="tmain">
+<div class="ed-title">🎗 Cancer Staging & Surgical Planning</div>
+<div class="ed-sub">Document staging workup, generate informed consent with ERAS protocol, and track oncology history</div>
+
+<!-- Patient -->
+<div class="pat-strip">
+<div><label class="fl">Patient name</label><input type="text" id="f-name" placeholder="Patient Name" oninput="S.name=this.value;render()"></div>
+<div><label class="fl">DOB</label><input type="date" id="f-dob" oninput="S.dob=this.value"></div>
+<div><label class="fl">MRN</label><input type="text" id="f-mrn" placeholder="MRN" oninput="S.mrn=this.value"></div>
+<div><label class="fl">DOS</label><input type="date" id="f-dos" oninput="S.dos=this.value"></div>
+<div><label class="fl">Provider</label><input type="text" id="f-prov" placeholder="Provider Name" oninput="S.provider=this.value"></div>
+</div>
+
+<!-- Tabs -->
+<div class="tabrow">
+<button class="tab on" id="tab-staging" onclick="showTab('staging')">📊 Staging Workup</button>
+<button class="tab" id="tab-consent" onclick="showTab('consent')">📝 Informed Consent</button>
+<button class="tab" id="tab-onc" onclick="showTab('onc')">🎗 Oncology History</button>
+</div>
+
+<!-- ═══ STAGING TAB ═══ -->
+<div id="panel-staging">
+
+<div class="sec">
+<div class="sect">Cancer Type & Location</div>
+<div class="fgroup"><label class="fl">Cancer Type</label>
+<select id="f-cancer-type" onchange="S.cancerType=this.value;updateSurgeryOptions();render()">
+<option value="">Select...</option>
+<option value="colon">Colon Cancer</option>
+<option value="rectal">Rectal Cancer</option>
+<option value="anal_scc">Anal Cancer (SCC)</option>
+<option value="anal_adeno">Anal Cancer (Adenocarcinoma)</option>
+</select></div>
+<div class="fgroup"><label class="fl">Tumor Location</label>
+<select id="f-location" onchange="S.location=this.value;render()">
+<option value="">Select...</option>
+<optgroup label="Colon">
+<option>Cecum</option><option>Ascending colon</option><option>Hepatic flexure</option><option>Transverse colon</option><option>Splenic flexure</option><option>Descending colon</option><option>Sigmoid colon</option><option>Rectosigmoid junction</option>
+</optgroup>
+<optgroup label="Rectum">
+<option>Upper rectum (10-15cm)</option><option>Mid rectum (5-10cm)</option><option>Low rectum (0-5cm)</option>
+</optgroup>
+<optgroup label="Anus">
+<option>Anal canal</option><option>Anal margin</option><option>Cloacogenic zone</option>
+</optgroup>
+</select></div>
+<div class="fgroup"><label class="fl">Histology</label>
+<select id="f-histology" onchange="S.histology=this.value;render()">
+<option value="">Select...</option>
+<option>Adenocarcinoma, well-differentiated</option><option>Adenocarcinoma, moderately differentiated</option><option>Adenocarcinoma, poorly differentiated</option><option>Mucinous adenocarcinoma</option><option>Signet ring cell carcinoma</option><option>Squamous cell carcinoma</option><option>Basaloid carcinoma</option><option>Neuroendocrine carcinoma</option><option>Melanoma</option><option>Other / Pending</option>
+</select></div>
+</div>
+
+<div class="sec">
+<div class="sect">MMR / MSI Status</div>
+<div id="mmr-options"></div>
+</div>
+
+<div class="sec">
+<div class="sect">Molecular Testing</div>
+<div id="molecular-options"></div>
+</div>
+
+<div class="sec">
+<div class="sect">Staging CT Chest/Abdomen/Pelvis</div>
+<div id="ct-options"></div>
+</div>
+
+<div class="sec">
+<div class="sect">PET/CT</div>
+<div id="pet-options"></div>
+</div>
+
+<div class="sec">
+<div class="sect">Pelvic MRI — T Stage</div>
+<div id="mri-t-options"></div>
+</div>
+
+<div class="sec">
+<div class="sect">Pelvic MRI — N Stage</div>
+<div id="mri-n-options"></div>
+</div>
+
+<div class="sec">
+<div class="sect">Pelvic MRI — Additional</div>
+<div id="mri-extra-options"></div>
+</div>
+
+<div class="sec">
+<div class="sect">Baseline CEA</div>
+<input type="text" id="f-cea" placeholder="e.g., 3.2 ng/mL" oninput="S.cea=this.value;render()">
+</div>
+
+</div>
+
+<!-- ═══ CONSENT TAB ═══ -->
+<div id="panel-consent" style="display:none;">
+
+<div class="sec">
+<div class="sect">Planned Surgery</div>
+<div id="surgery-options"></div>
+<div class="fgroup" style="margin-top:8px;">
+<label class="fl">Surgical Approach</label>
+<select id="f-approach" onchange="S.approach=this.value;render()">
+<option value="">Select...</option>
+<option>Laparoscopic</option><option>Robotic</option><option>Open</option><option>Transanal</option><option>Combined laparoscopic + transanal</option><option>Perineal</option>
+</select>
+</div>
+</div>
+
+<div class="sec">
+<div class="sect">Procedure-Specific Risks Discussed</div>
+<div id="risk-list"></div>
+</div>
+
+<div class="sec">
+<div class="sect">Alternatives Discussed</div>
+<div id="alt-options"></div>
+</div>
+
+<div id="consent-preview"></div>
+
+</div>
+
+<!-- ═══ ONCOLOGY HISTORY TAB ═══ -->
+<div id="panel-onc" style="display:none;">
+
+<div class="sec">
+<div class="sect">Date of Cancer Diagnosis</div>
+<input type="text" id="f-dx-date" placeholder="e.g., January 2025" oninput="S.dxDate=this.value;render()">
+</div>
+
+<div class="sec">
+<div class="sect">Stage at Diagnosis</div>
+<input type="text" id="f-dx-stage" placeholder="e.g., Stage IIIB (pT3N1bM0)" oninput="S.dxStage=this.value;render()">
+</div>
+
+<div class="sec">
+<div class="sect">Current Cancer Status</div>
+<div id="status-options"></div>
+</div>
+
+<div class="sec">
+<div class="sect">Status Details</div>
+<textarea id="f-status-detail" rows="2" placeholder="e.g., New liver metastasis diagnosed 3/2025..." oninput="S.statusDetail=this.value;render()"></textarea>
+</div>
+
+<div class="sec">
+<div class="sect">Chemotherapy History</div>
+<textarea id="f-chemo" rows="3" placeholder="e.g., FOLFOX x 12 cycles completed 8/2025&#10;Capecitabine maintenance ongoing..." oninput="S.chemo=this.value;render()"></textarea>
+</div>
+
+<div class="sec">
+<div class="sect">Radiation History</div>
+<textarea id="f-radiation" rows="2" placeholder="e.g., Long-course CRT 50.4 Gy + capecitabine, completed 6/2025" oninput="S.radiation=this.value;render()"></textarea>
+</div>
+
+<div class="sec">
+<div class="sect">Immunotherapy</div>
+<textarea id="f-immuno" rows="2" placeholder="e.g., Pembrolizumab started 4/2025 for MSI-H disease" oninput="S.immuno=this.value;render()"></textarea>
+</div>
+
+<div class="sec">
+<div class="sect">Surveillance Plan</div>
+<div id="surveillance-options"></div>
+</div>
+
+</div>
+
+<div class="disc">Staging information is advisory. Always verify with official radiology/pathology reports and tumor board discussion.</div>
+</div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div class="tsidebar">
+<div class="slbl">Staging Summary</div>
+<div class="src">
+<div class="scode" id="sb-stage">Stage: —</div>
+<div class="sdesc" id="sb-summary">Complete staging workup to see summary</div>
+</div>
+
+<div class="sdiv"></div>
+<div class="slbl">Key Findings</div>
+<div id="sb-findings" style="font-size:12px;color:rgba(255,255,255,0.42);">Complete staging fields to see findings</div>
+
+<div class="sdiv"></div>
+<div class="slbl">Payer Estimates — E/M Level</div>
+<div class="ptbl" id="sb-payer">
+<div class="pr act"><span class="pn">Medicare</span><span class="pa">99215: $211</span></div>
+<div class="pr"><span class="pn">Medicaid</span><span class="pa">99215: $148</span></div>
+<div class="pr"><span class="pn">BCBS</span><span class="pa">99215: $232</span></div>
+<div class="pr"><span class="pn">UHC</span><span class="pa">99215: $225</span></div>
+<div class="pr"><span class="pn">Aetna</span><span class="pa">99215: $220</span></div>
+<div class="pr"><span class="pn">Commercial</span><span class="pa">99215: $235</span></div>
+</div>
+<div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:4px;">Cancer staging visit typically qualifies for 99215 (high MDM complexity)</div>
+
+<div class="sdiv"></div>
+<div class="slbl">Generated Note</div>
+<div class="snote-pre" id="sb-note">Complete fields to generate note...</div>
+
+<div class="push">
+<button class="sbtn sbtn-g" onclick="copyNote()">📋 Copy Note</button>
+<button class="sbtn sbtn-p" onclick="saveNote()">💾 Save Note</button>
+<button class="sbtn sbtn-r" onclick="window.print()">🖨 Print</button>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════════════════
+const S = {
+  name:'',dob:'',mrn:'',dos:new Date().toISOString().split('T')[0],provider:'',
+  cancerType:'',location:'',histology:'',
+  mmr:'',molecular:[],ct:'',pet:'',mriT:'',mriN:'',mriCRM:'',mriEMVI:'',cea:'',
+  surgery:'',approach:'',risksAcknowledged:false,
+  dxDate:'',dxStage:'',cancerStatus:'',statusDetail:'',chemo:'',radiation:'',immuno:'',
+  surveillance:[],alternatives:[]
+};
+
+const MMR_OPTIONS = [
+  {v:'MMR intact (MLH1, MSH2, MSH6, PMS2 all retained)',c:'sel-g'},
+  {v:'Loss of MLH1 expression',c:'sel-r'},{v:'Loss of MSH2 expression',c:'sel-r'},
+  {v:'Loss of MSH6 expression',c:'sel-r'},{v:'Loss of PMS2 expression',c:'sel-r'},
+  {v:'Loss of MLH1 and PMS2 expression',c:'sel-r'},{v:'Loss of MSH2 and MSH6 expression',c:'sel-r'},
+  {v:'MSI-High (by PCR/NGS)',c:'sel-a'},{v:'MSI-Low / MSS (by PCR/NGS)',c:'sel-g'},
+  {v:'Not tested',c:''},{v:'Pending',c:''}
+];
+
+const MOLECULAR_OPTIONS = ['KRAS wild-type','KRAS mutant','NRAS wild-type','NRAS mutant','BRAF V600E mutant','BRAF wild-type','HER2 positive','HER2 negative','NTRK fusion positive','Not tested','Pending'];
+
+const CT_OPTIONS = [
+  {v:'No evidence of distant metastasis',c:'sel-g'},
+  {v:'Liver metastasis — solitary',c:'sel-r'},{v:'Liver metastases — multiple',c:'sel-r'},
+  {v:'Lung metastasis — solitary',c:'sel-a'},{v:'Lung metastases — multiple',c:'sel-r'},
+  {v:'Liver and lung metastases',c:'sel-r'},{v:'Peritoneal carcinomatosis',c:'sel-r'},
+  {v:'Bone metastasis',c:'sel-r'},{v:'Distant lymph node metastasis',c:'sel-a'},
+  {v:'Multiple sites of metastasis',c:'sel-r'},{v:'Indeterminate findings',c:'sel-a'},
+  {v:'Not performed',c:''}
+];
+
+const PET_OPTIONS = [
+  {v:'No FDG-avid distant disease',c:'sel-g'},
+  {v:'FDG-avid primary tumor only',c:''},{v:'FDG-avid regional lymph nodes',c:'sel-a'},
+  {v:'FDG-avid distant metastasis — liver',c:'sel-r'},{v:'FDG-avid distant metastasis — lung',c:'sel-r'},
+  {v:'FDG-avid distant metastasis — bone',c:'sel-r'},{v:'FDG-avid distant metastasis — multiple sites',c:'sel-r'},
+  {v:'Indeterminate findings',c:'sel-a'},{v:'Not performed',c:''}
+];
+
+const MRI_T = [
+  {v:'T1 — submucosa only',c:''},{v:'T2 — muscularis propria',c:''},
+  {v:'T3a — <1mm beyond muscularis',c:'sel-a'},{v:'T3b — 1-5mm beyond muscularis',c:'sel-a'},
+  {v:'T3c — 5-15mm beyond muscularis',c:'sel-r'},{v:'T3d — >15mm beyond muscularis',c:'sel-r'},
+  {v:'T4a — visceral peritoneum',c:'sel-r'},{v:'T4b — invades adjacent organ',c:'sel-r'},
+  {v:'Cannot be assessed',c:''},{v:'Not performed / N/A',c:''}
+];
+
+const MRI_N = [
+  {v:'N0 — no suspicious lymph nodes',c:'sel-g'},
+  {v:'N1 — 1-3 suspicious mesorectal nodes',c:'sel-a'},
+  {v:'N2 — 4+ suspicious mesorectal nodes',c:'sel-r'},
+  {v:'Suspicious lateral pelvic nodes',c:'sel-r'},
+  {v:'Cannot be assessed',c:''},{v:'Not performed / N/A',c:''}
+];
+
+const MRI_EXTRA = [
+  {v:'CRM clear (>1mm from mesorectal fascia)',c:'sel-g'},
+  {v:'CRM threatened (≤1mm)',c:'sel-a'},
+  {v:'CRM involved (tumor at/beyond fascia)',c:'sel-r'},
+  {v:'EMVI negative',c:'sel-g'},{v:'EMVI positive',c:'sel-r'},
+  {v:'Not assessed',c:''}
+];
+
+const SURGERY_MAP = {
+  colon:['Laparoscopic right hemicolectomy','Robotic right hemicolectomy','Open right hemicolectomy','Laparoscopic extended right hemicolectomy','Laparoscopic left hemicolectomy','Robotic left hemicolectomy','Laparoscopic sigmoid colectomy','Robotic sigmoid colectomy','Laparoscopic transverse colectomy','Total abdominal colectomy with IRA','Subtotal colectomy with end ileostomy','Diverting loop ileostomy'],
+  rectal:['Laparoscopic LAR with TME','Robotic LAR with TME','Open LAR with TME','Laparoscopic ultralow AR with coloanal anastomosis','Robotic ultralow AR with coloanal anastomosis','APR — laparoscopic','APR — robotic','APR — open','Intersphincteric resection','Transanal TME (taTME)','Transanal excision (TAE)','TAMIS','Hartmann\'s procedure','Diverting loop ileostomy','Ileostomy reversal','Pelvic exenteration'],
+  anal_scc:['EUA with biopsy','Local excision (T1 anal margin)','APR (persistent/recurrent post-CRT)','Inguinal lymph node dissection','Sentinel lymph node biopsy'],
+  anal_adeno:['EUA with biopsy','Local excision','APR','Inguinal lymph node dissection'],
+};
+
+const RISK_MAP = {
+  colon:['Bleeding requiring transfusion','Infection (wound, intra-abdominal abscess)','Anastomotic leak (2-5%)','Need for reoperation','Need for temporary or permanent ostomy','Ileus / small bowel obstruction','DVT / PE','Ureteral injury','Injury to adjacent organs','Wound dehiscence / incisional hernia','Change in bowel habits','Death (rare, <1-2%)'],
+  rectal:['Anastomotic leak (5-15% for low anastomosis)','Need for temporary diverting ileostomy','Need for permanent colostomy','Low anterior resection syndrome (LARS)','Sexual dysfunction (erectile dysfunction, dyspareunia)','Urinary dysfunction (retention, incontinence)','Bleeding requiring transfusion','Wound infection / pelvic abscess','DVT / PE','Ureteral injury','Small bowel obstruction','Pelvic nerve injury','Perineal wound complications (APR)','Death (1-3%)'],
+  anal_scc:['Permanent colostomy (APR)','Perineal wound complications','Sexual dysfunction','Urinary dysfunction','Bleeding','Infection','DVT/PE','Chronic perineal pain'],
+  anal_adeno:['Permanent colostomy (APR)','Wound complications','Sexual dysfunction','Urinary dysfunction','Bleeding','Infection','DVT/PE'],
+};
+
+const STATUS_OPTIONS = ['NED (No Evidence of Disease)','Stable disease','Disease progression','New metastasis','Recurrence — local','Recurrence — distant','Complete response to treatment','Partial response','Under active treatment'];
+
+const SURVEILLANCE_OPTIONS = ['CEA every 3-6 months','CT chest/abdomen/pelvis annually','Colonoscopy at 1 year post-resection','Colonoscopy every 3 years thereafter','Pelvic MRI every 6 months (rectal)','DRE + anoscopy every 3-6 months (anal)','PET/CT as clinically indicated','Genetic counseling / hereditary testing','Office visit every 3-6 months x 2 years','Office visit every 6 months years 3-5'];
+
+const ALT_OPTIONS = ['Medical/conservative management','Observation / watchful waiting','Neoadjuvant therapy alone (watch-and-wait if cCR)','Chemoradiation without surgery (anal SCC)','Endoscopic resection (if feasible)','Palliative care / hospice','Alternative surgical approach','Second surgical opinion'];
+
+// ══════════════════════════════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════════════════════════════
+
+function showTab(t) {
+  ['staging','consent','onc'].forEach(id => {
+    document.getElementById('panel-'+id).style.display = id===t ? '' : 'none';
+    document.getElementById('tab-'+id).classList.toggle('on', id===t);
+  });
+}
+
+function radioHTML(options, key, stateField) {
+  return options.map(o => {
+    const v = typeof o === 'string' ? o : o.v;
+    const c = typeof o === 'string' ? '' : o.c;
+    const sel = S[stateField] === v;
+    const cls = sel ? (c || 'sel') : '';
+    return `<div class="ri ${cls}" onclick="S.${stateField}='${esc(v)}';renderAll()"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">${v}</div></div></div>`;
+  }).join('');
+}
+
+function checkHTML(options, stateField) {
+  const arr = S[stateField] || [];
+  return options.map(o => {
+    const sel = arr.includes(o);
+    return `<div class="ci ${sel?'ck':''}" onclick="toggleArr('${stateField}','${esc(o)}')"><div class="cb">✓</div><div class="cc"><div class="clbl">${o}</div></div></div>`;
+  }).join('');
+}
+
+function toggleArr(field, val) {
+  if (!S[field]) S[field] = [];
+  const i = S[field].indexOf(val);
+  if (i >= 0) S[field].splice(i,1); else S[field].push(val);
+  renderAll();
+}
+
+function updateSurgeryOptions() {
+  const opts = SURGERY_MAP[S.cancerType] || [];
+  document.getElementById('surgery-options').innerHTML = opts.length ?
+    radioHTML(opts.map(o=>({v:o,c:''})), 'surgery', 'surgery') :
+    '<div style="font-size:12px;color:var(--text3);">Select a cancer type first</div>';
+  const risks = RISK_MAP[S.cancerType] || [];
+  document.getElementById('risk-list').innerHTML = risks.map(r =>
+    `<div style="padding:6px 10px;border-radius:var(--r);background:var(--rebg);border:0.5px solid rgba(121,31,31,0.15);font-size:12px;color:var(--retxt);margin-bottom:3px;">• ${r}</div>`
+  ).join('') || '<div style="font-size:12px;color:var(--text3);">Select a cancer type first</div>';
+}
+
+function renderAll() {
+  // Staging
+  document.getElementById('mmr-options').innerHTML = radioHTML(MMR_OPTIONS, 'mmr', 'mmr');
+  document.getElementById('molecular-options').innerHTML = checkHTML(MOLECULAR_OPTIONS, 'molecular');
+  document.getElementById('ct-options').innerHTML = radioHTML(CT_OPTIONS, 'ct', 'ct');
+  document.getElementById('pet-options').innerHTML = radioHTML(PET_OPTIONS, 'pet', 'pet');
+  document.getElementById('mri-t-options').innerHTML = radioHTML(MRI_T, 'mriT', 'mriT');
+  document.getElementById('mri-n-options').innerHTML = radioHTML(MRI_N, 'mriN', 'mriN');
+  document.getElementById('mri-extra-options').innerHTML = checkHTML(MRI_EXTRA.map(o=>o.v), 'mriExtra');
+
+  // Consent
+  updateSurgeryOptions();
+  document.getElementById('alt-options').innerHTML = checkHTML(ALT_OPTIONS, 'alternatives');
+  renderConsentPreview();
+
+  // Oncology
+  document.getElementById('status-options').innerHTML = radioHTML(STATUS_OPTIONS.map(o=>({v:o,c:o.includes('NED')?'sel-g':o.includes('progression')||o.includes('metastasis')||o.includes('Recurrence')?'sel-r':''})), 'cancerStatus', 'cancerStatus');
+  document.getElementById('surveillance-options').innerHTML = checkHTML(SURVEILLANCE_OPTIONS, 'surveillance');
+
+  // Sidebar
+  renderSidebar();
+}
+
+function renderConsentPreview() {
+  const el = document.getElementById('consent-preview');
+  if (!S.surgery) { el.innerHTML = ''; return; }
+  const risks = RISK_MAP[S.cancerType] || [];
+  el.innerHTML = `
+    <div class="consent-box">
+      <h4>✓ Informed Consent Documentation</h4>
+      <p>The risks, benefits, and alternatives of <strong>${S.surgery}</strong>${S.approach ? ' via <strong>'+S.approach+' approach</strong>' : ''} were discussed in detail with the patient${S.name ? ' ('+S.name+')' : ''}.</p>
+      <p style="margin-top:8px;"><strong>Risks discussed include but are not limited to:</strong></p>
+      <ul>${risks.map(r => '<li>'+r+'</li>').join('')}</ul>
+      <p style="margin-top:8px;"><strong>Alternatives discussed:</strong> ${(S.alternatives||[]).join(', ') || 'Medical/conservative management, observation'}</p>
+      <p style="margin-top:8px;">The patient verbalized understanding and had all questions answered. <strong>Written informed consent was obtained and signed.</strong></p>
+      <p style="margin-top:8px;"><strong>Verbal and written preoperative instructions given per ERAS protocol:</strong></p>
+      <ul>
+        <li>Preoperative diet and bowel preparation instructions</li>
+        <li>Carbohydrate loading instructions (clear carbohydrate drink night before and morning of surgery)</li>
+        <li>Medications to hold/continue (anticoagulants, diabetic medications, etc.)</li>
+        <li>DVT prophylaxis plan (SCDs, chemoprophylaxis)</li>
+        <li>Preoperative shower with chlorhexidine</li>
+        <li>Expected postoperative course and discharge milestones</li>
+        <li>Early mobilization, diet advancement, multimodal pain management plan</li>
+        ${S.surgery.toLowerCase().includes('ostomy') || S.surgery.toLowerCase().includes('apr') || S.surgery.toLowerCase().includes('ileostomy') ? '<li>Stoma site marking arranged with WOC nurse</li><li>Ostomy education and expectations discussed</li>' : ''}
+      </ul>
+    </div>
+  `;
+}
+
+function renderSidebar() {
+  // Stage summary
+  const stageEl = document.getElementById('sb-stage');
+  const summEl = document.getElementById('sb-summary');
+  const findEl = document.getElementById('sb-findings');
+
+  let findings = [];
+  if (S.cancerType) findings.push(`Type: ${S.cancerType.replace('_',' ').replace('anal ','Anal ')}`);
+  if (S.location) findings.push(`Location: ${S.location}`);
+  if (S.histology) findings.push(`Histology: ${S.histology}`);
+  if (S.mmr && S.mmr !== 'Not tested' && S.mmr !== 'Pending') findings.push(`MMR: ${S.mmr}`);
+  if (S.molecular?.length) findings.push(`Molecular: ${S.molecular.join(', ')}`);
+  if (S.ct && S.ct !== 'Not performed') findings.push(`CT: ${S.ct}`);
+  if (S.pet && S.pet !== 'Not performed') findings.push(`PET: ${S.pet}`);
+  if (S.mriT && !S.mriT.includes('N/A')) findings.push(`MRI T: ${S.mriT}`);
+  if (S.mriN && !S.mriN.includes('N/A')) findings.push(`MRI N: ${S.mriN}`);
+  if (S.cea) findings.push(`CEA: ${S.cea}`);
+
+  // Auto-derive clinical stage
+  let tStage = '', nStage = '', mStage = '';
+  if (S.mriT) { const m = S.mriT.match(/^(T\d\w?)/); if (m) tStage = m[1]; }
+  if (S.mriN) { const m = S.mriN.match(/^(N\d)/); if (m) nStage = m[1]; }
+  if (S.ct) {
+    if (S.ct.includes('No evidence')) mStage = 'M0';
+    else if (S.ct.includes('metast') || S.ct.includes('Peritoneal') || S.ct.includes('Bone') || S.ct.includes('Multiple')) mStage = 'M1';
+  }
+
+  if (tStage || nStage || mStage) {
+    stageEl.textContent = `c${tStage||'Tx'}${nStage||'Nx'}${mStage||'Mx'}`;
+  } else {
+    stageEl.textContent = 'Stage: —';
+  }
+
+  summEl.textContent = S.cancerType ? `${(S.location||'Unknown location')} — ${(S.histology||'histology pending')}` : 'Complete staging workup to see summary';
+  findEl.innerHTML = findings.length ? findings.map(f => `<div style="font-size:11px;color:rgba(255,255,255,0.6);padding:3px 0;border-bottom:0.5px solid rgba(255,255,255,0.06);">${f}</div>`).join('') : '<div style="font-size:12px;color:rgba(255,255,255,0.28);">Complete staging fields to see findings</div>';
+
+  // Note
+  document.getElementById('sb-note').textContent = generateNote();
+}
+
+function render() { renderSidebar(); }
+
+// ══════════════════════════════════════════════════════════════════════════
+// NOTE GENERATOR
+// ══════════════════════════════════════════════════════════════════════════
+
+function generateNote() {
+  const L = [];
+  const d = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  L.push('CANCER STAGING & SURGICAL PLANNING NOTE');
+  L.push('═'.repeat(46));
+  L.push(`Patient: ${S.name||'[NAME]'}  |  DOB: ${S.dob||'[DOB]'}  |  MRN: ${S.mrn||'[MRN]'}`);
+  L.push(`DOS: ${S.dos||d}  |  Provider: ${S.provider||'[PROVIDER]'}`);
+  L.push('');
+
+  // Oncology History
+  if (S.dxDate || S.dxStage || S.cancerStatus) {
+    L.push('── ONCOLOGY HISTORY ──');
+    if (S.dxDate) L.push(`Date of Diagnosis: ${S.dxDate}`);
+    if (S.dxStage) L.push(`Stage at Diagnosis: ${S.dxStage}`);
+    if (S.cancerStatus) L.push(`Current Status: ${S.cancerStatus}`);
+    if (S.statusDetail) L.push(`Details: ${S.statusDetail}`);
+    if (S.chemo) L.push(`Chemotherapy: ${S.chemo}`);
+    if (S.radiation) L.push(`Radiation: ${S.radiation}`);
+    if (S.immuno) L.push(`Immunotherapy: ${S.immuno}`);
+    L.push('');
+  }
+
+  // Staging
+  L.push('── STAGING WORKUP ──');
+  if (S.cancerType) L.push(`Cancer Type: ${S.cancerType.replace('_',' ')}`);
+  if (S.location) L.push(`Location: ${S.location}`);
+  if (S.histology) L.push(`Histology: ${S.histology}`);
+  if (S.mmr) L.push(`MMR/MSI Status: ${S.mmr}`);
+  if (S.molecular?.length) L.push(`Molecular: ${S.molecular.join(', ')}`);
+  if (S.ct) L.push(`CT C/A/P: ${S.ct}`);
+  if (S.pet) L.push(`PET/CT: ${S.pet}`);
+  if (S.mriT) L.push(`Pelvic MRI T Stage: ${S.mriT}`);
+  if (S.mriN) L.push(`Pelvic MRI N Stage: ${S.mriN}`);
+  if (S.mriExtra?.length) L.push(`MRI Additional: ${S.mriExtra.join('; ')}`);
+  if (S.cea) L.push(`Baseline CEA: ${S.cea}`);
+  L.push('');
+
+  // Surgical Plan & Consent
+  if (S.surgery) {
+    L.push('── SURGICAL PLAN & INFORMED CONSENT ──');
+    L.push(`Planned Procedure: ${S.surgery}`);
+    if (S.approach) L.push(`Approach: ${S.approach}`);
+    L.push('');
+    L.push(`Informed Consent Discussion:`);
+    L.push(`The risks, benefits, and alternatives of ${S.surgery} were discussed in detail with the patient${S.name ? ' ('+S.name+')' : ''}.`);
+    L.push('');
+    L.push('Risks discussed include but are not limited to:');
+    (RISK_MAP[S.cancerType]||[]).forEach((r,i) => L.push(`  ${i+1}. ${r}`));
+    L.push('');
+    L.push(`Alternatives discussed: ${(S.alternatives||[]).join(', ') || 'Medical/conservative management, observation'}`);
+    L.push('The patient verbalized understanding. Written informed consent was obtained and signed.');
+    L.push('Verbal and written preoperative instructions given per ERAS protocol.');
+    L.push('');
+  }
+
+  // Surveillance
+  if (S.surveillance?.length) {
+    L.push('── SURVEILLANCE PLAN ──');
+    S.surveillance.forEach(s => L.push(`  • ${s}`));
+    L.push('');
+  }
+
+  L.push('═'.repeat(46));
+  L.push(`Electronically signed: ${S.provider||'[PROVIDER]'}`);
+  L.push(`Date: ${d}`);
+  return L.join('\n');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// ACTIONS
+// ══════════════════════════════════════════════════════════════════════════
+
+function copyNote() {
+  navigator.clipboard.writeText(generateNote()).then(() => {
+    const btn = document.querySelector('.sbtn-g');
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = '📋 Copy Note', 2000);
+  });
+}
+
+function saveNote() {
+  const notes = JSON.parse(localStorage.getItem('sb-staging-notes')||'[]');
+  notes.unshift({id:Date.now(),timestamp:new Date().toISOString(),patient:S.name,type:S.cancerType,note:generateNote()});
+  if (notes.length > 30) notes.length = 30;
+  localStorage.setItem('sb-staging-notes', JSON.stringify(notes));
+  const btn = document.querySelector('.sbtn-p');
+  btn.textContent = '✓ Saved!';
+  setTimeout(() => btn.textContent = '💾 Save Note', 2000);
+}
+
+function esc(s) { return s.replace(/'/g, "\\'"); }
+
+// ══════════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════════
+document.getElementById('f-dos').value = S.dos;
+renderAll();
+</script>
+</body>
+</html>

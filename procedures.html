@@ -160,6 +160,11 @@ textarea{resize:vertical;line-height:1.65;}
 .smc-a{background:rgba(250,199,117,0.18);color:#FAC775;}
 .smc-g{background:rgba(46,196,143,0.18);color:#6EE7B7;}
 .snote-pre{background:rgba(0,0,0,0.25);border-radius:var(--r);padding:12px;font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.75);white-space:pre-wrap;line-height:1.6;max-height:400px;overflow-y:auto;margin-top:8px;}
+.ptbl{display:flex;flex-direction:column;gap:1px;}
+.pr{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;border-radius:var(--r);}
+.pr.act{background:rgba(46,196,143,0.14);}
+.pn{font-size:12px;color:rgba(255,255,255,0.48);}.pr.act .pn{color:#2EC48F;font-weight:600;}
+.pa{font-size:13px;font-weight:700;color:#fff;}.pr.act .pa{color:#2EC48F;}
 .sbtn{width:100%;border:none;padding:9px;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:6px;}
 .sbtn-p{background:#fff;color:var(--gd);}
 .sbtn-g{background:#1D9E75;color:#fff;}
@@ -187,6 +192,7 @@ textarea{resize:vertical;line-height:1.65;}
 <a class="ntab" href="/index.html#ema" onclick="localStorage.setItem('sb-nav','ema')">📋 E&M</a>
 <a class="ntab" href="/checklist.html">✅ Checklist</a>
 <a class="ntab on" href="/procedures.html">🩺 Procedures</a>
+<a class="ntab" href="/staging.html">🎗 Staging</a>
 </div>
 </div>
 
@@ -616,6 +622,10 @@ function renderSidebar() {
     </div>
 
     <div class="sdiv"></div>
+    <div class="slbl">Payer Estimates</div>
+    ${getPayerHTML(formState.cpt_selected)}
+
+    <div class="sdiv"></div>
     <div class="slbl">Generated note</div>
     <div class="snote-pre" id="notePreview">${escHTML(noteText)}</div>
 
@@ -770,6 +780,40 @@ function updateVoiceUI() {
   btn.textContent = voiceState === 'recording' ? '⏹' : voiceState === 'processing' ? '⚙' : '🎙';
   lbl.className = 'voice-label' + (voiceState === 'recording' ? ' rec' : voiceState === 'processing' ? ' proc' : '');
   lbl.textContent = voiceState === 'recording' ? 'Recording… tap to stop' : voiceState === 'processing' ? 'Processing audio…' : 'Tap to record encounter';
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  PAYER ESTIMATES
+// ══════════════════════════════════════════════════════════════════════════════
+
+const CPT_RVU = {
+  '45330':2.56,'45331':3.22,'45333':4.17,'45338':4.56,
+  '45300':1.48,'45305':2.03,
+  '46600':0.84,'46606':1.62,'46607':2.89,'46916':2.44,'46924':4.67,
+  '57410':1.72,
+  '46040':4.57,'46045':6.89,'46050':3.21,'46060':7.12,'10060':2.93,'10061':4.44,
+  '46221':2.31,'46945':1.15,'46946':1.15,
+  '46083':2.67,'46320':3.44,
+  '46999':3.00,
+};
+const PAYER_MULT = {
+  Medicare:1.0, Medicaid:0.70, BCBS:1.10, UHC:1.07, Aetna:1.05, Commercial:1.12
+};
+const CF = 33.89; // 2025 Medicare conversion factor
+
+function getPayerHTML(cpt) {
+  const rvu = CPT_RVU[cpt] || 0;
+  if (!rvu) return '<div style="font-size:12px;color:rgba(255,255,255,0.28);">Select a CPT code to see estimates</div>';
+  const rows = Object.entries(PAYER_MULT).map(([name, mult]) => {
+    const amt = (rvu * CF * mult).toFixed(0);
+    const isMedicare = name === 'Medicare';
+    return `<div class="pr${isMedicare?' act':''}"><span class="pn">${name}</span><span class="pa">$${amt}</span></div>`;
+  }).join('');
+  return `<div class="ptbl">${rows}</div><div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:4px;">RVU: ${rvu} × $${CF} CF (2025)</div>`;
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
