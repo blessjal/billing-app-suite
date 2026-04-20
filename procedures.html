@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SurgiBill">
+<meta name="theme-color" content="#0a3d2e">
+<title>Clinic Procedures — SurgiBill</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+--bg:#fff;--bg2:#f7f7f5;--bg3:#f0efe9;
+--text:#1a1a1a;--text2:#555;--text3:#999;
+--border:rgba(0,0,0,0.11);--border2:rgba(0,0,0,0.22);
+--gd:#0a3d2e;--g8:#0F6E56;--g7:#1D9E75;--g6:#2EC48F;
+--gbg:#EAF3DE;--gtxt:#27500A;
+--bbg:#E6F1FB;--btxt:#0C447C;
+--abg:#FAEEDA;--atxt:#633806;
+--pbg:#EEEDFE;--ptxt:#3C3489;
+--tbg:#E1F5EE;--ttxt:#085041;
+--grbg:#F1EFE8;--grtxt:#444441;
+--rebg:#FCEBEB;--retxt:#791F1F;
+--r:8px;--rlg:12px;
+}
+@media(prefers-color-scheme:dark){:root{
+--bg:#1c1c1e;--bg2:#242424;--bg3:#2e2e2e;
+--text:#f0f0ee;--text2:#aaa;--text3:#666;
+--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+--gbg:#173404;--gtxt:#C0DD97;--bbg:#042C53;--btxt:#B5D4F4;
+--abg:#412402;--atxt:#FAC775;--pbg:#26215C;--ptxt:#CECBF6;
+--tbg:#04342C;--ttxt:#9FE1CB;--grbg:#2C2C2A;--grtxt:#D3D1C7;
+--rebg:#501313;--retxt:#F7C1C1;
+}}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
+
+/* TOP NAV — matches SurgiBill */
+.tnav{background:var(--gd);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:50px;flex-shrink:0;}
+.tnav-l{display:flex;align-items:center;gap:4px;}
+.wm{font-size:17px;font-weight:700;color:#fff;letter-spacing:-0.5px;cursor:pointer;padding:7px 10px;border-radius:var(--r);text-decoration:none;}
+.wm span{color:#2EC48F;}
+.ntab{background:transparent;border:none;color:rgba(255,255,255,0.45);padding:7px 13px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;}
+.ntab:hover{color:#fff;background:rgba(255,255,255,0.08);}
+.ntab.on{color:#fff;background:rgba(255,255,255,0.14);}
+
+/* LAYOUT */
+.page-wrap{display:flex;flex-direction:column;min-height:100vh;}
+.content{flex:1;display:flex;flex-direction:column;}
+
+/* HOME / PICKER */
+.picker{padding:28px 24px;max-width:1100px;margin:0 auto;width:100%;}
+.picker-head{margin-bottom:24px;}
+.picker-title{font-size:22px;font-weight:700;letter-spacing:-0.4px;margin-bottom:3px;}
+.picker-sub{font-size:13px;color:var(--text2);}
+
+/* Category headers */
+.cat-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin:20px 0 10px;padding-top:10px;border-top:0.5px solid var(--border);}
+.cat-title:first-of-type{border-top:none;padding-top:0;margin-top:0;}
+
+/* Procedure cards */
+.proc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:8px;}
+.proc-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rlg);padding:16px 18px;cursor:pointer;transition:border-color 0.15s,transform 0.12s;display:flex;flex-direction:column;gap:8px;}
+.proc-card:hover{border-color:var(--g7);transform:translateY(-2px);}
+.proc-card-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.proc-card-name{font-size:14px;font-weight:600;letter-spacing:-0.1px;}
+.proc-card-arr{font-size:14px;color:var(--text3);}
+.proc-card-desc{font-size:12px;color:var(--text2);line-height:1.5;}
+.proc-card-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.ptag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600;}
+.ptag-g{background:var(--tbg);color:var(--ttxt);}
+.ptag-b{background:var(--bbg);color:var(--btxt);}
+.ptag-a{background:var(--abg);color:var(--atxt);}
+
+/* History section */
+.history-section{margin-top:28px;padding-top:20px;border-top:0.5px solid var(--border);}
+.hist-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.hist-empty{font-size:13px;color:var(--text3);padding:16px;text-align:center;}
+.hist-item{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:6px;cursor:pointer;transition:background 0.1s;}
+.hist-item:hover{background:var(--bg3);}
+.hist-item-top{display:flex;justify-content:space-between;align-items:center;}
+.hist-item-name{font-size:13px;font-weight:600;}
+.hist-item-time{font-size:11px;color:var(--text3);}
+.hist-item-patient{font-size:12px;color:var(--text2);margin-top:2px;}
+
+/* TWO-COL EDITOR */
+.editor{display:none;flex:1;}
+.editor.on{display:flex;flex-direction:column;flex:1;}
+.tpage{display:grid;grid-template-columns:1fr 310px;flex:1;}
+.tmain{padding:22px 24px 48px;overflow-y:auto;}
+.tsidebar{background:var(--gd);padding:20px 16px;position:sticky;top:0;height:calc(100vh - 50px);overflow-y:auto;display:flex;flex-direction:column;}
+
+/* Editor header */
+.ed-back{font-size:12px;color:var(--text3);cursor:pointer;margin-bottom:12px;display:inline-flex;align-items:center;gap:4px;}
+.ed-back:hover{color:var(--text);}
+.ed-title{font-size:20px;font-weight:700;letter-spacing:-0.4px;margin-bottom:2px;}
+.ed-sub{font-size:13px;color:var(--text2);margin-bottom:18px;}
+
+/* Patient strip */
+.pat-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:18px;padding-bottom:16px;border-bottom:0.5px solid var(--border);}
+label.fl{font-size:11px;color:var(--text2);display:block;margin-bottom:3px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;}
+input[type=text],input[type=date],input[type=number],select,textarea{width:100%;padding:8px 10px;border:0.5px solid var(--border);border-radius:var(--r);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--bg);}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--g7);}
+textarea{resize:vertical;line-height:1.65;}
+
+/* Sections */
+.sec{margin-bottom:18px;}
+.sect{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+
+/* Clickable check items */
+.ci{display:flex;align-items:flex-start;gap:10px;padding:8px 11px;border:0.5px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all 0.1s;user-select:none;background:var(--bg);margin-bottom:3px;}
+.ci:hover{border-color:var(--border2);background:var(--bg2);}
+.ci.ck{background:var(--gbg);border-color:rgba(63,139,17,0.25);}
+.ci.ck .clbl{color:var(--gtxt);}
+.ci.ckb{background:var(--bbg);border-color:rgba(24,95,165,0.25);}
+.ci.ckb .clbl{color:var(--btxt);}
+.cb{width:17px;height:17px;border:1.5px solid var(--border2);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;background:var(--bg);font-size:10px;color:transparent;}
+.ci.ck .cb,.ci.ckb .cb{background:#3B6D11;border-color:#3B6D11;color:#fff;}
+.ci.ckb .cb{background:#185FA5;border-color:#185FA5;}
+.cc{flex:1;}
+.clbl{font-size:13px;font-weight:500;line-height:1.4;}
+.csub{font-size:11px;color:var(--text2);margin-top:1px;line-height:1.4;}
+
+/* Radio items */
+.ri{display:flex;align-items:flex-start;gap:10px;padding:8px 11px;border:0.5px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all 0.1s;user-select:none;background:var(--bg);margin-bottom:3px;}
+.ri:hover{border-color:var(--border2);background:var(--bg2);}
+.ri.sel{background:var(--bbg);border-color:rgba(24,95,165,0.25);}
+.ri.sel .clbl{color:var(--btxt);}
+.rdot{width:17px;height:17px;border:1.5px solid var(--border2);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;background:var(--bg);}
+.ri.sel .rdot{background:#185FA5;border-color:#185FA5;}
+.rin{width:6px;height:6px;border-radius:50%;background:white;display:none;}
+.ri.sel .rin{display:block;}
+
+/* Buttons */
+.abtn{width:100%;background:var(--gd);color:#fff;border:none;padding:12px;border-radius:var(--rlg);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;}
+.abtn:active{opacity:0.85;}
+.abtn:disabled{opacity:0.38;}
+
+/* Voice button */
+.voice-area{margin-bottom:18px;text-align:center;padding:20px;border:1px dashed var(--border);border-radius:var(--rlg);background:var(--bg2);}
+.mic-btn{width:64px;height:64px;border-radius:50%;border:2.5px solid #c0392b;background:rgba(192,57,43,0.06);cursor:pointer;font-size:26px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.15s;margin-bottom:8px;}
+.mic-btn:hover{background:rgba(192,57,43,0.12);}
+.mic-btn.recording{background:#c0392b;border-color:#c0392b;animation:pulse 1.5s infinite;}
+.mic-btn.processing{border-color:#d4a843;animation:spin 1s linear infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+@keyframes spin{to{transform:rotate(360deg);}}
+.voice-label{font-size:12px;color:var(--text3);}
+.voice-label.rec{color:#c0392b;font-weight:600;}
+.voice-label.proc{color:var(--g7);font-weight:600;}
+.voice-transcript{margin-top:10px;background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r);padding:10px;font-size:12px;color:var(--text2);text-align:left;white-space:pre-wrap;max-height:120px;overflow-y:auto;}
+
+/* SIDEBAR */
+.slbl{font-size:10px;font-weight:700;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:8px;}
+.sdiv{height:0.5px;background:rgba(255,255,255,0.1);margin:14px 0;}
+.src{background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.11);border-radius:var(--rlg);padding:15px;margin-bottom:14px;}
+.scode{font-family:'DM Mono',monospace;font-size:28px;font-weight:700;color:#fff;margin-bottom:2px;letter-spacing:-0.5px;}
+.sdesc{font-size:12px;color:rgba(255,255,255,0.42);margin-bottom:6px;line-height:1.4;}
+.smods{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+.smc{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:600;background:rgba(206,203,246,0.18);color:#CECBF6;}
+.smc-a{background:rgba(250,199,117,0.18);color:#FAC775;}
+.smc-g{background:rgba(46,196,143,0.18);color:#6EE7B7;}
+.snote-pre{background:rgba(0,0,0,0.25);border-radius:var(--r);padding:12px;font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.75);white-space:pre-wrap;line-height:1.6;max-height:400px;overflow-y:auto;margin-top:8px;}
+.sbtn{width:100%;border:none;padding:9px;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:6px;}
+.sbtn-p{background:#fff;color:var(--gd);}
+.sbtn-g{background:#1D9E75;color:#fff;}
+.sbtn-r{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.55);border:0.5px solid rgba(255,255,255,0.14);}
+.sbtn:active{opacity:0.8;}
+.push{margin-top:auto;padding-top:14px;}
+
+.disc{font-size:11px;color:var(--text3);padding:12px;line-height:1.6;text-align:center;margin-top:12px;}
+
+/* Responsive */
+@media(max-width:960px){.tpage{grid-template-columns:1fr;}.tsidebar{position:static;height:auto;}.pat-strip{grid-template-columns:1fr 1fr;}.proc-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.proc-grid{grid-template-columns:1fr;}.pat-strip{grid-template-columns:1fr;}.tnav-l .ntab:not(.on){display:none;}}
+@media print{.tnav,.voice-area,.push,.ed-back,.abtn{display:none!important;}.tsidebar{position:static;height:auto;background:#0a3d2e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.tpage{grid-template-columns:1fr 280px;}}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<!-- NAV -->
+<div class="tnav">
+<div class="tnav-l">
+<a class="wm" href="/index.html">Surgi<span>Bill</span></a>
+<a class="ntab" href="/index.html">Home</a>
+<a class="ntab" href="/index.html#surg" onclick="localStorage.setItem('sb-nav','surg')">🔪 Surgical</a>
+<a class="ntab" href="/index.html#ema" onclick="localStorage.setItem('sb-nav','ema')">📋 E&M</a>
+<a class="ntab" href="/checklist.html">✅ Checklist</a>
+<a class="ntab on" href="/procedures.html">🩺 Procedures</a>
+</div>
+</div>
+
+<!-- PICKER VIEW -->
+<div class="content">
+<div class="picker" id="pickerView">
+<div class="picker-head">
+<div class="picker-title">🩺 Clinic Procedures</div>
+<div class="picker-sub">Select a procedure to generate a structured note with CPT codes, modifiers, and billing optimization</div>
+</div>
+
+<div class="cat-title">Endoscopy</div>
+<div class="proc-grid" id="grid-endo"></div>
+
+<div class="cat-title">Office Procedures</div>
+<div class="proc-grid" id="grid-office"></div>
+
+<div class="cat-title">Examination</div>
+<div class="proc-grid" id="grid-exam"></div>
+
+<!-- History -->
+<div class="history-section">
+<div class="hist-title">📂 Recent Procedure Notes <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text3);font-size:11px;" id="histCount"></span></div>
+<div id="histList"><div class="hist-empty">No saved procedure notes yet. Generate a note from any template above.</div></div>
+</div>
+</div>
+
+<!-- EDITOR VIEW -->
+<div class="editor" id="editorView">
+<div class="tpage">
+<div class="tmain" id="editorMain">
+<!-- Populated by JS -->
+</div>
+<div class="tsidebar" id="editorSidebar">
+<!-- Populated by JS -->
+</div>
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+//  PROCEDURE TEMPLATES DATABASE
+// ══════════════════════════════════════════════════════════════════════════════
+
+const PROCEDURES = [
+{
+  id:"flex_sig", name:"Flexible Sigmoidoscopy", category:"Endoscopy",
+  cpt:[
+    {code:"45330",desc:"Diagnostic flexible sigmoidoscopy"},
+    {code:"45331",desc:"Flex sig with biopsy"},
+    {code:"45333",desc:"Flex sig with polypectomy (hot biopsy/bipolar)"},
+    {code:"45338",desc:"Flex sig with snare polypectomy"},
+  ],
+  modifiers:["-25 Significant E/M same day","-59 Distinct procedural service","-76 Repeat procedure same physician","-XE Separate encounter"],
+  indication:["Rectal bleeding","Surveillance of rectal stump/pouch","Evaluation of anastomosis","Evaluation of distal colitis","Post-polypectomy surveillance","Evaluation of rectal mass","Screening (limited)"],
+  prep:["Fleet enema x2","Fleet enema x1","No prep required","Oral prep (partial)"],
+  sedation:["None — unsedated","Topical lidocaine only","Moderate sedation (99152/99153)","Monitored anesthesia care (MAC)"],
+  scopeText:"Flexible sigmoidoscope inserted and advanced to ___ cm from the anal verge.",
+  findings:[
+    "Normal mucosa throughout examined segment","Erythematous/inflamed mucosa","Ulcerations","Polyp(s) identified at __ cm","Mass lesion identified at __ cm","Diverticulosis","Internal hemorrhoids",
+    "Anastomosis intact, no stenosis","Anastomotic stenosis, dilated to __ mm","Rectal stump — normal mucosa","Rectal stump — proctitis","J-pouch — normal pouch mucosa","J-pouch — pouchitis",
+    "Biopsies taken from ___","Polypectomy performed — snare","Polypectomy performed — cold forceps","No biopsies taken","Retroflexion performed in rectum","Tattoo placed at site"
+  ],
+  complications:["None","Bleeding — controlled with cautery","Bleeding — self-limited","Mucosal tear — no intervention","Patient discomfort — procedure shortened","Perforation suspected — CT ordered"],
+  postInstructions:["Resume regular diet","Watch for signs of bleeding, fever, or abdominal pain","Call office or go to ER if significant rectal bleeding, fever >101°F, or severe abdominal pain","Follow-up in office in __ weeks","Pathology results will be communicated within 1-2 weeks","No driving for 24 hours if sedation was used"],
+  billingTips:["45330 diagnostic vs 45331 with biopsy — use highest complexity code","If E/M same day, add modifier -25 to E/M code","Polypectomy codes (45333/45338) include the sigmoidoscopy — do not bill 45330 separately","If converting to colonoscopy, use colonoscopy codes instead","Document depth of insertion and quality of prep","Moderate sedation billed separately: 99152 (first 15 min) + 99153 (each additional 15 min)"],
+},
+{
+  id:"rigid_procto", name:"Rigid Proctoscopy", category:"Endoscopy",
+  cpt:[
+    {code:"45300",desc:"Rigid proctosigmoidoscopy, diagnostic"},
+    {code:"45305",desc:"Rigid proctoscopy with biopsy"},
+  ],
+  modifiers:["-25 Significant E/M same day","-59 Distinct procedural service"],
+  indication:["Evaluation of rectal mass/lesion","FAP rectal surveillance","Post-operative assessment","Evaluation of rectal bleeding","Staging of rectal cancer (distance from anal verge)","Pre-operative evaluation"],
+  prep:["Fleet enema","No prep","Self-administered prep"],
+  sedation:["None — unsedated","Topical lidocaine"],
+  scopeText:"A rigid proctoscope was inserted and advanced to ___ cm from the anal verge.",
+  findings:["Normal rectal mucosa","Rectal mass at __ cm from anal verge, size __ cm","Polyp(s) at __ cm","Mucosal erythema/friability","Post-surgical changes/scar","Anastomosis visualized and intact","No rectal polyps (FAP surveillance)","Rectal polyps present — approximately __ in number","Biopsies taken from ___","No biopsies taken"],
+  complications:["None","Minimal bleeding from biopsy sites","Patient discomfort"],
+  postInstructions:["Resume regular diet","Monitor for bleeding","Follow-up for pathology results","Return if rectal bleeding or fever"],
+  billingTips:["45300 is diagnostic, 45305 includes biopsy","Document exact distance from anal verge — critical for rectal cancer staging","If performed with anoscopy, can bill both with -59 modifier on anoscopy","If performed same day as E/M, add -25 to E/M code","Document number and location of polyps for FAP surveillance"],
+},
+{
+  id:"anoscopy", name:"Anoscopy", category:"Endoscopy",
+  cpt:[
+    {code:"46600",desc:"Anoscopy, diagnostic"},
+    {code:"46606",desc:"Anoscopy with biopsy"},
+  ],
+  modifiers:["-25 Significant E/M same day","-59 Distinct procedural service"],
+  indication:["Evaluation of hemorrhoids","Evaluation of rectal bleeding","Evaluation of anal/rectal mass","Assessment of fissure","Assessment of fistula internal opening","Pre-procedural assessment (before banding)","Post-operative assessment"],
+  prep:["None required"],
+  sedation:["None — unsedated","Topical lidocaine"],
+  scopeText:"An anoscope was inserted into the anal canal and rotated to visualize all quadrants.",
+  findings:["Internal hemorrhoids — Grade I","Internal hemorrhoids — Grade II","Internal hemorrhoids — Grade III","Internal hemorrhoids — Grade IV","No internal hemorrhoids","Single hemorrhoidal column: left lateral / right anterior / right posterior","Multiple hemorrhoidal columns","Congested hemorrhoidal tissue","Anal fissure visualized at __ position","Internal opening of fistula identified at __ position","Normal anal canal mucosa","Mucosal abnormality at ___","Condylomata identified","Biopsy taken from ___","No biopsies taken"],
+  complications:["None","Minimal bleeding","Patient discomfort"],
+  postInstructions:["No special precautions needed","Call if significant bleeding or fever"],
+  billingTips:["46600 diagnostic vs 46606 with biopsy","Can be billed with rigid proctoscopy (add -59 to one)","If performed with hemorrhoid banding (46221), anoscopy is included — do not bill separately","Document hemorrhoid grade (I-IV) for ICD-10 specificity","Same-day E/M requires -25 modifier on E/M code"],
+},
+{
+  id:"hra", name:"High Resolution Anoscopy (HRA)", category:"Endoscopy",
+  cpt:[
+    {code:"46607",desc:"HRA with magnification and biopsy"},
+    {code:"46600",desc:"Anoscopy, diagnostic (if no biopsy)"},
+    {code:"46916",desc:"Destruction of anal lesion — electrocautery/ablation (add-on)"},
+  ],
+  modifiers:["-25 Significant E/M same day","-59 Distinct procedural service"],
+  indication:["Abnormal anal cytology — ASC-US","Abnormal anal cytology — ASC-H","Abnormal anal cytology — LSIL","Abnormal anal cytology — HSIL","High-risk HPV positive","HIV-positive screening","Surveillance after HSIL treatment","Anal dysplasia follow-up"],
+  prep:["None — acetic acid 3-5% applied during procedure","Lugol's iodine applied during procedure"],
+  sedation:["None — unsedated","Topical lidocaine gel"],
+  scopeText:"High-resolution anoscope with magnification was inserted. Acetic acid 3-5% was applied to the anal canal and transformation zone. Systematic examination of all quadrants was performed.",
+  findings:[
+    "Normal squamocolumnar junction (SCJ) visualized","Acetowhite lesion(s) — flat","Acetowhite lesion(s) — raised/thick","Punctation pattern","Mosaicism","Atypical vascular pattern",
+    "Lugol's non-staining area(s)","Warty/papillomatous changes","Lesion location: anterior / posterior / left lateral / right lateral","Lesion extends to perianal skin","Lesion involves distal rectal mucosa",
+    "Number of biopsies taken: 1","Number of biopsies taken: 2","Number of biopsies taken: 3","Number of biopsies taken: 4+",
+    "IRC ablation performed at biopsy sites","Electrocautery ablation performed at lesion sites","No acetowhite or suspicious lesions identified","Condylomata identified and treated"
+  ],
+  complications:["None","Minimal bleeding from biopsy sites — hemostasis achieved with silver nitrate/pressure","Moderate bleeding — cauterized","Patient discomfort"],
+  postInstructions:["Mild discomfort and spotting expected for 1-2 days","Sitz baths as needed for comfort","Avoid heavy lifting for 24 hours","Pathology results in 1-2 weeks","Follow-up HRA in __ months","Call if heavy bleeding, fever, or increasing pain"],
+  billingTips:["46607 = HRA with biopsy — includes magnification","If ablation performed, add 46916 for destruction — document extent","Document number of biopsies and exact locations","Document HIV status and CD4 — supports medical necessity for screening","HPV testing (87624/87625) billed separately","Anal cytology (88112) billed separately by lab","If both diagnostic HRA and treatment ablation, can bill 46607 + 46916","Same-day E/M requires -25 modifier"],
+},
+{
+  id:"speculum", name:"Speculum Vaginal Examination", category:"Examination",
+  cpt:[
+    {code:"57410",desc:"Pelvic exam under anesthesia (if applicable)"},
+  ],
+  modifiers:["-25 Significant E/M same day"],
+  indication:["Evaluation of rectovaginal fistula","Evaluation of colovaginal fistula","Assessment of vaginal cuff post-hysterectomy","Evaluation of pelvic floor/rectocele","Assessment of posterior vaginal wall","Pre-operative assessment for rectal surgery"],
+  prep:["None required"],
+  sedation:["None","Topical lidocaine"],
+  scopeText:"A speculum was placed in the vagina for visualization. Systematic examination was performed.",
+  findings:["Normal vaginal mucosa","Rectovaginal fistula opening identified at __ position","Colovaginal fistula opening identified","Posterior vaginal wall bulging (rectocele) — small / moderate / large","Vaginal cuff intact","No fistula opening identified","Atrophic mucosal changes","Stool/gas noted in vagina (suggestive of fistula)","Discharge present","Bimanual exam: no masses, no tenderness / ___"],
+  complications:["None","Patient discomfort"],
+  postInstructions:["No special precautions","Follow-up as scheduled"],
+  billingTips:["Typically part of the E/M exam — not separately billable in most cases","57410 only if performed under anesthesia","Document findings supporting surgical planning (fistula location, rectocele size)","If fistula confirmed, document for surgical consent planning","Supports higher MDM complexity for E/M coding"],
+},
+{
+  id:"id_abscess", name:"I&D Perianal Abscess", category:"Office Procedures",
+  cpt:[
+    {code:"46040",desc:"I&D perianal abscess, superficial"},
+    {code:"46045",desc:"I&D perianal abscess, deep (intramural)"},
+    {code:"46050",desc:"I&D superficial perianal abscess"},
+    {code:"46060",desc:"I&D ischiorectal/intramural abscess"},
+    {code:"10060",desc:"I&D abscess, simple"},
+    {code:"10061",desc:"I&D abscess, complicated"},
+  ],
+  modifiers:["-25 Significant E/M same day","-76 Repeat procedure same physician","-59 Distinct procedural service"],
+  indication:["Perianal abscess — acute","Ischiorectal abscess","Recurrent perianal abscess","Perianal abscess with suspected fistula","Post-operative abscess"],
+  prep:["Sterile prep and drape","Betadine/chlorhexidine prep"],
+  sedation:["Local anesthesia — 1% lidocaine with epinephrine","Local anesthesia — 1% lidocaine without epinephrine","Local anesthesia — 0.25% bupivacaine with epinephrine","Field block performed","No anesthesia — spontaneous drainage"],
+  scopeText:"",
+  findings:[
+    "Fluctuant abscess identified at __ o'clock position, approximately __ cm from anal verge",
+    "Cruciate incision made over point of maximal fluctuance","Elliptical incision made","Linear incision made",
+    "Purulent material expressed — approximately __ mL","Serosanguinous fluid expressed","Loculations broken with finger/hemostat",
+    "Cavity irrigated with normal saline","Wound packed with iodoform gauze packing strip","Wound left open to drain without packing",
+    "Culture and sensitivity sent","Culture not sent — clinical decision","Probe used to assess for fistula tract","No fistula tract identified on probing","Fistula tract identified coursing toward __ o'clock","Hemostasis achieved with pressure / cautery / silver nitrate"
+  ],
+  complications:["None","Minor bleeding — controlled with pressure","Moderate bleeding — cautery/suture required","Difficult to achieve adequate anesthesia","Incomplete drainage — OR drainage recommended"],
+  postInstructions:["Sitz baths 3-4 times daily starting tomorrow","Packing removal in 1-2 days (or at home per instructions)","Wound care: keep area clean, change dressings as needed","Antibiotics prescribed: [Augmentin / Cipro + Flagyl / Bactrim]","Pain management: [acetaminophen / ibuprofen / prescribed]","Return to office in __ days for wound check","Go to ER if increasing pain, fever >101°F, or spreading redness","Follow up in 6-8 weeks to evaluate for fistula"],
+  billingTips:["46040 (perianal, superficial) vs 46060 (ischiorectal/deep) — document location and depth","10060/10061 for skin abscess not specifically perianal","Document abscess size/volume and exact anatomical location","If fistula probed, document separately — supports future fistula procedure coding","Culture sent supports medical necessity for antibiotics","Same-day E/M with -25 modifier if significant/separate evaluation performed","Document whether patient was given IV or oral antibiotics","10-day global period for 46040, 10061"],
+},
+{
+  id:"rbl", name:"Rubber Band Ligation of Hemorrhoids", category:"Office Procedures",
+  cpt:[
+    {code:"46221",desc:"Hemorrhoidectomy, rubber band ligation — single column"},
+    {code:"46945",desc:"Hemorrhoidectomy, rubber band ligation — 2nd column (add-on)"},
+    {code:"46946",desc:"Hemorrhoidectomy, rubber band ligation — 3+ columns (add-on)"},
+  ],
+  modifiers:["-25 Significant E/M same day","-59 Distinct procedural service"],
+  indication:["Grade I internal hemorrhoids, symptomatic","Grade II internal hemorrhoids, symptomatic","Grade III internal hemorrhoids, symptomatic","Failed conservative management (fiber, topicals, sitz baths)","Recurrent hemorrhoidal bleeding","Recurrent hemorrhoidal prolapse"],
+  prep:["Fleet enema","No prep required"],
+  sedation:["None — band applied above dentate line (insensate zone)","No sedation required"],
+  scopeText:"Anoscopy was performed. Internal hemorrhoidal columns were identified and evaluated.",
+  findings:[
+    "Hemorrhoidal column(s) identified: left lateral","Hemorrhoidal column(s) identified: right anterior","Hemorrhoidal column(s) identified: right posterior","Multiple columns identified",
+    "1 column banded — left lateral / right anterior / right posterior","2 columns banded","3 columns banded",
+    "Band(s) placed at base of hemorrhoid, above dentate line","Good tissue purchase with adequate suction","Proper band placement confirmed — no pain with placement",
+    "Patient tolerated procedure well","No immediate complications","Redundant tissue adequately incorporated into band"
+  ],
+  complications:["None","Mild discomfort / pressure sensation (expected)","Vasovagal reaction — resolved with Trendelenburg and observation","Immediate bleeding — band reapplied","Band slipped — reapplied successfully","Significant pain — band removed (placed too close to dentate line)"],
+  postInstructions:["Mild pressure/fullness sensation normal for 24-48 hours","Dull ache expected for 1-3 days — acetaminophen or ibuprofen as needed","Avoid aspirin for 1 week","High-fiber diet (25-35g/day) and adequate hydration","Avoid straining, heavy lifting for 48 hours","Sitz baths for comfort","Band and tissue slough in 5-10 days — mild bleeding normal","Call if heavy bleeding (more than streaks on tissue), fever, inability to urinate, or severe pain","Return in 4-6 weeks for reassessment / additional banding if needed"],
+  billingTips:["46221 = first column; 46945 = 2nd column (add-on); 46946 = 3rd+ column (add-on)","Do NOT bill anoscopy (46600) separately — it's included in the hemorrhoid banding","Document which specific column(s) banded (left lateral, right anterior, right posterior)","Document hemorrhoid grade for each column — supports ICD-10 specificity","Document failed conservative management for medical necessity","If same-day E/M, use -25 modifier on E/M — must document separately identifiable service","Banding has a 10-day global period","If multiple sessions (staged banding), each session is separately billable"],
+},
+{
+  id:"thrombosed_hem", name:"Excision of Thrombosed External Hemorrhoid", category:"Office Procedures",
+  cpt:[
+    {code:"46083",desc:"Incision of thrombosed external hemorrhoid"},
+    {code:"46320",desc:"Enucleation/excision of thrombosed external hemorrhoid"},
+  ],
+  modifiers:["-25 Significant E/M same day"],
+  indication:["Thrombosed external hemorrhoid — acute onset (<72 hours)","Thrombosed external hemorrhoid — significant pain and swelling","Recurrent thrombosed external hemorrhoid"],
+  prep:["Sterile prep","Betadine prep"],
+  sedation:["Local anesthesia — 1% lidocaine with epinephrine","Local anesthesia — 0.25% bupivacaine with epinephrine","Perianal field block"],
+  scopeText:"",
+  findings:[
+    "Thrombosed external hemorrhoid identified at __ o'clock position","Size approximately __ cm","Tense, tender, blue-purple discoloration",
+    "Elliptical excision performed over thrombosed hemorrhoid","Intact thrombus/clot removed","Multiple organized clots removed","Redundant skin excised","Thrombus expressed through incision",
+    "Hemostasis achieved with pressure / electrocautery / silver nitrate","Wound left open to heal by secondary intention","Base inspected — no active bleeding","Specimen to pathology: yes / no"
+  ],
+  complications:["None","Minor bleeding — controlled with pressure/cautery","Moderate bleeding — suture placed for hemostasis"],
+  postInstructions:["Sitz baths 3-4 times daily starting tomorrow","Keep area clean and dry","Wound will heal by secondary intention over 2-4 weeks","Mild bleeding/oozing normal for first few days","Acetaminophen / ibuprofen for pain","Stool softener (docusate) to avoid straining","High-fiber diet","Return if heavy bleeding, increasing pain, or signs of infection","Follow-up in 2-4 weeks"],
+  billingTips:["46083 = incision (simple clot evacuation) vs 46320 = excision/enucleation (more extensive)","46320 includes excision of overlying skin — document the technique","Document acuity — timing of onset supports medical necessity for office procedure","Presenting within 72 hours of onset supports excision over conservative management","If same-day E/M, -25 modifier required on E/M code","10-day global period","Document size of thrombus and amount of tissue excised"],
+},
+{
+  id:"cryo_condyloma", name:"Cryotherapy of Anal Condyloma (Verruca Freeze)", category:"Office Procedures",
+  cpt:[
+    {code:"46916",desc:"Destruction of anal lesion(s), simple — electrodesiccation/cryotherapy"},
+    {code:"46924",desc:"Destruction of anal lesion(s), extensive"},
+    {code:"46999",desc:"Unlisted procedure, anus"},
+  ],
+  modifiers:["-25 Significant E/M same day","-59 Distinct procedural service"],
+  indication:["Perianal condylomata acuminata","Intra-anal condylomata","Recurrent condylomata after prior treatment","Small-volume condyloma amenable to office cryotherapy","Condyloma refractory to topical imiquimod/5-FU"],
+  prep:["None required","Acetic acid 3-5% applied to enhance visualization of lesions"],
+  sedation:["None required for cryotherapy","Topical lidocaine gel for comfort","Local anesthesia for larger or tender lesions"],
+  scopeText:"",
+  findings:[
+    "Condylomata identified: perianal only / intra-anal only / both perianal and intra-anal",
+    "Number of lesions treated: ___","Size of largest lesion: ___ mm","Size of smallest lesion: ___ mm",
+    "Verruca Freeze cryogen applied to each lesion","Freeze-thaw-freeze technique used","Each lesion frozen for __ seconds x 2 cycles",
+    "Adequate freeze ball / ice ball observed around each lesion","White frost achieved on all treated lesions","Complete treatment of all visible lesions",
+    "Lesion locations documented: __ o'clock, __ o'clock, __ o'clock",
+    "Anoscopy performed — no intra-anal condylomata / intra-anal lesions also treated",
+    "Total treatment time: __ minutes"
+  ],
+  complications:["None","Mild discomfort during cryotherapy application","Minor bleeding from a lesion site","Expected post-procedure blistering discussed with patient"],
+  postInstructions:["Treated areas will blister and slough over 1-2 weeks — this is expected","Keep area clean and dry","Mild pain and swelling normal for 2-3 days","Acetaminophen / ibuprofen for discomfort","Sitz baths for comfort","Avoid sexual contact until lesions healed","Return in 4-6 weeks for reassessment and retreatment if needed","HPV vaccination counseling (if not yet vaccinated)","Recurrence is common — may need multiple treatment sessions"],
+  billingTips:["46916 = simple destruction (few lesions, small area)","46924 = extensive destruction (numerous lesions, large area, circumferential) — document extent","Document total number of lesions and total area treated to justify simple vs extensive","If anoscopy performed for intra-anal assessment, 46600 may be billed with -59","Cryotherapy and electrocautery are coded the same — document method used","Document HIV status — supports surveillance interval and medical necessity","If imiquimod/5-FU prescribed same day, document counseling for medication management","Photo documentation recommended for extent of disease"],
+},
+];
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════════════════════
+
+let currentProc = null;
+let formState = {};
+let savedNotes = JSON.parse(localStorage.getItem('sb-proc-notes') || '[]');
+let voiceState = 'idle'; // idle | recording | processing
+let mediaRecorder = null;
+let audioChunks = [];
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  RENDER PICKER
+// ══════════════════════════════════════════════════════════════════════════════
+
+function renderPicker() {
+  const grids = { Endoscopy: 'grid-endo', 'Office Procedures': 'grid-office', Examination: 'grid-exam' };
+  Object.entries(grids).forEach(([cat, gridId]) => {
+    const grid = document.getElementById(gridId);
+    const procs = PROCEDURES.filter(p => p.category === cat);
+    grid.innerHTML = procs.map(p => `
+      <div class="proc-card" onclick="openEditor('${p.id}')">
+        <div class="proc-card-top">
+          <div class="proc-card-name">${p.name}</div>
+          <div class="proc-card-arr">→</div>
+        </div>
+        <div class="proc-card-tags">
+          ${p.cpt.slice(0,2).map(c => `<span class="ptag ptag-g">${c.code}</span>`).join('')}
+          ${p.modifiers.length ? `<span class="ptag ptag-b">${p.modifiers.length} mod</span>` : ''}
+          <span class="ptag ptag-a">${p.billingTips.length} tips</span>
+        </div>
+      </div>
+    `).join('');
+  });
+  renderHistory();
+}
+
+function renderHistory() {
+  const list = document.getElementById('histList');
+  const count = document.getElementById('histCount');
+  if (!savedNotes.length) {
+    list.innerHTML = '<div class="hist-empty">No saved procedure notes yet. Generate a note from any template above.</div>';
+    count.textContent = '';
+    return;
+  }
+  count.textContent = `(${savedNotes.length})`;
+  list.innerHTML = savedNotes.slice(0, 20).map((n, i) => `
+    <div class="hist-item" onclick="viewSavedNote(${i})">
+      <div class="hist-item-top">
+        <div class="hist-item-name">${n.procName}</div>
+        <div class="hist-item-time">${new Date(n.timestamp).toLocaleDateString()} ${new Date(n.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>
+      </div>
+      ${n.patient ? `<div class="hist-item-patient">${n.patient}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  EDITOR
+// ══════════════════════════════════════════════════════════════════════════════
+
+function openEditor(procId) {
+  currentProc = PROCEDURES.find(p => p.id === procId);
+  if (!currentProc) return;
+  formState = { findings: [], cpt_selected: currentProc.cpt[0]?.code || '', modifier: '', patient_name:'', patient_dob:'', patient_mrn:'', dos: new Date().toISOString().split('T')[0], provider:'' };
+  document.getElementById('pickerView').style.display = 'none';
+  document.getElementById('editorView').classList.add('on');
+  renderEditor();
+  renderSidebar();
+}
+
+function closeEditor() {
+  document.getElementById('pickerView').style.display = '';
+  document.getElementById('editorView').classList.remove('on');
+  currentProc = null;
+  formState = {};
+}
+
+function renderEditor() {
+  const p = currentProc;
+  const m = document.getElementById('editorMain');
+  m.innerHTML = `
+    <div class="ed-back" onclick="closeEditor()">← Back to procedures</div>
+    <div class="ed-title">${p.name}</div>
+    <div class="ed-sub">Generate a structured procedure note with CPT code and modifier recommendations</div>
+
+    <!-- Patient -->
+    <div class="pat-strip">
+      <div><label class="fl">Patient name</label><input type="text" id="f-name" placeholder="Patient Name" oninput="formState.patient_name=this.value;renderSidebar()"></div>
+      <div><label class="fl">DOB</label><input type="date" id="f-dob" oninput="formState.patient_dob=this.value"></div>
+      <div><label class="fl">MRN</label><input type="text" id="f-mrn" placeholder="MRN" oninput="formState.patient_mrn=this.value"></div>
+      <div><label class="fl">Date of service</label><input type="date" id="f-dos" value="${formState.dos}" oninput="formState.dos=this.value"></div>
+      <div><label class="fl">Provider</label><input type="text" id="f-prov" placeholder="Provider Name" oninput="formState.provider=this.value"></div>
+    </div>
+
+    <!-- Voice -->
+    <div class="voice-area" id="voiceArea">
+      <button class="mic-btn" id="micBtn" onclick="toggleVoice()">🎙</button>
+      <div class="voice-label" id="voiceLabel">Tap to record encounter</div>
+      <div id="voiceTranscript"></div>
+    </div>
+
+    <!-- Indication -->
+    <div class="sec">
+      <div class="sect">Indication</div>
+      ${p.indication.map(o => `<div class="ri ${formState.indication===o?'sel':''}" onclick="formState.indication='${esc(o)}';renderEditor();renderSidebar()"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('')}
+    </div>
+
+    <!-- Prep -->
+    <div class="sec">
+      <div class="sect">Preparation</div>
+      ${p.prep.map(o => `<div class="ri ${formState.prep===o?'sel':''}" onclick="formState.prep='${esc(o)}';renderEditor();renderSidebar()"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('')}
+    </div>
+
+    <!-- Sedation -->
+    <div class="sec">
+      <div class="sect">Sedation / Anesthesia</div>
+      ${p.sedation.map(o => `<div class="ri ${formState.sedation===o?'sel':''}" onclick="formState.sedation='${esc(o)}';renderEditor();renderSidebar()"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('')}
+    </div>
+
+    <!-- Scope detail -->
+    ${p.scopeText ? `<div class="sec">
+      <div class="sect">Instrument / Scope Detail</div>
+      <textarea id="f-scope" rows="2" placeholder="${p.scopeText}" oninput="formState.scopeDetail=this.value;renderSidebar()">${formState.scopeDetail||''}</textarea>
+    </div>` : ''}
+
+    <!-- Findings -->
+    <div class="sec">
+      <div class="sect">Findings <span style="font-size:11px;color:var(--g7);font-weight:500;text-transform:none;letter-spacing:0;">${(formState.findings||[]).length} selected</span></div>
+      ${p.findings.map(o => `<div class="ci ${(formState.findings||[]).includes(o)?'ck':''}" onclick="toggleFinding('${esc(o)}')"><div class="cb">✓</div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('')}
+      <div style="margin-top:6px;"><label class="fl">Additional findings (free text)</label><textarea id="f-addl-findings" rows="2" placeholder="Additional findings..." oninput="formState.addlFindings=this.value;renderSidebar()">${formState.addlFindings||''}</textarea></div>
+    </div>
+
+    <!-- Complications -->
+    <div class="sec">
+      <div class="sect">Complications</div>
+      ${p.complications.map(o => `<div class="ri ${formState.complication===o?'sel':''}" onclick="formState.complication='${esc(o)}';renderEditor();renderSidebar()"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('')}
+    </div>
+
+    <!-- EBL -->
+    <div class="sec">
+      <div class="sect">Estimated Blood Loss</div>
+      <input type="text" id="f-ebl" placeholder="e.g., Minimal, <5cc" value="${formState.ebl||''}" oninput="formState.ebl=this.value;renderSidebar()">
+    </div>
+
+    <!-- Specimen -->
+    <div class="sec">
+      <div class="sect">Specimen</div>
+      <input type="text" id="f-specimen" placeholder="e.g., Biopsy x2 to pathology, labeled A and B" value="${formState.specimen||''}" oninput="formState.specimen=this.value;renderSidebar()">
+    </div>
+
+    <!-- Post-procedure instructions -->
+    <div class="sec">
+      <div class="sect">Post-Procedure Instructions</div>
+      ${p.postInstructions.map(o => `<div class="ci ${(formState.postInstr||[]).includes(o)?'ckb':''}" onclick="togglePostInstr('${esc(o)}')"><div class="cb">✓</div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('')}
+    </div>
+
+    <!-- CPT -->
+    <div class="sec">
+      <div class="sect">CPT Code</div>
+      ${p.cpt.map(c => `<div class="ri ${formState.cpt_selected===c.code?'sel':''}" onclick="formState.cpt_selected='${c.code}';renderEditor();renderSidebar()"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl"><span style="font-family:'DM Mono',monospace;font-weight:600;">${c.code}</span> — ${c.desc}</div></div></div>`).join('')}
+    </div>
+
+    <!-- Modifier -->
+    <div class="sec">
+      <div class="sect">Modifier</div>
+      <div class="ri ${!formState.modifier?'sel':''}" onclick="formState.modifier='';renderEditor();renderSidebar()"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">No modifier</div></div></div>
+      ${p.modifiers.map(o => `<div class="ri ${formState.modifier===o?'sel':''}" onclick="formState.modifier='${esc(o)}';renderEditor();renderSidebar()"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('')}
+    </div>
+
+    <!-- Billing Tips -->
+    <div class="sec">
+      <div class="sect">💡 Billing Tips</div>
+      ${p.billingTips.map((t,i) => `<div style="padding:8px 11px;border-radius:var(--r);background:var(--abg);border:0.5px solid rgba(99,56,6,0.15);font-size:12px;line-height:1.5;color:var(--atxt);margin-bottom:4px;"><strong>${i+1}.</strong> ${t}</div>`).join('')}
+    </div>
+
+    <div class="disc">Always validate CPT codes and modifiers with a certified coder before claim submission.</div>
+  `;
+}
+
+function renderSidebar() {
+  const p = currentProc;
+  if (!p) return;
+  const s = document.getElementById('editorSidebar');
+  const noteText = generateNoteText();
+
+  s.innerHTML = `
+    <div class="slbl">Procedure code</div>
+    <div class="src">
+      <div class="scode">${formState.cpt_selected || '—'}</div>
+      <div class="sdesc">${p.cpt.find(c=>c.code===formState.cpt_selected)?.desc || p.name}</div>
+      ${formState.modifier ? `<div class="smods"><span class="smc smc-a">${formState.modifier}</span></div>` : ''}
+    </div>
+
+    <div class="sdiv"></div>
+    <div class="slbl">Generated note</div>
+    <div class="snote-pre" id="notePreview">${escHTML(noteText)}</div>
+
+    <div class="push">
+      <button class="sbtn sbtn-g" onclick="copyNote()">📋 Copy Note</button>
+      <button class="sbtn sbtn-p" onclick="saveNote()" style="margin-top:4px;">💾 Save Note</button>
+      <button class="sbtn sbtn-r" onclick="window.print()">🖨 Print</button>
+      <button class="sbtn sbtn-r" onclick="closeEditor()">← Back</button>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  NOTE GENERATOR
+// ══════════════════════════════════════════════════════════════════════════════
+
+function generateNoteText() {
+  const p = currentProc;
+  if (!p) return '';
+  const d = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const L = [];
+  L.push('PROCEDURE NOTE');
+  L.push('═'.repeat(44));
+  L.push(`Patient: ${formState.patient_name||'[NAME]'}  |  DOB: ${formState.patient_dob||'[DOB]'}  |  MRN: ${formState.patient_mrn||'[MRN]'}`);
+  L.push(`DOS: ${formState.dos||d}  |  Provider: ${formState.provider||'[PROVIDER]'}`);
+  L.push(`Procedure: ${p.name}`);
+  L.push(`CPT: ${formState.cpt_selected||p.cpt[0]?.code}${formState.modifier ? ' '+formState.modifier : ''}`);
+  L.push('');
+  L.push(`Indication: ${formState.indication||'[Select indication]'}`);
+  L.push('Consent: Risks, benefits, and alternatives discussed with the patient. Informed consent obtained.');
+  L.push(`Preparation: ${formState.prep||'[Select prep]'}`);
+  L.push(`Anesthesia/Sedation: ${formState.sedation||'[Select sedation]'}`);
+  L.push('');
+  L.push('── PROCEDURE DETAILS ──');
+  if (p.scopeText) L.push(formState.scopeDetail || p.scopeText);
+  L.push('');
+  L.push('Findings:');
+  (formState.findings||[]).forEach(f => L.push(`  • ${f}`));
+  if (formState.addlFindings) L.push(`  • ${formState.addlFindings}`);
+  if (!(formState.findings||[]).length && !formState.addlFindings) L.push('  [Select findings above]');
+  L.push('');
+  L.push(`Complications: ${formState.complication||'None'}`);
+  L.push(`Estimated Blood Loss: ${formState.ebl||'Minimal'}`);
+  if (formState.specimen) { L.push(`Specimen: ${formState.specimen}`); }
+  L.push('');
+  const pi = formState.postInstr||[];
+  if (pi.length) {
+    L.push('── POST-PROCEDURE INSTRUCTIONS ──');
+    pi.forEach(i => L.push(`  • ${i}`));
+    L.push('');
+  }
+  L.push('═'.repeat(44));
+  L.push(`Electronically signed: ${formState.provider||'[PROVIDER]'}`);
+  L.push(`Date: ${d}`);
+  return L.join('\n');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  ACTIONS
+// ══════════════════════════════════════════════════════════════════════════════
+
+function toggleFinding(f) {
+  if (!formState.findings) formState.findings = [];
+  const i = formState.findings.indexOf(f);
+  if (i >= 0) formState.findings.splice(i, 1);
+  else formState.findings.push(f);
+  renderEditor();
+  renderSidebar();
+}
+
+function togglePostInstr(f) {
+  if (!formState.postInstr) formState.postInstr = [];
+  const i = formState.postInstr.indexOf(f);
+  if (i >= 0) formState.postInstr.splice(i, 1);
+  else formState.postInstr.push(f);
+  renderEditor();
+  renderSidebar();
+}
+
+function copyNote() {
+  const text = generateNoteText();
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.sbtn-g');
+    if (btn) { btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = '📋 Copy Note', 2000); }
+  });
+}
+
+function saveNote() {
+  const note = {
+    id: Date.now(),
+    timestamp: new Date().toISOString(),
+    procId: currentProc.id,
+    procName: currentProc.name,
+    patient: formState.patient_name || '',
+    cpt: formState.cpt_selected,
+    noteText: generateNoteText(),
+  };
+  savedNotes.unshift(note);
+  if (savedNotes.length > 50) savedNotes = savedNotes.slice(0, 50);
+  localStorage.setItem('sb-proc-notes', JSON.stringify(savedNotes));
+  const btn = document.querySelectorAll('.sbtn-p')[0];
+  if (btn) { btn.textContent = '✓ Saved!'; setTimeout(() => btn.textContent = '💾 Save Note', 2000); }
+}
+
+function viewSavedNote(index) {
+  const note = savedNotes[index];
+  if (!note) return;
+  // Open a simple preview
+  const w = window.open('', '_blank', 'width=700,height=800');
+  w.document.write(`<html><head><title>Procedure Note</title><style>body{font-family:'DM Mono',monospace;padding:32px;font-size:13px;line-height:1.7;white-space:pre-wrap;color:#1a1a1a;}</style></head><body>${escHTML(note.noteText)}</body></html>`);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  VOICE RECORDING
+// ══════════════════════════════════════════════════════════════════════════════
+
+async function toggleVoice() {
+  if (voiceState === 'idle') {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+      mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
+      mediaRecorder.onstop = () => {
+        stream.getTracks().forEach(t => t.stop());
+        voiceState = 'processing';
+        updateVoiceUI();
+        // Simulate processing — in production, send audioChunks to Whisper/Google STT
+        setTimeout(() => {
+          voiceState = 'idle';
+          const transcript = `[Voice recording captured at ${new Date().toLocaleTimeString()}]\n\nAudio: ${audioChunks.length} chunk(s) recorded successfully.\n\nTo enable live transcription, connect to:\n• OpenAI Whisper API\n• Google Speech-to-Text\n• AWS Transcribe Medical\n\nThe transcript would auto-populate findings, indication, and other fields.`;
+          document.getElementById('voiceTranscript').innerHTML = `<div class="voice-transcript">${escHTML(transcript)}</div>`;
+          updateVoiceUI();
+        }, 1500);
+      };
+      mediaRecorder.start();
+      voiceState = 'recording';
+      updateVoiceUI();
+    } catch (err) {
+      alert('Microphone access is required. Please allow microphone access and try again.');
+    }
+  } else if (voiceState === 'recording') {
+    if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+  }
+}
+
+function updateVoiceUI() {
+  const btn = document.getElementById('micBtn');
+  const lbl = document.getElementById('voiceLabel');
+  if (!btn || !lbl) return;
+  btn.className = 'mic-btn' + (voiceState === 'recording' ? ' recording' : voiceState === 'processing' ? ' processing' : '');
+  btn.textContent = voiceState === 'recording' ? '⏹' : voiceState === 'processing' ? '⚙' : '🎙';
+  lbl.className = 'voice-label' + (voiceState === 'recording' ? ' rec' : voiceState === 'processing' ? ' proc' : '');
+  lbl.textContent = voiceState === 'recording' ? 'Recording… tap to stop' : voiceState === 'processing' ? 'Processing audio…' : 'Tap to record encounter';
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════════════════════════
+
+function esc(s) { return s.replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+function escHTML(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════════════════════════
+
+renderPicker();
+</script>
+</body>
+</html>
