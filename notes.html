@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a3d2e">
+<title>Clinic Notes — SurgiBill</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#fff;--bg2:#f7f7f5;--bg3:#f0efe9;--text:#1a1a1a;--text2:#555;--text3:#999;--border:rgba(0,0,0,0.11);--border2:rgba(0,0,0,0.22);--gd:#0a3d2e;--g8:#0F6E56;--g7:#1D9E75;--g6:#2EC48F;--gbg:#EAF3DE;--gtxt:#27500A;--bbg:#E6F1FB;--btxt:#0C447C;--abg:#FAEEDA;--atxt:#633806;--pbg:#EEEDFE;--ptxt:#3C3489;--tbg:#E1F5EE;--ttxt:#085041;--rebg:#FCEBEB;--retxt:#791F1F;--r:8px;--rlg:12px;}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1c1e;--bg2:#242424;--bg3:#2e2e2e;--text:#f0f0ee;--text2:#aaa;--text3:#666;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);--gbg:#173404;--gtxt:#C0DD97;--bbg:#042C53;--btxt:#B5D4F4;--abg:#412402;--atxt:#FAC775;--pbg:#26215C;--ptxt:#CECBF6;--tbg:#04342C;--ttxt:#9FE1CB;--rebg:#501313;--retxt:#F7C1C1;}}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
+.tnav{background:var(--gd);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:50px;flex-shrink:0;}
+.tnav-l{display:flex;align-items:center;gap:4px;overflow-x:auto;}
+.wm{font-size:17px;font-weight:700;color:#fff;letter-spacing:-0.5px;padding:7px 10px;border-radius:var(--r);text-decoration:none;}.wm span{color:#2EC48F;}
+.ntab{background:transparent;border:none;color:rgba(255,255,255,0.45);padding:7px 13px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;}.ntab:hover{color:#fff;background:rgba(255,255,255,0.08);}.ntab.on{color:#fff;background:rgba(255,255,255,0.14);}
+.page{display:flex;flex-direction:column;min-height:100vh;}
+.main-content{flex:1;display:flex;flex-direction:column;}
+
+/* Picker */
+.picker{padding:24px;max-width:1200px;margin:0 auto;width:100%;}
+.pk-title{font-size:22px;font-weight:700;letter-spacing:-0.4px;margin-bottom:2px;}
+.pk-sub{font-size:13px;color:var(--text2);margin-bottom:18px;}
+.pk-search{width:100%;padding:10px 16px;border-radius:var(--rlg);border:1px solid var(--border);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);margin-bottom:20px;}
+.pk-search:focus{outline:none;border-color:var(--g7);}
+.cat-hdr{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin:18px 0 8px;padding-top:12px;border-top:0.5px solid var(--border);}
+.cat-hdr:first-of-type{border-top:none;padding-top:0;margin-top:0;}
+.cond-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:6px;}
+.cond-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rlg);padding:14px 16px;cursor:pointer;transition:border-color 0.15s,transform 0.12s;}
+.cond-card:hover{border-color:var(--g7);transform:translateY(-2px);}
+.cc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.cc-name{font-size:14px;font-weight:600;letter-spacing:-0.1px;}
+.cc-arr{font-size:14px;color:var(--text3);}
+.cc-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.ctag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600;}
+.ctag-g{background:var(--tbg);color:var(--ttxt);}
+.ctag-b{background:var(--bbg);color:var(--btxt);}
+.ctag-a{background:var(--abg);color:var(--atxt);}
+.ctag-p{background:var(--pbg);color:var(--ptxt);}
+
+/* Editor */
+.editor{display:none;flex:1;}
+.editor.on{display:flex;flex-direction:column;flex:1;}
+.tpage{display:grid;grid-template-columns:1fr 320px;flex:1;}
+.tmain{padding:20px 24px 48px;overflow-y:auto;}
+.tsidebar{background:var(--gd);padding:18px 16px;position:sticky;top:0;height:calc(100vh - 50px);overflow-y:auto;display:flex;flex-direction:column;}
+.ed-back{font-size:12px;color:var(--text3);cursor:pointer;margin-bottom:10px;display:inline-flex;align-items:center;gap:4px;}.ed-back:hover{color:var(--text);}
+.ed-title{font-size:18px;font-weight:700;letter-spacing:-0.3px;margin-bottom:1px;}
+.ed-sub{font-size:12px;color:var(--text2);margin-bottom:6px;}
+.ed-icd{font-size:11px;color:var(--text3);margin-bottom:14px;font-family:'DM Mono',monospace;}
+
+/* Patient strip */
+.pat-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:0.5px solid var(--border);}
+label.fl{font-size:10px;color:var(--text2);display:block;margin-bottom:2px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;}
+select,input[type=text],input[type=date],textarea{width:100%;padding:7px 9px;border:0.5px solid var(--border);border-radius:var(--r);font-size:12px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--bg);}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--g7);}
+textarea{resize:vertical;line-height:1.6;}
+
+/* Section tabs */
+.stabs{display:flex;gap:0;background:var(--bg2);border-radius:var(--r);padding:3px;margin-bottom:14px;overflow-x:auto;}
+.stab{padding:7px 14px;border-radius:6px;border:none;font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;background:transparent;color:var(--text2);white-space:nowrap;}
+.stab.on{background:var(--bg);color:var(--text);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+
+/* Sections */
+.sec{margin-bottom:14px;}
+.sect{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+
+/* Check items */
+.ci{display:flex;align-items:flex-start;gap:8px;padding:6px 10px;border:0.5px solid var(--border);border-radius:6px;cursor:pointer;transition:all 0.1s;user-select:none;background:var(--bg);margin-bottom:2px;}
+.ci:hover{border-color:var(--border2);background:var(--bg2);}
+.ci.ck{background:var(--gbg);border-color:rgba(63,139,17,0.2);}.ci.ck .clbl{color:var(--gtxt);}
+.ci.ckb{background:var(--bbg);border-color:rgba(24,95,165,0.2);}.ci.ckb .clbl{color:var(--btxt);}
+.cb{width:16px;height:16px;border:1.5px solid var(--border2);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;background:var(--bg);font-size:9px;color:transparent;}
+.ci.ck .cb{background:#3B6D11;border-color:#3B6D11;color:#fff;}
+.ci.ckb .cb{background:#185FA5;border-color:#185FA5;color:#fff;}
+
+/* Radio items */
+.ri{display:flex;align-items:flex-start;gap:8px;padding:6px 10px;border:0.5px solid var(--border);border-radius:6px;cursor:pointer;transition:all 0.1s;user-select:none;background:var(--bg);margin-bottom:2px;}
+.ri:hover{border-color:var(--border2);background:var(--bg2);}
+.ri.sel{background:var(--bbg);border-color:rgba(24,95,165,0.2);}.ri.sel .clbl{color:var(--btxt);}
+.rdot{width:16px;height:16px;border:1.5px solid var(--border2);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;background:var(--bg);}
+.ri.sel .rdot{background:#185FA5;border-color:#185FA5;}
+.rin{width:6px;height:6px;border-radius:50%;background:#fff;display:none;}.ri.sel .rin{display:block;}
+
+.cc{flex:1;}.clbl{font-size:12px;font-weight:500;line-height:1.35;}
+.abtn{width:100%;background:var(--gd);color:#fff;border:none;padding:11px;border-radius:var(--rlg);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px;}.abtn:active{opacity:0.85;}
+.abtn-gold{background:#B8860B;}.abtn-gold:hover{background:#9A7209;}
+
+/* Voice */
+.voice-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px dashed var(--border);border-radius:var(--r);background:var(--bg2);margin-bottom:14px;}
+.mic-btn-sm{width:36px;height:36px;border-radius:50%;border:2px solid #c0392b;background:rgba(192,57,43,0.06);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.mic-btn-sm.rec{background:#c0392b;border-color:#c0392b;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+.voice-info{flex:1;font-size:11px;color:var(--text3);}
+.voice-info.rec-on{color:#c0392b;font-weight:600;}
+
+/* Sidebar */
+.slbl{font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:6px;}
+.sdiv{height:0.5px;background:rgba(255,255,255,0.1);margin:12px 0;}
+.src{background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.11);border-radius:var(--rlg);padding:12px;margin-bottom:8px;}
+.scode{font-family:'DM Mono',monospace;font-size:24px;font-weight:700;color:#fff;margin-bottom:2px;}
+.sdesc{font-size:11px;color:rgba(255,255,255,0.4);line-height:1.4;}
+.slvlrow{display:flex;align-items:center;gap:6px;margin:8px 0 4px;}
+.spips{display:flex;gap:2px;flex:1;}
+.spip{height:4px;flex:1;border-radius:2px;background:rgba(255,255,255,0.1);transition:background 0.15s;}
+.spip.l2{background:rgba(255,255,255,0.3);}.spip.l3{background:#2EC48F;}.spip.l4{background:#F59E0B;}.spip.l5{background:#EF4444;}
+.slvllbl{font-size:10px;color:rgba(255,255,255,0.35);white-space:nowrap;}
+.ptbl{display:flex;flex-direction:column;gap:1px;}
+.pr{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;border-radius:var(--r);}
+.pr.act{background:rgba(46,196,143,0.14);}
+.pn{font-size:11px;color:rgba(255,255,255,0.45);}.pr.act .pn{color:#2EC48F;font-weight:600;}
+.pa{font-size:12px;font-weight:700;color:#fff;}.pr.act .pa{color:#2EC48F;}
+.mdmr{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.mdml{font-size:10px;color:rgba(255,255,255,0.35);width:55px;flex-shrink:0;}
+.mdmv{font-size:11px;font-weight:600;color:#fff;}
+.snote-pre{background:rgba(0,0,0,0.25);border-radius:var(--r);padding:10px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,0.7);white-space:pre-wrap;line-height:1.55;max-height:300px;overflow-y:auto;margin-top:6px;}
+.sal{display:flex;flex-direction:column;gap:3px;}
+.sa{font-size:10px;padding:5px 7px;border-radius:var(--r);display:flex;gap:5px;align-items:flex-start;line-height:1.35;}
+.saw{background:rgba(245,158,11,0.15);color:#FDE68A;}.sao{background:rgba(46,196,143,0.15);color:#6EE7B7;}.sai{background:rgba(96,165,250,0.15);color:#93C5FD;}
+.sbtn{width:100%;border:none;padding:8px;border-radius:var(--r);font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px;}
+.sbtn-p{background:#fff;color:var(--gd);}.sbtn-g{background:#1D9E75;color:#fff;}.sbtn-r{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.55);border:0.5px solid rgba(255,255,255,0.14);}.sbtn:active{opacity:0.8;}
+.push{margin-top:auto;padding-top:10px;}
+
+/* Billing tip */
+.btip{padding:6px 9px;border-radius:6px;background:var(--abg);border:0.5px solid rgba(99,56,6,0.12);font-size:11px;line-height:1.45;color:var(--atxt);margin-bottom:3px;}
+
+/* Consent box */
+.consent-box{background:var(--tbg);border:1px solid rgba(8,80,65,0.15);border-radius:var(--rlg);padding:14px;margin-top:10px;font-size:12px;color:var(--ttxt);line-height:1.6;}
+.consent-box strong{font-weight:600;}
+.consent-box ul{padding-left:16px;margin:4px 0;}
+
+@media(max-width:960px){.tpage{grid-template-columns:1fr;}.tsidebar{position:static;height:auto;}.pat-strip{grid-template-columns:1fr 1fr;}.cond-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.cond-grid{grid-template-columns:1fr;}.pat-strip{grid-template-columns:1fr;}.tnav-l .ntab:not(.on){display:none;}}
+@media print{.tnav,.voice-bar,.push,.ed-back,.abtn,.stabs,.pk-search{display:none!important;}.tsidebar{position:static;height:auto;background:#0a3d2e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.tpage{grid-template-columns:1fr 280px;}}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="tnav">
+<div class="tnav-l">
+<a class="wm" href="/index.html">Surgi<span>Bill</span></a>
+<a class="ntab" href="/index.html">Home</a>
+<a class="ntab" href="/index.html" onclick="localStorage.setItem('sb-nav','surg')">🔪 Surgical</a>
+<a class="ntab" href="/index.html" onclick="localStorage.setItem('sb-nav','ema')">📋 E&M</a>
+<a class="ntab" href="/checklist.html">✅ Checklist</a>
+<a class="ntab" href="/procedures.html">🩺 Procedures</a>
+<a class="ntab" href="/staging.html">🎗 Staging</a>
+<a class="ntab on" href="/notes.html">📄 Clinic Notes</a>
+</div>
+</div>
+<div class="main-content">
+
+<!-- ═══ PICKER ═══ -->
+<div class="picker" id="pickerView">
+<div class="pk-title">📄 Clinic Notes — Colorectal Scribe</div>
+<div class="pk-sub">Generate structured clinic notes with auto-billing analysis. Select a condition, tap through fields, and get a complete note with E/M level in seconds.</div>
+<input class="pk-search" type="text" placeholder="Search conditions, ICD-10 codes..." id="searchBox" oninput="filterCards()">
+<div id="cardContainer"></div>
+</div>
+
+<!-- ═══ EDITOR ═══ -->
+<div class="editor" id="editorView">
+<div class="tpage">
+<div class="tmain" id="editorMain"></div>
+<div class="tsidebar" id="editorSidebar"></div>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════
+// CONDITIONS DATABASE — All 20+ Colorectal Surgery Conditions
+// ══════════════════════════════════════════════════════════════════════════
+
+const CONDITIONS = [
+// ──── ANORECTAL ────
+{id:"hemorrhoids",name:"Hemorrhoids",cat:"Anorectal",
+icd10:["K64.0-Grade I","K64.1-Grade II","K64.2-Grade III","K64.3-Grade IV","K64.5-Thrombosed"],
+cpt:["46221","46945","46946","46250","46255","46260","46083"],
+hpi:[
+{k:"grade",l:"Grade",t:"r",o:["Grade I - no prolapse","Grade II - prolapse, spontaneous reduction","Grade III - requires manual reduction","Grade IV - irreducible"]},
+{k:"loc",l:"Location",t:"m",o:["Internal","External","Mixed","Left lateral","Right anterior","Right posterior","Circumferential"]},
+{k:"sx",l:"Symptoms",t:"m",o:["Painless BRBPR","Pain","Prolapse","Itching","Mucous discharge","Soiling","Thrombosis","Incarceration","Anemia from chronic bleeding"]},
+{k:"dur",l:"Duration",t:"x",p:"e.g., 3 months"},
+{k:"sev",l:"Severity",t:"r",o:["Mild - occasional","Moderate - frequent, affects QOL","Severe - constant, failed conservative tx"]},
+{k:"ptx",l:"Prior Treatments",t:"m",o:["None","Fiber/dietary modification","Topical agents","Sitz baths","Rubber band ligation","Sclerotherapy","IRC","Prior hemorrhoidectomy"]},
+{k:"bh",l:"Bowel Habits",t:"m",o:["Normal","Constipation","Straining","Diarrhea","Incomplete evacuation"]},
+{k:"ac",l:"Anticoagulation",t:"r",o:["None","Aspirin","Clopidogrel","Warfarin","Apixaban","Rivaroxaban","Other"]},
+],
+exam:[
+{k:"ext",l:"External Exam",t:"m",o:["Normal external exam","External hemorrhoid(s)","Thrombosed external hemorrhoid","Skin tags","Prolapsing internal hemorrhoids","Excoriation"]},
+{k:"dre",l:"DRE",t:"m",o:["Normal sphincter tone","Increased tone","Decreased tone","No masses","Internal hemorrhoids palpated","Tenderness","No tenderness"]},
+{k:"anos",l:"Anoscopy",t:"m",o:["Grade I internal hemorrhoids","Grade II","Grade III","Grade IV","Single column","Multiple columns","Circumferential","No other mucosal abnormality"]},
+],
+ax:["Internal hemorrhoids, [grade], symptomatic","External hemorrhoids, symptomatic","Mixed hemorrhoidal disease","Thrombosed external hemorrhoid","Hemorrhoidal disease, failed conservative management"],
+plan:["Conservative: high-fiber (25-35g/day), hydration, sitz baths, topical therapy","Rubber band ligation in office","Schedule hemorrhoidectomy (excisional)","HAL/THD procedure","IRC","Colonoscopy to evaluate rectal bleeding","Return for reassessment"],
+surg:["Excisional hemorrhoidectomy (Ferguson)","Excisional hemorrhoidectomy (Milligan-Morgan)","Stapled hemorrhoidopexy (PPH)","HAL/THD","Rubber band ligation","Combined excisional + RBL"],
+risks:["Bleeding (immediate and delayed)","Pain (2-4 weeks expected)","Urinary retention","Anal stenosis","Fecal incontinence (rare)","Infection","Recurrence","Need for reoperation"],
+tips:["Document hemorrhoid grade for ICD-10 specificity (K64.0-K64.3)","For RBL: 46221 (single column) + 46945/46946 (additional)","Document failed conservative measures for surgical medical necessity","If thrombosed, use K64.5","Anoscopy (46600) included in RBL — do NOT bill separately"],
+},
+{id:"fissure",name:"Anal Fissure",cat:"Anorectal",
+icd10:["K60.0-Acute","K60.1-Chronic","K60.2-Unspecified"],
+cpt:["46200","46505","J0585","46940"],
+hpi:[
+{k:"loc",l:"Location",t:"r",o:["Posterior midline","Anterior midline","Lateral (atypical)","Multiple"]},
+{k:"chr",l:"Chronicity",t:"r",o:["Acute (<6 weeks)","Chronic (>6 weeks)","Recurrent"]},
+{k:"sx",l:"Symptoms",t:"m",o:["Sharp pain with BM","Pain lasting minutes after BM","Pain lasting hours after BM","BRBPR on tissue","Blood in toilet","Spasm","Itching"]},
+{k:"dur",l:"Duration",t:"x",p:"e.g., 2 months"},
+{k:"ptx",l:"Prior Treatments",t:"m",o:["None","Fiber","Sitz baths","Topical nitroglycerin 0.4%","Topical diltiazem 2%","Topical nifedipine","Botox injection","Prior LIS"]},
+{k:"rf",l:"Risk Factors",t:"m",o:["Constipation","Crohn's disease","Prior anorectal surgery","Childbirth","None identified"]},
+],
+exam:[
+{k:"insp",l:"Inspection",t:"m",o:["Fissure at posterior midline","Fissure at anterior midline","Lateral fissure (atypical)","Sentinel skin tag","Hypertrophied anal papilla","Exposed internal sphincter fibers","Shallow/superficial","Deep/chronic fissure"]},
+{k:"dre",l:"DRE",t:"m",o:["Deferred due to pain","Increased resting tone","Normal tone","Spasm noted","Tenderness at fissure site"]},
+],
+ax:["Acute anal fissure, posterior midline","Chronic anal fissure with sentinel tag","Anal fissure, atypical location — evaluate for Crohn's","Chronic anal fissure, failed medical management"],
+plan:["Medical: fiber, sitz baths, topical nitroglycerin/diltiazem BID x 8 weeks","Botulinum toxin injection","Lateral internal sphincterotomy","Fissurectomy with advancement flap","Crohn's workup for atypical location","Return in 6-8 weeks"],
+surg:["Lateral internal sphincterotomy (open)","Lateral internal sphincterotomy (closed)","Fissurectomy","Fissurectomy with V-Y advancement flap","Botulinum toxin injection to internal sphincter"],
+risks:["Minor fecal incontinence to flatus (10-15%)","Incontinence to liquid stool (rare)","Bleeding","Infection","Recurrence","Keyhole deformity","Non-healing wound"],
+tips:["Distinguish acute K60.0 vs chronic K60.1","Lateral fissures warrant Crohn's workup — document reasoning","Document failed 6-8 weeks medical therapy before surgery","Botox: 46505 + J0585","LIS 46200 — document informed consent re: incontinence risk"],
+},
+{id:"fistula",name:"Anal Fistula / Abscess",cat:"Anorectal",
+icd10:["K61.0-Anal abscess","K61.3-Ischiorectal abscess","K60.3-Anal fistula","K60.5-Anorectal fistula"],
+cpt:["46040","46060","46270","46280","46285","46020","46707"],
+hpi:[
+{k:"pres",l:"Presentation",t:"r",o:["New abscess","Recurrent abscess","Known fistula","Abscess with suspected fistula","Post-operative concern"]},
+{k:"parks",l:"Parks Classification",t:"r",o:["N/A — abscess only","Intersphincteric","Trans-sphincteric","Suprasphincteric","Extrasphincteric","Superficial"]},
+{k:"sx",l:"Symptoms",t:"m",o:["Pain","Swelling","Purulent drainage","Serosanguinous drainage","Fever","Induration","Recurrent episodes","External opening visible"]},
+{k:"dur",l:"Duration",t:"x",p:"e.g., 5 days"},
+{k:"rf",l:"Risk Factors",t:"m",o:["Crohn's disease","Diabetes","Immunosuppression","Prior anorectal surgery","Hidradenitis","None"]},
+{k:"ptx",l:"Prior Treatments",t:"m",o:["None","Antibiotics","Prior I&D","Seton","Fistulotomy","LIFT","Advancement flap","Fibrin glue","FiLaC"]},
+],
+exam:[
+{k:"insp",l:"Inspection",t:"m",o:["Fluctuant perianal mass","Induration without fluctuance","Erythema","Spontaneous drainage","External fistula opening","Multiple openings","Seton in place","Cellulitis"]},
+{k:"dre",l:"DRE",t:"m",o:["Tenderness","Fluctuance palpated","Induration","Internal opening palpated","No internal opening","Normal tone","Decreased tone"]},
+],
+ax:["Perianal abscess, acute","Ischiorectal abscess","Anal fistula, [Parks type], [simple/complex]","Recurrent anal fistula","Perianal Crohn's with fistula"],
+plan:["I&D in office/OR","Antibiotics","MRI pelvis for fistula mapping","EUA with seton placement","Fistulotomy","LIFT procedure","Endorectal advancement flap","GI referral for Crohn's","Wound care follow-up"],
+surg:["I&D perianal abscess","I&D ischiorectal abscess","Fistulotomy (simple)","Seton placement","LIFT procedure","Endorectal advancement flap","EUA with fistula assessment"],
+risks:["Recurrence (10-30%)","Fecal incontinence","Bleeding","Infection","Non-healing wound","Need for staged procedures"],
+tips:["46040 (perianal) vs 46060 (ischiorectal) — document location","Parks classification supports procedure selection","Seton placement 46020","LIFT procedure 46707","Document Crohn's status for medical necessity"],
+},
+{id:"condyloma",name:"Anal Condyloma / HPV Dysplasia",cat:"Anorectal",
+icd10:["A63.0-Condyloma","K62.82-Anal HSIL","D01.3-CIS anus","R85.612-HSIL cytology"],
+cpt:["46916","46924","46607","46600","87624"],
+hpi:[
+{k:"pres",l:"Presentation",t:"r",o:["New condyloma","Recurrent condyloma","Abnormal anal Pap (ASC-US/ASC-H/LSIL/HSIL)","Positive high-risk HPV","HRA surveillance","Post-treatment follow-up"]},
+{k:"sx",l:"Symptoms",t:"m",o:["Perianal growths","Itching","Bleeding","Pain","Discharge","Asymptomatic — found on exam"]},
+{k:"hiv",l:"HIV Status",t:"r",o:["Negative","Positive — well controlled","Positive — uncontrolled","Unknown"]},
+{k:"rf",l:"Risk Factors",t:"m",o:["HIV+","MSM","Immunosuppression","Receptive anal intercourse","Not HPV vaccinated","HPV vaccinated","Hx cervical/vulvar dysplasia","Transplant recipient"]},
+{k:"ptx",l:"Prior Treatments",t:"m",o:["None","Topical imiquimod","Topical 5-FU","Office fulguration","OR fulguration/excision","Cryotherapy (Verruca Freeze)","HRA with treatment"]},
+],
+exam:[
+{k:"pa",l:"Perianal/HRA",t:"m",o:["Condylomata present — perianal","Intra-anal condyloma","Small (<1cm) lesions","Large (>1cm) lesions","Confluent disease","Scattered lesions","Circumferential","Acetowhite lesions on HRA","Punctation/mosaicism","Biopsies taken: 1/2/3/4+","IRC/cautery ablation performed","No lesions identified"]},
+],
+ax:["Anal condylomata acuminata","Anal HSIL on HRA biopsy","Anal LSIL","Anal dysplasia, surveillance visit","Condyloma, recurrent"],
+plan:["Office fulguration/destruction","Cryotherapy (Verruca Freeze)","Topical imiquimod 5% 3x/week x 16 weeks","EUA with fulguration/excision","HRA with targeted biopsy/ablation","Repeat HRA in 3/6/12 months","HPV vaccination counseling","ID referral for HIV"],
+surg:[],risks:[],
+tips:["Condyloma A63.0 vs dysplasia K62.82 vs CIS D01.3","46916 simple vs 46924 extensive — document extent","HRA 46607 with biopsy + 46916 for ablation if performed","Document HIV status and CD4 for screening justification","HPV testing 87624 billed separately"],
+},
+{id:"rectal_prolapse",name:"Rectal Prolapse",cat:"Anorectal",
+icd10:["K62.3-Rectal prolapse","K62.2-Anal prolapse","N81.6-Rectocele"],
+cpt:["45130","45135","45540","45550","45560"],
+hpi:[
+{k:"type",l:"Type",t:"r",o:["Full-thickness rectal prolapse","Mucosal prolapse","Internal intussusception","Rectocele","Combined pelvic floor disorder"]},
+{k:"sx",l:"Symptoms",t:"m",o:["Prolapsing tissue","Incomplete evacuation","Straining","Fecal incontinence","Mucous drainage","Bleeding","Pelvic pressure","Need to manually reduce","Need to splint vagina"]},
+{k:"dur",l:"Duration",t:"x",p:""},
+{k:"sev",l:"Functional Impact",t:"m",o:["Reduces spontaneously","Requires manual reduction","Incarcerated episodes","Limits activity","Incontinence to flatus","Incontinence to liquid","Incontinence to solid stool"]},
+{k:"eval",l:"Prior Evaluation",t:"m",o:["Defecography","Anorectal manometry","Pudendal nerve testing","Colonoscopy","Transit study","None"]},
+],
+exam:[
+{k:"insp",l:"Inspection",t:"m",o:["Full-thickness prolapse demonstrated","Mucosal prolapse only","Prolapse with straining","Not demonstrated today","Concentric folds (full thickness)","Radial folds (mucosal)","Solitary rectal ulcer","Patulous anus"]},
+{k:"dre",l:"DRE/Functional",t:"m",o:["Decreased resting tone","Normal resting tone","Weak squeeze","Normal squeeze","Rectocele palpated","Paradoxical puborectalis contraction"]},
+],
+ax:["Full-thickness rectal prolapse","Mucosal prolapse","Internal intussusception","Rectocele with obstructed defecation","Pelvic floor dysfunction"],
+plan:["Pelvic floor PT/biofeedback","Defecography","Anorectal manometry","Perineal proctosigmoidectomy (Altemeier)","Laparoscopic/robotic ventral mesh rectopexy","Delorme procedure","Concurrent rectocele repair","Urogyn referral"],
+surg:["Lap/robotic ventral mesh rectopexy","Lap/robotic suture rectopexy","Lap/robotic resection rectopexy","Perineal proctosigmoidectomy (Altemeier)","Delorme procedure","STARR procedure"],
+risks:["Recurrence (5-30%)","Constipation (new or worsened)","Fecal incontinence","Mesh complications","Bleeding","Urinary retention","Anastomotic leak"],
+tips:["Full-thickness K62.3 vs mucosal K62.89","Perineal 45130/45135 vs abdominal 45540-45560","Document prolapse type for procedure selection","Reference defecography/manometry results"],
+},
+{id:"pruritus",name:"Pruritus Ani",cat:"Anorectal",
+icd10:["L29.0"],cpt:["99213","99214","99215"],
+hpi:[
+{k:"dur",l:"Duration",t:"x",p:""},
+{k:"sev",l:"Severity",t:"r",o:["Mild — occasional","Moderate — daily, affects sleep","Severe — constant, significantly affects QOL"]},
+{k:"sx",l:"Symptoms",t:"m",o:["Itching only","Burning","Moisture","Soiling","Bleeding from scratching","Pain"]},
+{k:"trig",l:"Triggers",t:"m",o:["Foods (coffee, chocolate, spicy)","Moisture/sweating","Soaps/wipes","Night time","After BM","No clear trigger"]},
+{k:"ptx",l:"Prior Treatments",t:"m",o:["None","OTC creams","Topical steroids","Barrier cream","Dietary modification","Antifungal"]},
+],
+exam:[{k:"pa",l:"Perianal",t:"m",o:["Erythema","Excoriation","Lichenification","Maceration","Normal skin","Fungal appearance","Skin tags","Hemorrhoids noted","Fissure noted","Dermatitis"]}],
+ax:["Pruritus ani, idiopathic","Pruritus ani, secondary to [cause]","Perianal dermatitis"],
+plan:["Gentle hygiene (no wipes, pat dry, cotton underwear)","Dietary modifications","Barrier cream (zinc oxide/Calmoseptine)","Topical hydrocortisone 1% short course","Biopsy if refractory","Return for reassessment"],
+surg:[],risks:[],
+tips:["E/M level based on MDM complexity","If biopsy 11102/11103, document clinical suspicion","Document differential diagnosis for MDM","Consider underlying condition as primary Dx"],
+},
+{id:"anal_cancer",name:"Anal Cancer",cat:"Anorectal",
+icd10:["C21.0-Anus unspecified","C21.1-Anal canal","C21.2-Cloacogenic"],
+cpt:["46606","45110","45395","88305"],
+hpi:[
+{k:"pres",l:"Presentation",t:"r",o:["New diagnosis","Biopsy-proven","Post-CRT assessment","Surveillance","Recurrence evaluation","Persistent disease post-CRT"]},
+{k:"hist",l:"Histology",t:"r",o:["Squamous cell carcinoma","Adenocarcinoma","Melanoma","Basaloid","Verrucous","Unknown/pending"]},
+{k:"sx",l:"Symptoms",t:"m",o:["Bleeding","Pain","Mass/lump","Change in bowel habits","Incontinence","Weight loss","Inguinal lymphadenopathy","Asymptomatic"]},
+{k:"mmr",l:"MMR/MSI Status",t:"r",o:["Not tested","MMR intact (all retained)","Loss of MLH1","Loss of MSH2","Loss of MSH6","Loss of PMS2","Loss of MLH1+PMS2","Loss of MSH2+MSH6","MSI-High","MSI-Low/MSS"]},
+{k:"cea",l:"Baseline CEA",t:"x",p:"e.g., 2.5 ng/mL"},
+],
+exam:[{k:"tumor",l:"Tumor Assessment",t:"m",o:["Visible mass at anal verge","Mass in anal canal on DRE","Fixed to sphincter","Mobile","Ulcerated","Size <2cm","Size 2-5cm","Size >5cm","Inguinal LN right","Inguinal LN left","Inguinal LN bilateral","No inguinal LN","Complete response (post-CRT)","Partial response","Residual mass"]}],
+ax:["SCC of anal canal, cT__N__M__","Anal margin SCC","Anal cancer, post-CRT — complete response","Anal cancer, post-CRT — persistent disease","Recurrent anal cancer","Anal cancer surveillance"],
+plan:["Refer Rad Onc + Med Onc for CRT (Nigro)","Staging: CT C/A/P, PET/CT, MRI pelvis","EUA with biopsy","Tumor board","Surveillance: DRE + anoscopy q3-6mo","Local excision (T1 margin)","APR for persistent/recurrent","Inguinal LN biopsy"],
+surg:["Local excision (T1 anal margin)","APR","EUA with biopsy","Inguinal LN dissection"],
+risks:["Permanent colostomy (APR)","Perineal wound complications","Sexual dysfunction","Urinary dysfunction","Bleeding","Infection","DVT/PE"],
+tips:["C21.1 anal canal vs C21.0 anal margin","Document size, fixation, sphincter involvement","Biopsy 46606","Document tumor board discussion","MMR/MSI supports immunotherapy consideration"],
+},
+// ──── COLORECTAL ────
+{id:"colon_ca",name:"Colon Cancer",cat:"Colorectal",
+icd10:["C18.0-Cecum","C18.2-Ascending","C18.4-Transverse","C18.6-Descending","C18.7-Sigmoid","C19-Rectosigmoid"],
+cpt:["44140","44204","44205","44206","44207","44210"],
+hpi:[
+{k:"pres",l:"Presentation",t:"r",o:["Screening finding","Symptomatic","Biopsy-proven referral","Staging visit","Pre-op visit","Post-op follow-up","Surveillance","Obstruction/emergency"]},
+{k:"loc",l:"Tumor Location",t:"r",o:["Cecum","Ascending colon","Hepatic flexure","Transverse colon","Splenic flexure","Descending colon","Sigmoid colon","Rectosigmoid junction"]},
+{k:"hist",l:"Histology",t:"r",o:["Adenocarcinoma, well-diff","Adenocarcinoma, mod-diff","Adenocarcinoma, poorly-diff","Mucinous","Signet ring cell","Neuroendocrine","Adenoma with HGD","Other/Pending"]},
+{k:"sx",l:"Symptoms",t:"m",o:["Asymptomatic — screening finding","Rectal bleeding","Change in bowel habits","Iron deficiency anemia","Abdominal pain","Weight loss","Obstruction symptoms","Fatigue"]},
+{k:"mmr",l:"MMR/MSI Status",t:"r",o:["Not tested","MMR intact (all retained)","Loss of MLH1","Loss of MSH2","Loss of MSH6","Loss of PMS2","Loss of MLH1+PMS2","Loss of MSH2+MSH6","MSI-High","MSI-Low/MSS","Pending"]},
+{k:"ct",l:"Staging CT C/A/P",t:"r",o:["Not performed","No distant metastasis","Liver met — solitary","Liver mets — multiple","Lung met — solitary","Lung mets — multiple","Liver + lung mets","Peritoneal carcinomatosis","Bone metastasis","Multiple sites","Indeterminate"]},
+{k:"cea",l:"Baseline CEA",t:"x",p:"e.g., 3.2 ng/mL"},
+{k:"fhx",l:"Family History",t:"m",o:["No FH of CRC","FDR with CRC age >60","FDR with CRC age <60","Multiple FDRs","Known Lynch syndrome","Known FAP","Suggestive of hereditary syndrome"]},
+],
+exam:[
+{k:"abd",l:"Abdomen",t:"m",o:["Soft, non-tender, non-distended","Palpable mass","Distention","No hepatomegaly","Well-healed incisions","Ostomy healthy"]},
+],
+ax:["Colon cancer, [location], [histology], cT__N__M__","Colon cancer, post-op, pT__N__M__","Colon cancer surveillance, __ mo post-resection, NED","Colon cancer with synchronous metastases"],
+plan:["Complete staging: CT C/A/P, CEA","Tumor board presentation","Genetic/hereditary evaluation","Right hemicolectomy","Left hemicolectomy","Sigmoid colectomy","Total abdominal colectomy","Refer Med Onc for adjuvant chemo","Surveillance: CEA q3-6mo, CT annually, colonoscopy 1yr"],
+surg:["Lap right hemicolectomy","Robotic right hemicolectomy","Open right hemicolectomy","Lap left hemicolectomy","Robotic left hemicolectomy","Lap sigmoid colectomy","Robotic sigmoid colectomy","Total abdominal colectomy with IRA","Subtotal colectomy with end ileostomy"],
+risks:["Bleeding","Infection","Anastomotic leak (2-5%)","Need for reoperation","Need for ostomy","Ileus/SBO","DVT/PE","Ureteral injury","Wound dehiscence/hernia","Death (rare)"],
+tips:["Specify exact location C18.0-C18.9, C19","Pre-op: E/M with modifier -57","Lap 4420x vs open 4414x","Document LN harvest ≥12 nodes","Document MSI/MMR for treatment planning"],
+},
+{id:"rectal_ca",name:"Rectal Cancer",cat:"Colorectal",
+icd10:["C20-Rectum","C19-Rectosigmoid"],
+cpt:["45111","45112","45113","45110","45395","45397","44210","44211"],
+hpi:[
+{k:"pres",l:"Presentation",t:"r",o:["New diagnosis","Staging visit","Pre-op visit","Post-neoadjuvant restaging","Post-op follow-up","Surveillance","Watch-and-wait (cCR)","Recurrence"]},
+{k:"dist",l:"Distance from Anal Verge",t:"r",o:["0-5 cm (low)","5-10 cm (mid)","10-15 cm (upper)"]},
+{k:"hist",l:"Histology",t:"r",o:["Adenocarcinoma, well-diff","Adenocarcinoma, mod-diff","Adenocarcinoma, poorly-diff","Mucinous","Signet ring cell","Other/Pending"]},
+{k:"mmr",l:"MMR/MSI Status",t:"r",o:["Not tested","MMR intact","Loss of MLH1","Loss of MSH2","Loss of MSH6","Loss of PMS2","Loss of MLH1+PMS2","Loss of MSH2+MSH6","MSI-High","MSI-Low/MSS"]},
+{k:"mrit",l:"MRI T Stage",t:"r",o:["T1","T2","T3a (<1mm)","T3b (1-5mm)","T3c (5-15mm)","T3d (>15mm)","T4a","T4b","Not performed"]},
+{k:"mrin",l:"MRI N Stage",t:"r",o:["N0","N1 (1-3 nodes)","N2 (4+ nodes)","Lateral pelvic nodes","Not performed"]},
+{k:"crm",l:"MRI CRM",t:"r",o:["Clear (>1mm)","Threatened (≤1mm)","Involved","Not assessed"]},
+{k:"ct",l:"Staging CT C/A/P",t:"r",o:["No distant metastasis","Liver met(s)","Lung met(s)","Multiple sites","Not performed"]},
+{k:"cea",l:"Baseline CEA",t:"x",p:"e.g., 4.8 ng/mL"},
+{k:"neo",l:"Neoadjuvant Therapy",t:"r",o:["N/A","Planned long-course CRT","Planned short-course RT","Planned TNT","Completed CRT","Completed TNT","Immunotherapy (MSI-H)"]},
+{k:"resp",l:"Response to Neoadjuvant",t:"r",o:["N/A","Complete clinical response","Near-complete response","Partial response","Stable disease","Progression"]},
+],
+exam:[
+{k:"dre",l:"DRE",t:"m",o:["Palpable mass at __ cm","Fixed tumor","Mobile tumor","Tethered","Anterior wall","Posterior wall","Circumferential","No palpable mass (post-CRT)","Smooth scar only","Residual induration","Normal sphincter tone","Decreased tone"]},
+],
+ax:["Rectal cancer, __ cm from AV, cT__N__M__","Rectal cancer, post-neoadjuvant, complete clinical response","Rectal cancer, post-op, pT__N__M__","Rectal cancer surveillance, NED"],
+plan:["Complete staging: CT C/A/P, MRI pelvis, CEA","Tumor board","Neoadjuvant long-course CRT","Neoadjuvant short-course RT","TNT protocol","LAR with TME","APR","taTME","Local excision (T1)","TAMIS/TEM","Watch-and-wait for cCR","Diverting loop ileostomy","Ileostomy reversal","Refer Med Onc","Surveillance per NCCN"],
+surg:["Lap LAR with TME","Robotic LAR with TME","Open LAR","Lap ultralow AR with coloanal","Robotic ultralow AR","APR — lap","APR — robotic","APR — open","Intersphincteric resection","taTME","TAE","TAMIS","Hartmann's","Diverting ileostomy","Ileostomy reversal"],
+risks:["Anastomotic leak (5-15%)","Diverting ileostomy","Permanent colostomy","LARS","Sexual dysfunction","Urinary dysfunction","Bleeding","Pelvic abscess","DVT/PE","Pelvic nerve injury","Death (1-3%)"],
+tips:["C20 for rectum","Document distance from anal verge","MRI T/N staging, CRM, EMVI critical","Document neoadjuvant response","Modifier -57 for decision for surgery"],
+},
+{id:"diverticular",name:"Diverticular Disease",cat:"Colorectal",
+icd10:["K57.20-w/o perforation","K57.21-w/ abscess","K57.32-w/ bleeding","K57.33-w/ perforation+bleeding"],
+cpt:["44140","44204","44206","44320","44625"],
+hpi:[
+{k:"pres",l:"Presentation",t:"r",o:["Acute diverticulitis — first","Acute — recurrent","Complicated","Chronic/smoldering","Diverticular bleeding","Elective surgical consult","Post-episode follow-up"]},
+{k:"hinch",l:"Hinchey",t:"r",o:["N/A","I — pericolic abscess","II — pelvic/distant abscess","III — purulent peritonitis","IV — feculent peritonitis"]},
+{k:"sx",l:"Symptoms",t:"m",o:["LLQ pain","Fever","Nausea/vomiting","Change in bowel habits","Urinary symptoms","Rectal bleeding","Distention","Currently asymptomatic"]},
+{k:"ep",l:"Episodes",t:"x",p:"e.g., 3 over 2 years"},
+{k:"comp",l:"Complications",t:"m",o:["None","Abscess","Perforation","Fistula (colovesical)","Fistula (colovaginal)","Stricture/obstruction","Bleeding requiring intervention"]},
+],
+exam:[{k:"abd",l:"Abdomen",t:"m",o:["Soft, non-tender","LLQ tenderness","Guarding","Rebound","Distention","Palpable phlegmon","Peritonitis","Well-healed incision","Ostomy functioning"]}],
+ax:["Acute uncomplicated diverticulitis","Acute complicated, Hinchey [I-IV]","Diverticular disease with [abscess/fistula/stricture]","Chronic recurrent diverticular disease","Diverticular hemorrhage"],
+plan:["Conservative: antibiotics, clears, advance diet","CT-guided drainage","Elective sigmoid colectomy 6-8 weeks post-episode","Emergent sigmoid colectomy/Hartmann's","Colonoscopy 6-8 weeks post-resolution","Hartmann's reversal","High fiber diet"],
+surg:["Lap sigmoid colectomy with primary anastomosis","Robotic sigmoid colectomy","Open sigmoid colectomy","Sigmoid colectomy with diverting ileostomy","Hartmann's procedure","Hartmann's reversal"],
+risks:["Anastomotic leak (3-8%)","Bleeding","Wound infection","Pelvic abscess","Need for ostomy","Ureteral injury (left)","Ileus/SBO","DVT/PE","Death (higher in emergent)"],
+tips:["K57.20 w/o perforation vs K57.21 w/ abscess","Document Hinchey classification","Number of episodes supports surgical indication","Hartmann's: colostomy creation 44320"],
+},
+{id:"ibd",name:"IBD (Surgical)",cat:"Colorectal",
+icd10:["K50.10-Crohn's colon","K50.90-Crohn's unspecified","K51.00-UC pancolitis","K51.90-UC unspecified"],
+cpt:["44150","44155","44157","44158","44204","44210","44310","44615","44625"],
+hpi:[
+{k:"dx",l:"IBD Type",t:"r",o:["Crohn's disease","Ulcerative colitis","Indeterminate colitis"]},
+{k:"pres",l:"Surgical Indication",t:"r",o:["Medically refractory","Dysplasia/cancer","Stricturing disease","Fistulizing disease","Toxic colitis/megacolon","Obstruction","Abscess/sepsis","Elective planning","Post-op follow-up","Ostomy management"]},
+{k:"ext",l:"Disease Extent",t:"m",o:["Terminal ileum","Ileocolonic","Colonic only","Small bowel","Pancolitis","Left-sided","Proctitis","Perianal disease"]},
+{k:"meds",l:"Current/Failed Meds",t:"m",o:["5-ASA","Steroids","Azathioprine/6-MP","Methotrexate","Infliximab","Adalimumab","Vedolizumab","Ustekinumab","Tofacitinib","Risankizumab","None"]},
+],
+exam:[
+{k:"abd",l:"Abdomen",t:"m",o:["Soft, non-distended","Distended","Tender","Peritonitis","Palpable mass","Prior scars","Ileostomy healthy","Cachectic"]},
+{k:"pa",l:"Perianal (Crohn's)",t:"m",o:["N/A","Normal","Fistula opening(s)","Seton in place","Abscess","Skin tags","Stenosis","Fissure"]},
+],
+ax:["Crohn's disease, [location], [phenotype]","UC, [extent], medically refractory","UC with dysplasia/cancer","Crohn's with fistula/abscess/stricture","Pouchitis"],
+plan:["TPC with end ileostomy","TPC with IPAA (J-pouch)","Ileocecal resection","Strictureplasty","EUA with seton/drainage","Ileostomy creation","Ileostomy reversal","Optimize nutrition","Coordinate with GI: biologic washout","Stoma marking"],
+surg:["TPC with end ileostomy","TPC with IPAA — 1 stage","TPC with IPAA — 2 stage","TPC with IPAA — 3 stage","Subtotal colectomy with end ileostomy","Ileocecal resection","Strictureplasty","Ileostomy creation","Ileostomy reversal"],
+risks:["Anastomotic leak","Pouch failure (5-10%)","Pouchitis","SBO","Wound infection","Sexual dysfunction","Infertility (female)","DVT/PE","Short bowel syndrome","Need for permanent ileostomy"],
+tips:["Crohn's K50.xx vs UC K51.xx","TPC 44150-44158 depends on ileostomy vs IPAA","IPAA 44157/44158","Document medication failures","Strictureplasty 44615"],
+},
+// ──── FUNCTIONAL ────
+{id:"constipation",name:"Constipation / Obstructed Defecation",cat:"Functional",
+icd10:["K59.00-Unspecified","K59.01-Slow transit","K59.02-Outlet dysfunction","K59.04-Chronic idiopathic"],
+cpt:["99213","99214","99215","91122"],
+hpi:[
+{k:"type",l:"Type",t:"r",o:["Slow transit","Outlet dysfunction","Combined","Chronic idiopathic","Opioid-induced","Not yet classified"]},
+{k:"sx",l:"Symptoms",t:"m",o:["<3 BMs/week","Hard/lumpy stools","Straining","Incomplete evacuation","Sensation of blockage","Digital facilitation","Splinting needed","Bloating","Abdominal pain","Overflow incontinence"]},
+{k:"dur",l:"Duration",t:"x",p:""},
+{k:"meds",l:"Medications Tried",t:"m",o:["None","Fiber (psyllium)","Docusate","Senna/bisacodyl","Miralax","Lactulose","Linzess","Trulance","Amitiza","Motegrity","Enemas","Multiple failed"]},
+{k:"wu",l:"Prior Workup",t:"m",o:["None","Colonoscopy (normal)","Transit study (normal)","Transit study (slow)","Manometry (normal)","Manometry (dyssynergia)","Defecography (normal)","Defecography (abnormal)","Balloon expulsion (normal)","Balloon expulsion (abnormal)"]},
+],
+exam:[
+{k:"abd",l:"Abdomen",t:"m",o:["Soft, non-tender","Distended","Palpable stool","No masses"]},
+{k:"dre",l:"DRE/Pelvic Floor",t:"m",o:["Normal resting tone","Increased tone","Decreased tone","Normal squeeze","Weak squeeze","Paradoxical contraction (dyssynergia)","Normal relaxation","Rectocele","Stool in vault","Empty rectum","Perineal descent"]},
+],
+ax:["Chronic constipation, slow transit","Obstructed defecation / outlet dysfunction","Pelvic floor dyssynergia","Combined slow transit + outlet dysfunction"],
+plan:["Optimize fiber and fluid","Osmotic laxative (Miralax)","Secretagogue (Linzess/Trulance)","Prokinetic (Motegrity)","Colonic transit study","Anorectal manometry","Defecography","Pelvic floor PT/biofeedback","Total abdominal colectomy with IRA (refractory slow transit)","Sacral nerve stimulation"],
+surg:["Total abdominal colectomy with IRA","Sacral nerve stimulation (InterStim)"],
+risks:["Persistent constipation","Diarrhea (10-20 BMs/day post-colectomy)","Incontinence","Abdominal pain","SBO","Anastomotic leak"],
+tips:["K59.01 slow transit vs K59.02 outlet — specificity matters","Document failed medical therapies for surgical candidacy","Manometry 91122 with E/M","Transit study supports surgical decision"],
+},
+{id:"fecal_incont",name:"Fecal Incontinence",cat:"Functional",
+icd10:["R15.9-Unspecified","R15.1-Smearing","R15.2-Urgency"],
+cpt:["99213","99214","99215","91122","46750","64581"],
+hpi:[
+{k:"type",l:"Type",t:"r",o:["Passive (no awareness)","Urge incontinence","Combined","Fecal seepage/soiling","Post-surgical","Obstetric injury-related"]},
+{k:"sev",l:"Severity",t:"m",o:["Flatus only","Liquid stool","Solid stool","Daily episodes","Weekly episodes","Monthly","Requires pad use","Socially limiting"]},
+{k:"wex",l:"Wexner Score",t:"x",p:"0-20"},
+{k:"onset",l:"Onset",t:"r",o:["Gradual","After vaginal delivery","After anorectal surgery","After radiation","Lifelong","Unknown"]},
+{k:"ptx",l:"Prior Treatments",t:"m",o:["None","Dietary modification","Fiber","Loperamide","Biofeedback/PT","Prior sphincter repair","SNS","Injectable bulking agent"]},
+],
+exam:[
+{k:"pa",l:"Perianal",t:"m",o:["Normal appearance","Soiling noted","Gaping/patulous anus","Anterior sphincter defect palpable","Perineal body thin","Dovetail sign","Keyhole deformity","Scarring from prior repair"]},
+{k:"dre",l:"DRE",t:"m",o:["Markedly decreased resting tone","Mildly decreased tone","Normal tone","Markedly weak squeeze","Mildly weak squeeze","Normal squeeze","Anterior defect","Posterior defect"]},
+],
+ax:["Fecal incontinence, [type], [severity]","Fecal incontinence secondary to obstetric injury","Fecal incontinence, post-surgical","Fecal incontinence with sphincter defect"],
+plan:["Dietary modification, fiber","Loperamide titration","Pelvic floor PT/biofeedback","Anorectal manometry","Endoanal ultrasound","Sphincteroplasty","SNS — Stage 1 trial","SNS — Stage 2 permanent","Injectable bulking agent (Solesta)","End colostomy (refractory)"],
+surg:["Overlapping sphincteroplasty","SNS Stage 1","SNS Stage 2","Injectable bulking agent","End sigmoid colostomy"],
+risks:["Failure to improve","Worsening incontinence","Infection","Device malfunction (SNS)","Lead migration","Wound dehiscence","Chronic pain"],
+tips:["Document Wexner score for objective severity","Manometry 91122, EAUS 76872","Sphincteroplasty 46750","SNS 64581 (stage 1) / 64590 (stage 2)","Document failed conservative measures"],
+},
+// ──── HEREDITARY ────
+{id:"lynch",name:"Lynch Syndrome",cat:"Hereditary",
+icd10:["Z15.09-Genetic susceptibility","Z80.0-FH digestive organs","Z85.038-Personal hx CRC"],
+cpt:["99214","99215","81292","81295","81298","45378"],
+hpi:[
+{k:"pres",l:"Presentation",t:"r",o:["Known Lynch — surveillance","Newly diagnosed","Suspected — family history","Lynch with new CRC","Lynch with extra-colonic cancer","MMR-deficient tumor — testing pending"]},
+{k:"gene",l:"Gene Mutation",t:"r",o:["MLH1","MSH2","MSH6","PMS2","EPCAM deletion","VUS","Testing pending","Not yet tested"]},
+{k:"ca_hx",l:"Personal Cancer History",t:"m",o:["None","Colorectal cancer","Endometrial cancer","Ovarian cancer","Gastric cancer","Urothelial cancer","Small bowel cancer","Multiple cancers"]},
+{k:"fhx",l:"Family History",t:"m",o:["FDR with CRC <50","Multiple FDRs with CRC","FH endometrial cancer","FH ovarian cancer","Amsterdam II criteria met","Known gene mutation in family"]},
+],
+exam:[{k:"abd",l:"Abdomen",t:"m",o:["Normal exam","Prior surgical scars","Ostomy present","Soft, non-tender"]}],
+ax:["Lynch syndrome ([gene] mutation), surveillance","Lynch syndrome, newly diagnosed","Suspected Lynch, testing pending","Lynch with new CRC"],
+plan:["Colonoscopy every 1-2 years","Upper endoscopy every 2-3 years (MLH1/MSH2)","Urinalysis annually","Genetic counseling for patient and family","Consider prophylactic hysterectomy/BSO","Extended colectomy if cancer develops","Aspirin chemoprevention discussion","Cascade genetic testing for family"],
+surg:[],risks:[],
+tips:["Z15.09 + specific cancer code if applicable","Germline testing: MLH1 81292, MSH2 81295, MSH6 81298","IHC for MMR 88360/88361","Document surveillance rationale","Higher E/M supported by genetic counseling complexity"],
+},
+{id:"fap",name:"FAP / Polyposis Syndromes",cat:"Hereditary",
+icd10:["D12.6-Benign neoplasm colon","Z15.09-Genetic susceptibility","Z83.71-FH polyps"],
+cpt:["99214","99215","81201","44150","44157","44158"],
+hpi:[
+{k:"pres",l:"Presentation",t:"r",o:["Known FAP — surveillance","Newly diagnosed FAP","Attenuated FAP","MYH-associated polyposis","Post-colectomy surveillance","Desmoid management"]},
+{k:"gene",l:"Genetic Status",t:"r",o:["APC mutation confirmed","MUTYH biallelic (MAP)","Clinically diagnosed (>100 polyps)","Testing pending","Not yet tested"]},
+{k:"burden",l:"Polyp Burden",t:"r",o:["<100 (attenuated)","100-1000 (classic)",">1000 (profuse)","Rectal: minimal","Rectal: moderate","Rectal: severe/carpeting"]},
+{k:"extra",l:"Extra-colonic",t:"m",o:["None","Duodenal/ampullary adenomas","Gastric fundic gland polyps","Desmoid tumor(s)","Osteomas","CHRPE","Thyroid nodules"]},
+{k:"desm",l:"Desmoid Status",t:"r",o:["No desmoids","Mesenteric — stable","Mesenteric — growing","Abdominal wall","FH aggressive desmoids"]},
+],
+exam:[{k:"abd",l:"Abdomen",t:"m",o:["Normal","Prior scars","Ileostomy present","Desmoid mass palpable"]}],
+ax:["FAP (APC mutation), surveillance","Attenuated FAP","MYH-associated polyposis","FAP, s/p [TAC+IRA / TPC+IPAA]","FAP with desmoid tumor"],
+plan:["Colonoscopy/sigmoidoscopy q6-12mo (IRA)","Pouchoscopy annually (IPAA)","Upper endoscopy q1-4yr based on Spigelman","TAC with IRA","TPC with IPAA","Completion proctectomy","Genetic counseling for family","Celecoxib/sulindac chemoprevention","Desmoid management","Thyroid ultrasound annually","Family screening age 10-12"],
+surg:["TAC with IRA","TPC with IPAA","Completion proctectomy with IPAA","Proctocolectomy with end ileostomy"],
+risks:["Rectal cancer risk if IRA","Pouch failure","Pouchitis","Desmoid development (10-30%)","Infertility (female, IPAA)","SBO","Short bowel (rarely)"],
+tips:["APC gene testing 81201","Document polyp count for surgical planning","IRA vs IPAA decision critical","Desmoid management may need separate coding"],
+},
+// ──── GENERAL ────
+{id:"ostomy",name:"Ostomy Management",cat:"General",
+icd10:["Z93.2-Ileostomy","Z93.3-Colostomy","K94.00-Colostomy complication","K43.5-Parastomal hernia"],
+cpt:["44625","44626","44312","44314","49560"],
+hpi:[
+{k:"type",l:"Ostomy Type",t:"r",o:["End ileostomy","Loop ileostomy","End colostomy","Loop colostomy"]},
+{k:"reason",l:"Visit Reason",t:"r",o:["Routine check","Reversal evaluation","Complication","New ostomy education","High output","Parastomal hernia","Stoma revision needed"]},
+{k:"comp",l:"Complications",t:"m",o:["None","High output (>1.5L/day)","Peristomal skin breakdown","Retraction","Prolapse","Stenosis","Parastomal hernia","Mucocutaneous separation","Appliance issues"]},
+{k:"func",l:"Function",t:"m",o:["Functioning well","Low output","High output","Mostly liquid","Formed output","No output — concern for obstruction"]},
+],
+exam:[{k:"stoma",l:"Stoma Exam",t:"m",o:["Pink and viable","Dusky","Good protrusion (>1cm)","Flush with skin","Retracted","Prolapsed","Stenotic","Parastomal hernia present","Hernia reducible","Peristomal skin intact","Peristomal irritation","Proper appliance fit","Appliance leaking"]}],
+ax:["[Ileostomy/Colostomy], functioning well","[Ileostomy/Colostomy] with [complication]","High-output ileostomy","Parastomal hernia","Stoma requiring revision","Reversal candidate"],
+plan:["Continue current management","WOC nurse consultation","High output: diet, loperamide, Metamucil","Schedule reversal","Parastomal hernia repair","Stoma revision","Electrolyte monitoring"],
+surg:["Ileostomy reversal","Colostomy reversal (Hartmann's takedown)","Stoma revision","Parastomal hernia repair with mesh","Stoma relocation"],
+risks:["Anastomotic leak","Wound infection","SBO","Ileus","Hernia at site","Need for re-creation","Mesh infection"],
+tips:["Z93.2 ileostomy / Z93.3 colostomy + complication code","Reversal: ileostomy 44625/44626","Document stoma output volume","Stoma revision 44312/44314","WOC consult separately billable"],
+},
+{id:"postop",name:"Post-Operative Visit",cat:"General",
+icd10:["Z48.815-Aftercare digestive","T81.4-Infection post-procedure","T81.31-Wound disruption"],
+cpt:["99024","99213","99214"],
+hpi:[
+{k:"proc",l:"Procedure Performed",t:"x",p:"e.g., Lap right hemicolectomy"},
+{k:"pod",l:"Post-Op Day/Week",t:"x",p:"e.g., POD #14"},
+{k:"sx",l:"Symptoms",t:"m",o:["None — doing well","Incisional pain","Wound drainage","Fever","N/V","Diarrhea","Constipation","Not tolerating diet","Distension","Urinary issues","Fatigue","Ostomy concerns"]},
+{k:"act",l:"Activity",t:"r",o:["Normal activity","Increasing activity","Limited","Bed-bound"]},
+{k:"diet",l:"Diet",t:"r",o:["Regular diet","Low residue","Soft/mechanical","Liquid","NPO","Poor appetite"]},
+{k:"bm",l:"Bowel Function",t:"r",o:["Regular BMs","Diarrhea","Constipation","No BM yet","Ostomy functioning"]},
+],
+exam:[
+{k:"wound",l:"Wound",t:"m",o:["Clean, dry, intact","Well-approximated","Sutures/staples in place","Steri-strips intact","Erythema","Serous drainage","Purulent drainage","Dehiscence","Port sites healing","Drain removed today"]},
+{k:"abd",l:"Abdomen",t:"m",o:["Soft, non-distended","Mild tenderness at incision","Bowel sounds present","Distended","No peritonitis"]},
+],
+ax:["S/p [procedure], POD #__, recovering well","S/p [procedure], wound complication","S/p [procedure], post-op ileus","S/p [procedure], SSI"],
+plan:["Healing well, continue care","Remove staples/sutures","Wound care","Antibiotics for SSI","Advance diet","Lifting restriction","Review pathology","Refer Med Onc","Return in [timeframe]","Clear for return to work"],
+surg:[],risks:[],
+tips:["Post-op within 90-day global: 99024 (no charge) unless new problem","New problem: E/M with -24 modifier","Document if routine vs complication","SSI: specify superficial/deep/organ-space"],
+},
+];
+
+// ══════════════════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════════════════
+let cur = null; // current condition
+let D = {};     // note data
+let sec = 'hpi'; // active section
+let voiceOn = false;
+let mediaRec = null;
+
+// ══════════════════════════════════════════════════════════════════════════
+// BILLING ENGINE
+// ══════════════════════════════════════════════════════════════════════════
+const CF = 33.89;
+const EM_RVU = {'99212':1.22,'99213':2.04,'99214':2.99,'99215':4.14};
+const PAY_MULT = {Medicare:1.0,Medicaid:0.70,BCBS:1.10,UHC:1.07,Aetna:1.05,Commercial:1.12};
+
+function calcBilling() {
+  let prob=0, data=0, risk=0;
+  const c = cur;
+  // Problems
+  if (c?.id?.includes('ca') || c?.id === 'anal_cancer' || c?.id === 'lynch' || c?.id === 'fap') prob = 4;
+  else if (c?.id === 'fistula' || c?.id === 'ibd' || c?.id === 'rectal_prolapse') prob = 3;
+  else if ((D.hpi_ptx||[]).length > 2 || (D.hpi_comp||[]).length > 0) prob = 3;
+  else if ((D.hpi_sx||[]).length > 3) prob = 2;
+  else prob = 1;
+  // Data
+  const dr = [];
+  if (D.hpi_ct && !D.hpi_ct.includes('Not')) dr.push('imaging');
+  if (D.hpi_mrit && !D.hpi_mrit.includes('Not')) dr.push('MRI');
+  if (D.hpi_cea) dr.push('labs');
+  if (D.hpi_mmr && !D.hpi_mmr.includes('Not tested')) dr.push('pathology');
+  if ((D.hpi_wu||[]).length) dr.push('prior workup');
+  if ((D.hpi_eval||[]).length) dr.push('prior eval');
+  data = Math.min(dr.length, 4);
+  // Risk
+  if ((D.plan||[]).some(p => /colectomy|proctectomy|apr|resection|exenteration/i.test(p))) risk = 4;
+  else if ((D.plan||[]).some(p => /chemo|radiation|CRT/i.test(p))) risk = 4;
+  else if (D.surg_selected) risk = 3;
+  else if ((D.plan||[]).some(p => /antibiotics|botox|biologic/i.test(p))) risk = 2;
+  else risk = 1;
+  const total = prob + data + risk;
+  let code, desc, lvl;
+  if (total >= 10) { code='99215'; desc='High complexity'; lvl=5; }
+  else if (total >= 7) { code='99214'; desc='Moderate complexity'; lvl=4; }
+  else if (total >= 4) { code='99213'; desc='Low complexity'; lvl=3; }
+  else { code='99212'; desc='Straightforward'; lvl=2; }
+  return { code, desc, lvl, prob, data, risk, total, dataItems: dr };
+}
+
+function payerHTML(code) {
+  const rvu = EM_RVU[code] || 0;
+  return Object.entries(PAY_MULT).map(([n,m]) => {
+    const amt = (rvu * CF * m).toFixed(0);
+    return `<div class="pr${n==='Medicare'?' act':''}"><span class="pn">${n}</span><span class="pa">$${amt}</span></div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// PICKER
+// ══════════════════════════════════════════════════════════════════════════
+
+function renderPicker() {
+  const container = document.getElementById('cardContainer');
+  const cats = {};
+  CONDITIONS.forEach(c => { if (!cats[c.cat]) cats[c.cat]=[]; cats[c.cat].push(c); });
+  let html = '';
+  Object.entries(cats).forEach(([cat, conds]) => {
+    html += `<div class="cat-hdr">${cat}</div><div class="cond-grid">`;
+    html += conds.map(c => `
+      <div class="cond-card" onclick="openEditor('${c.id}')" data-name="${c.name.toLowerCase()}" data-icd="${c.icd10.join(' ').toLowerCase()}">
+        <div class="cc-top"><div class="cc-name">${c.name}</div><div class="cc-arr">→</div></div>
+        <div class="cc-tags">
+          <span class="ctag ctag-g">${c.icd10.length} ICD</span>
+          <span class="ctag ctag-b">${c.cpt.length} CPT</span>
+          ${c.surg.length ? `<span class="ctag ctag-a">${c.surg.length} Surg</span>` : ''}
+          ${c.tips.length ? `<span class="ctag ctag-p">${c.tips.length} Tips</span>` : ''}
+        </div>
+      </div>
+    `).join('');
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function filterCards() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  document.querySelectorAll('.cond-card').forEach(c => {
+    const match = !q || c.dataset.name.includes(q) || c.dataset.icd.includes(q);
+    c.style.display = match ? '' : 'none';
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// EDITOR
+// ══════════════════════════════════════════════════════════════════════════
+
+function openEditor(id) {
+  cur = CONDITIONS.find(c => c.id === id);
+  if (!cur) return;
+  D = { dos: new Date().toISOString().split('T')[0] };
+  sec = 'hpi';
+  document.getElementById('pickerView').style.display = 'none';
+  document.getElementById('editorView').classList.add('on');
+  renderEditor();
+  renderSidebar();
+}
+
+function closeEditor() {
+  document.getElementById('pickerView').style.display = '';
+  document.getElementById('editorView').classList.remove('on');
+  cur = null; D = {};
+}
+
+function renderEditor() {
+  const c = cur;
+  const sections = [
+    {id:'hpi',l:'HPI',i:'📋'},
+    {id:'exam',l:'Exam',i:'🩺'},
+    {id:'ax',l:'Assess',i:'📊'},
+    {id:'plan',l:'Plan',i:'📝'},
+  ];
+  if (c.surg.length) sections.push({id:'surg',l:'Surgery',i:'🔪'});
+  sections.push({id:'billing',l:'Billing',i:'💰'});
+
+  let html = `
+    <div class="ed-back" onclick="closeEditor()">← Back to conditions</div>
+    <div class="ed-title">${c.name}</div>
+    <div class="ed-icd">${c.icd10.slice(0,4).join(' | ')}</div>
+    <div class="pat-strip">
+      <div><label class="fl">Patient</label><input type="text" value="${D.name||''}" oninput="D.name=this.value;renderSidebar()"></div>
+      <div><label class="fl">DOB</label><input type="date" value="${D.dob||''}" oninput="D.dob=this.value"></div>
+      <div><label class="fl">MRN</label><input type="text" value="${D.mrn||''}" oninput="D.mrn=this.value"></div>
+      <div><label class="fl">DOS</label><input type="date" value="${D.dos||''}" oninput="D.dos=this.value"></div>
+      <div><label class="fl">Provider</label><input type="text" value="${D.provider||''}" oninput="D.provider=this.value;renderSidebar()"></div>
+    </div>
+    <div class="voice-bar">
+      <button class="mic-btn-sm${voiceOn?' rec':''}" onclick="toggleVoice()">${voiceOn?'⏹':'🎙'}</button>
+      <div class="voice-info${voiceOn?' rec-on':''}">${voiceOn?'Recording… tap to stop':'Tap mic to record encounter → auto-populate fields'}</div>
+    </div>
+    <div class="stabs">${sections.map(s => `<button class="stab${sec===s.id?' on':''}" onclick="sec='${s.id}';renderEditor();renderSidebar()">${s.i} ${s.l}</button>`).join('')}</div>
+  `;
+
+  // HPI
+  if (sec === 'hpi') {
+    c.hpi.forEach(p => {
+      html += `<div class="sec"><div class="sect">${p.l}</div>`;
+      if (p.t === 'm') html += p.o.map(o => `<div class="ci ${(D['hpi_'+p.k]||[]).includes(o)?'ck':''}" onclick="tog('hpi_${p.k}','${esc(o)}')"><div class="cb">✓</div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('');
+      else if (p.t === 'r') html += p.o.map(o => `<div class="ri ${D['hpi_'+p.k]===o?'sel':''}" onclick="D['hpi_${p.k}']='${esc(o)}';renderEditor();renderSidebar()"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('');
+      else html += `<input type="text" value="${D['hpi_'+p.k]||''}" placeholder="${p.p||''}" oninput="D['hpi_${p.k}']=this.value;renderSidebar()">`;
+      html += '</div>';
+    });
+  }
+
+  // Exam
+  if (sec === 'exam') {
+    c.exam.forEach(e => {
+      html += `<div class="sec"><div class="sect">${e.l}</div>`;
+      html += e.o.map(o => `<div class="ci ${(D['exam_'+e.k]||[]).includes(o)?'ck':''}" onclick="tog('exam_${e.k}','${esc(o)}')"><div class="cb">✓</div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('');
+      html += '</div>';
+    });
+  }
+
+  // Assessment
+  if (sec === 'ax') {
+    html += `<div class="sec"><div class="sect">Assessment</div>`;
+    html += c.ax.map(a => `<div class="ri ${D.ax===a?'sel':''}" onclick="D.ax='${esc(a)}';renderEditor();renderSidebar()"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">${a}</div></div></div>`).join('');
+    html += `<div style="margin-top:6px;"><label class="fl">Additional</label><textarea rows="2" placeholder="Additional assessment..." oninput="D.ax_addl=this.value;renderSidebar()">${D.ax_addl||''}</textarea></div>`;
+    html += `</div><div class="sec"><div class="sect">ICD-10</div>`;
+    html += c.icd10.map(i => `<div class="ri ${D.icd===i?'sel':''}" onclick="D.icd='${esc(i)}';renderEditor();renderSidebar()"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl" style="font-family:'DM Mono',monospace;">${i}</div></div></div>`).join('');
+    html += '</div>';
+  }
+
+  // Plan
+  if (sec === 'plan') {
+    html += `<div class="sec"><div class="sect">Plan Items</div>`;
+    html += c.plan.map(p => `<div class="ci ${(D.plan||[]).includes(p)?'ckb':''}" onclick="tog('plan','${esc(p)}')"><div class="cb">✓</div><div class="cc"><div class="clbl">${p}</div></div></div>`).join('');
+    html += `<div style="margin-top:6px;"><label class="fl">Additional</label><textarea rows="2" placeholder="Additional plan..." oninput="D.plan_addl=this.value;renderSidebar()">${D.plan_addl||''}</textarea></div></div>`;
+  }
+
+  // Surgery
+  if (sec === 'surg' && c.surg.length) {
+    html += `<div class="sec"><div class="sect">Planned Procedure</div>`;
+    html += c.surg.map(s => `<div class="ri ${D.surg_selected===s?'sel':''}" onclick="D.surg_selected='${esc(s)}';renderEditor();renderSidebar()"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">${s}</div></div></div>`).join('');
+    html += '</div>';
+    if (D.surg_selected && c.risks.length) {
+      html += `<div class="consent-box"><strong>✓ Informed Consent — Risks Discussed:</strong><ul>${c.risks.map(r => '<li>'+r+'</li>').join('')}</ul><p style="margin-top:8px;">Alternatives: medical/conservative management, observation.<br><strong>Written informed consent obtained. Verbal and written preoperative instructions given per ERAS protocol.</strong></p></div>`;
+    }
+  }
+
+  // Billing
+  if (sec === 'billing') {
+    const b = calcBilling();
+    html += `<div class="sec"><div class="sect">AI Billing Recommendation</div>`;
+    html += `<div style="padding:12px;background:var(--tbg);border-radius:var(--rlg);border:1px solid rgba(8,80,65,0.15);margin-bottom:12px;">
+      <div style="font-size:22px;font-weight:700;color:var(--ttxt);">${b.code}</div>
+      <div style="font-size:12px;color:var(--ttxt);margin-top:2px;">${b.desc}</div>
+      <div style="font-size:11px;color:var(--text2);margin-top:6px;">Problems: ${b.prob>=4?'High':b.prob>=3?'Moderate':'Low'} | Data: ${b.data>=3?'Extensive':b.data>=2?'Moderate':'Limited'} | Risk: ${b.risk>=4?'High':b.risk>=3?'Mod':'Low'} | Score: ${b.total}</div>
+    </div></div>`;
+    html += `<div class="sec"><div class="sect">💡 Billing Tips</div>`;
+    html += c.tips.map((t,i) => `<div class="btip"><strong>${i+1}.</strong> ${t}</div>`).join('');
+    html += '</div>';
+  }
+
+  html += `<button class="abtn abtn-gold" onclick="generateAndPreview()">⚡ Generate Note & Analyze Billing</button>`;
+  document.getElementById('editorMain').innerHTML = html;
+}
+
+function renderSidebar() {
+  const b = calcBilling();
+  const pips = [1,2,3,4,5].map(i => `<div class="spip ${i<=b.lvl?'l'+b.lvl:''}"></div>`).join('');
+  const note = genNote();
+
+  document.getElementById('editorSidebar').innerHTML = `
+    <div class="slbl">AI Billing Level</div>
+    <div class="src">
+      <div class="scode">${b.code}</div>
+      <div class="sdesc">${b.desc}</div>
+      <div class="slvlrow"><div class="spips">${pips}</div><div class="slvllbl">Level ${b.lvl}</div></div>
+    </div>
+    <div class="slbl">MDM Breakdown</div>
+    <div class="mdmr"><span class="mdml">Problems</span><span class="mdmv">${b.prob>=4?'High':b.prob>=3?'Moderate':b.prob>=2?'Low':'Minimal'}</span></div>
+    <div class="mdmr"><span class="mdml">Data</span><span class="mdmv">${b.data>=3?'Extensive':b.data>=2?'Moderate':b.data>=1?'Limited':'Minimal'}${b.dataItems.length?' ('+b.dataItems.join(', ')+')':''}</span></div>
+    <div class="mdmr"><span class="mdml">Risk</span><span class="mdmv">${b.risk>=4?'High':b.risk>=3?'Moderate':b.risk>=2?'Low':'Minimal'}</span></div>
+    <div class="sdiv"></div>
+    <div class="slbl">Payer Estimates</div>
+    <div class="ptbl">${payerHTML(b.code)}</div>
+    <div style="font-size:9px;color:rgba(255,255,255,0.2);margin-top:3px;">2025 CF: $${CF} × RVU ${EM_RVU[b.code]||'?'}</div>
+    <div class="sdiv"></div>
+    <div class="slbl">Generated Note</div>
+    <div class="snote-pre">${escH(note)}</div>
+    <div class="push">
+      <button class="sbtn sbtn-g" onclick="copyNote()">📋 Copy Note</button>
+      <button class="sbtn sbtn-p" onclick="saveNote()">💾 Save</button>
+      <button class="sbtn sbtn-r" onclick="window.print()">🖨 Print</button>
+      <button class="sbtn sbtn-r" onclick="closeEditor()">← Back</button>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// NOTE GENERATOR
+// ══════════════════════════════════════════════════════════════════════════
+
+function genNote() {
+  if (!cur) return '';
+  const c = cur, d = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const L = [];
+  L.push('COLORECTAL SURGERY CLINIC NOTE');
+  L.push('═'.repeat(44));
+  L.push(`Patient: ${D.name||'[NAME]'}  |  DOB: ${D.dob||'[DOB]'}  |  MRN: ${D.mrn||'[MRN]'}`);
+  L.push(`DOS: ${D.dos||d}  |  Provider: ${D.provider||'[PROVIDER]'}`);
+  L.push(`Dx: ${c.name}  |  ICD-10: ${D.icd||c.icd10[0]}`);
+  L.push('');
+  // HPI
+  L.push('── HPI ──');
+  let hpi = `${D.name||'Patient'} presents for ${c.name.toLowerCase()}. `;
+  c.hpi.forEach(p => {
+    const v = D['hpi_'+p.k];
+    if (!v || (Array.isArray(v) && !v.length)) return;
+    hpi += `${p.l}: ${Array.isArray(v)?v.join(', '):v}. `;
+  });
+  L.push(hpi.trim());
+  L.push('');
+  // Exam
+  L.push('── PHYSICAL EXAM ──');
+  L.push('General: Alert, oriented, NAD.');
+  c.exam.forEach(e => {
+    const v = D['exam_'+e.k];
+    if (!v || (Array.isArray(v) && !v.length)) return;
+    L.push(`${e.l}: ${Array.isArray(v)?v.join('. '):v}.`);
+  });
+  L.push('');
+  // Assessment
+  const b = calcBilling();
+  L.push('── ASSESSMENT ──');
+  L.push(`1. ${D.ax||c.name}`);
+  if (D.ax_addl) L.push(`   ${D.ax_addl}`);
+  L.push(`   ICD-10: ${D.icd||c.icd10[0]}`);
+  L.push('');
+  L.push(`── E/M BILLING: ${b.code} (${b.desc}) ──`);
+  L.push(`MDM: Problems ${b.prob>=4?'High':b.prob>=3?'Mod':'Low'} | Data ${b.data>=3?'Ext':b.data>=2?'Mod':'Ltd'} | Risk ${b.risk>=4?'High':b.risk>=3?'Mod':'Low'} | Score ${b.total}`);
+  L.push('');
+  // Plan
+  L.push('── PLAN ──');
+  (D.plan||[]).forEach((p,i) => L.push(`${i+1}. ${p}`));
+  if (D.plan_addl) L.push(`${(D.plan||[]).length+1}. ${D.plan_addl}`);
+  L.push('');
+  // Surgery + Consent
+  if (D.surg_selected) {
+    L.push('── SURGICAL PLAN & INFORMED CONSENT ──');
+    L.push(`Procedure: ${D.surg_selected}`);
+    L.push(`Risks discussed: ${(c.risks||[]).join('; ')}`);
+    L.push('Alternatives: medical/conservative management, observation.');
+    L.push('Written informed consent obtained. Preoperative instructions given per ERAS protocol.');
+    L.push('');
+  }
+  // Payer estimates
+  L.push('── PAYER ESTIMATES ──');
+  Object.entries(PAY_MULT).forEach(([n,m]) => {
+    const amt = ((EM_RVU[b.code]||0) * CF * m).toFixed(0);
+    L.push(`  ${n}: $${amt}`);
+  });
+  L.push('');
+  L.push('═'.repeat(44));
+  L.push(`Signed: ${D.provider||'[PROVIDER]'} | ${d}`);
+  return L.join('\n');
+}
+
+function generateAndPreview() {
+  const note = genNote();
+  const w = window.open('','_blank','width=750,height=900');
+  w.document.write(`<html><head><title>Clinic Note</title><style>body{font-family:'DM Mono',monospace;padding:32px;font-size:12px;line-height:1.7;white-space:pre-wrap;color:#1a1a1a;max-width:800px;}</style></head><body>${escH(note)}\n\n<button onclick="navigator.clipboard.writeText(document.body.innerText.replace(this.innerText,''))" style="margin-top:20px;padding:10px 24px;background:#0a3d2e;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;">Copy to Clipboard</button></body></html>`);
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// ACTIONS
+// ══════════════════════════════════════════════════════════════════════════
+
+function tog(field, val) {
+  if (!D[field]) D[field] = [];
+  const i = D[field].indexOf(val);
+  if (i >= 0) D[field].splice(i,1); else D[field].push(val);
+  renderEditor(); renderSidebar();
+}
+
+function copyNote() {
+  navigator.clipboard.writeText(genNote()).then(() => {
+    const b = document.querySelector('.sbtn-g');
+    b.textContent='✓ Copied!'; setTimeout(()=>b.textContent='📋 Copy Note',2000);
+  });
+}
+
+function saveNote() {
+  const notes = JSON.parse(localStorage.getItem('sb-clinic-notes')||'[]');
+  notes.unshift({id:Date.now(),ts:new Date().toISOString(),cond:cur.name,patient:D.name||'',note:genNote()});
+  if (notes.length > 50) notes.length = 50;
+  localStorage.setItem('sb-clinic-notes',JSON.stringify(notes));
+  const b = document.querySelector('.sbtn-p');
+  b.textContent='✓ Saved!'; setTimeout(()=>b.textContent='💾 Save',2000);
+}
+
+async function toggleVoice() {
+  if (!voiceOn) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+      mediaRec = new MediaRecorder(stream);
+      mediaRec.ondataavailable = () => {};
+      mediaRec.onstop = () => { stream.getTracks().forEach(t=>t.stop()); voiceOn=false; renderEditor(); };
+      mediaRec.start();
+      voiceOn = true;
+      renderEditor();
+    } catch(e) { alert('Microphone access required.'); }
+  } else {
+    if (mediaRec && mediaRec.state==='recording') mediaRec.stop();
+  }
+}
+
+function esc(s) { return s.replace(/'/g,"\\'"); }
+function escH(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ══════════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════════
+renderPicker();
+</script>
+</body>
+</html>
