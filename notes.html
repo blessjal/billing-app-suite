@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- saved from url=(0044)file:///C:/Users/Jona/Downloads/notes_1.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="en">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0a3d2e">
 <title>Clinic Notes — SurgiBill</title>
-<link href="./Clinic Notes — SurgiBill_files/css2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--bg:#fff;--bg2:#f7f7f5;--bg3:#f0efe9;--text:#1a1a1a;--text2:#555;--text3:#999;--border:rgba(0,0,0,0.11);--border2:rgba(0,0,0,0.22);--gd:#0a3d2e;--g8:#0F6E56;--g7:#1D9E75;--g6:#2EC48F;--gbg:#EAF3DE;--gtxt:#27500A;--bbg:#E6F1FB;--btxt:#0C447C;--abg:#FAEEDA;--atxt:#633806;--pbg:#EEEDFE;--ptxt:#3C3489;--tbg:#E1F5EE;--ttxt:#085041;--rebg:#FCEBEB;--retxt:#791F1F;--r:8px;--rlg:12px;}
@@ -140,290 +140,31 @@ textarea{resize:vertical;line-height:1.6;}
 <div class="page">
 <div class="tnav">
 <div class="tnav-l">
-<a class="wm" href="file:///C:/index.html">Surgi<span>Bill</span></a>
-<a class="ntab" href="file:///C:/index.html">Home</a>
-<a class="ntab" href="file:///C:/index.html" onclick="localStorage.setItem(&#39;sb-nav&#39;,&#39;surg&#39;)">🔪 Surgical</a>
-<a class="ntab" href="file:///C:/index.html" onclick="localStorage.setItem(&#39;sb-nav&#39;,&#39;ema&#39;)">📋 E&amp;M</a>
-<a class="ntab" href="file:///C:/checklist.html">✅ Checklist</a>
-<a class="ntab" href="file:///C:/procedures.html">🩺 Procedures</a>
-<a class="ntab" href="file:///C:/staging.html">🎗 Staging</a>
-<a class="ntab on" href="file:///C:/notes.html">📄 Clinic Notes</a>
+<a class="wm" href="/index.html">Surgi<span>Bill</span></a>
+<a class="ntab" href="/index.html">Home</a>
+<a class="ntab" href="/index.html" onclick="localStorage.setItem('sb-nav','surg')">🔪 Surgical</a>
+<a class="ntab" href="/index.html" onclick="localStorage.setItem('sb-nav','ema')">📋 E&M</a>
+<a class="ntab" href="/checklist.html">✅ Checklist</a>
+<a class="ntab" href="/procedures.html">🩺 Procedures</a>
+<a class="ntab" href="/staging.html">🎗 Staging</a>
+<a class="ntab on" href="/notes.html">📄 Clinic Notes</a>
 </div>
 </div>
 <div class="main-content">
 
 <!-- ═══ PICKER ═══ -->
-<div class="picker" id="pickerView" style="display: none;">
+<div class="picker" id="pickerView">
 <div class="pk-title">📄 Clinic Notes — Colorectal Scribe</div>
 <div class="pk-sub">Generate structured clinic notes with auto-billing analysis. Select a condition, tap through fields, and get a complete note with E/M level in seconds.</div>
 <input class="pk-search" type="text" placeholder="Search conditions, ICD-10 codes..." id="searchBox" oninput="filterCards()">
-<div id="cardContainer"><div class="cat-hdr">Anorectal</div><div class="cond-grid">
-      <div class="cond-card" onclick="openEditor(&#39;hemorrhoids&#39;)" data-name="hemorrhoids" data-icd="k64.0-grade i k64.1-grade ii k64.2-grade iii k64.3-grade iv k64.5-thrombosed">
-        <div class="cc-top"><div class="cc-name">Hemorrhoids</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">5 ICD</span>
-          <span class="ctag ctag-b">7 CPT</span>
-          <span class="ctag ctag-a">6 Surg</span>
-          <span class="ctag ctag-p">5 Tips</span>
-        </div>
-      </div>
-    
-      <div class="cond-card" onclick="openEditor(&#39;fissure&#39;)" data-name="anal fissure" data-icd="k60.0-acute k60.1-chronic k60.2-unspecified">
-        <div class="cc-top"><div class="cc-name">Anal Fissure</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">3 ICD</span>
-          <span class="ctag ctag-b">4 CPT</span>
-          <span class="ctag ctag-a">5 Surg</span>
-          <span class="ctag ctag-p">5 Tips</span>
-        </div>
-      </div>
-    
-      <div class="cond-card" onclick="openEditor(&#39;fistula&#39;)" data-name="anal fistula / abscess" data-icd="k61.0-anal abscess k61.3-ischiorectal abscess k60.3-anal fistula k60.5-anorectal fistula">
-        <div class="cc-top"><div class="cc-name">Anal Fistula / Abscess</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">4 ICD</span>
-          <span class="ctag ctag-b">7 CPT</span>
-          <span class="ctag ctag-a">7 Surg</span>
-          <span class="ctag ctag-p">5 Tips</span>
-        </div>
-      </div>
-    
-      <div class="cond-card" onclick="openEditor(&#39;condyloma&#39;)" data-name="anal condyloma / hpv dysplasia" data-icd="a63.0-condyloma k62.82-anal hsil d01.3-cis anus r85.612-hsil cytology">
-        <div class="cc-top"><div class="cc-name">Anal Condyloma / HPV Dysplasia</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">4 ICD</span>
-          <span class="ctag ctag-b">5 CPT</span>
-          
-          <span class="ctag ctag-p">5 Tips</span>
-        </div>
-      </div>
-    
-      <div class="cond-card" onclick="openEditor(&#39;rectal_prolapse&#39;)" data-name="rectal prolapse" data-icd="k62.3-rectal prolapse k62.2-anal prolapse n81.6-rectocele">
-        <div class="cc-top"><div class="cc-name">Rectal Prolapse</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">3 ICD</span>
-          <span class="ctag ctag-b">5 CPT</span>
-          <span class="ctag ctag-a">6 Surg</span>
-          <span class="ctag ctag-p">4 Tips</span>
-        </div>
-      </div>
-    
-      <div class="cond-card" onclick="openEditor(&#39;pruritus&#39;)" data-name="pruritus ani" data-icd="l29.0">
-        <div class="cc-top"><div class="cc-name">Pruritus Ani</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">1 ICD</span>
-          <span class="ctag ctag-b">3 CPT</span>
-          
-          <span class="ctag ctag-p">4 Tips</span>
-        </div>
-      </div>
-    
-      <div class="cond-card" onclick="openEditor(&#39;anal_cancer&#39;)" data-name="anal cancer" data-icd="c21.0-anus unspecified c21.1-anal canal c21.2-cloacogenic">
-        <div class="cc-top"><div class="cc-name">Anal Cancer</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">3 ICD</span>
-          <span class="ctag ctag-b">4 CPT</span>
-          <span class="ctag ctag-a">4 Surg</span>
-          <span class="ctag ctag-p">5 Tips</span>
-        </div>
-      </div>
-    </div><div class="cat-hdr">Colorectal</div><div class="cond-grid">
-      <div class="cond-card" onclick="openEditor(&#39;colon_ca&#39;)" data-name="colon cancer" data-icd="c18.0-cecum c18.2-ascending c18.4-transverse c18.6-descending c18.7-sigmoid c19-rectosigmoid">
-        <div class="cc-top"><div class="cc-name">Colon Cancer</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">6 ICD</span>
-          <span class="ctag ctag-b">6 CPT</span>
-          <span class="ctag ctag-a">9 Surg</span>
-          <span class="ctag ctag-p">5 Tips</span>
-        </div>
-      </div>
-    
-      <div class="cond-card" onclick="openEditor(&#39;rectal_ca&#39;)" data-name="rectal cancer" data-icd="c20-rectum c19-rectosigmoid">
-        <div class="cc-top"><div class="cc-name">Rectal Cancer</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">2 ICD</span>
-          <span class="ctag ctag-b">8 CPT</span>
-          <span class="ctag ctag-a">15 Surg</span>
-          <span class="ctag ctag-p">5 Tips</span>
-        </div>
-      </div>
-    
-      <div class="cond-card" onclick="openEditor(&#39;diverticular&#39;)" data-name="diverticular disease" data-icd="k57.20-w/o perforation k57.21-w/ abscess k57.32-w/ bleeding k57.33-w/ perforation+bleeding">
-        <div class="cc-top"><div class="cc-name">Diverticular Disease</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">4 ICD</span>
-          <span class="ctag ctag-b">5 CPT</span>
-          <span class="ctag ctag-a">6 Surg</span>
-          <span class="ctag ctag-p">4 Tips</span>
-        </div>
-      </div>
-    
-      <div class="cond-card" onclick="openEditor(&#39;ibd&#39;)" data-name="ibd (surgical)" data-icd="k50.10-crohn&#39;s colon k50.90-crohn&#39;s unspecified k51.00-uc pancolitis k51.90-uc unspecified">
-        <div class="cc-top"><div class="cc-name">IBD (Surgical)</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">4 ICD</span>
-          <span class="ctag ctag-b">9 CPT</span>
-          <span class="ctag ctag-a">9 Surg</span>
-          <span class="ctag ctag-p">5 Tips</span>
-        </div>
-      </div>
-    </div><div class="cat-hdr">Functional</div><div class="cond-grid">
-      <div class="cond-card" onclick="openEditor(&#39;constipation&#39;)" data-name="constipation / obstructed defecation" data-icd="k59.00-unspecified k59.01-slow transit k59.02-outlet dysfunction k59.04-chronic idiopathic">
-        <div class="cc-top"><div class="cc-name">Constipation / Obstructed Defecation</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">4 ICD</span>
-          <span class="ctag ctag-b">4 CPT</span>
-          <span class="ctag ctag-a">2 Surg</span>
-          <span class="ctag ctag-p">4 Tips</span>
-        </div>
-      </div>
-    
-      <div class="cond-card" onclick="openEditor(&#39;fecal_incont&#39;)" data-name="fecal incontinence" data-icd="r15.9-unspecified r15.1-smearing r15.2-urgency">
-        <div class="cc-top"><div class="cc-name">Fecal Incontinence</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">3 ICD</span>
-          <span class="ctag ctag-b">6 CPT</span>
-          <span class="ctag ctag-a">5 Surg</span>
-          <span class="ctag ctag-p">5 Tips</span>
-        </div>
-      </div>
-    </div><div class="cat-hdr">Hereditary</div><div class="cond-grid">
-      <div class="cond-card" onclick="openEditor(&#39;lynch&#39;)" data-name="lynch syndrome" data-icd="z15.09-genetic susceptibility z80.0-fh digestive organs z85.038-personal hx crc">
-        <div class="cc-top"><div class="cc-name">Lynch Syndrome</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">3 ICD</span>
-          <span class="ctag ctag-b">6 CPT</span>
-          
-          <span class="ctag ctag-p">5 Tips</span>
-        </div>
-      </div>
-    
-      <div class="cond-card" onclick="openEditor(&#39;fap&#39;)" data-name="fap / polyposis syndromes" data-icd="d12.6-benign neoplasm colon z15.09-genetic susceptibility z83.71-fh polyps">
-        <div class="cc-top"><div class="cc-name">FAP / Polyposis Syndromes</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">3 ICD</span>
-          <span class="ctag ctag-b">6 CPT</span>
-          <span class="ctag ctag-a">4 Surg</span>
-          <span class="ctag ctag-p">4 Tips</span>
-        </div>
-      </div>
-    </div><div class="cat-hdr">General</div><div class="cond-grid">
-      <div class="cond-card" onclick="openEditor(&#39;ostomy&#39;)" data-name="ostomy management" data-icd="z93.2-ileostomy z93.3-colostomy k94.00-colostomy complication k43.5-parastomal hernia">
-        <div class="cc-top"><div class="cc-name">Ostomy Management</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">4 ICD</span>
-          <span class="ctag ctag-b">5 CPT</span>
-          <span class="ctag ctag-a">5 Surg</span>
-          <span class="ctag ctag-p">5 Tips</span>
-        </div>
-      </div>
-    
-      <div class="cond-card" onclick="openEditor(&#39;postop&#39;)" data-name="post-operative visit" data-icd="z48.815-aftercare digestive t81.4-infection post-procedure t81.31-wound disruption">
-        <div class="cc-top"><div class="cc-name">Post-Operative Visit</div><div class="cc-arr">→</div></div>
-        <div class="cc-tags">
-          <span class="ctag ctag-g">3 ICD</span>
-          <span class="ctag ctag-b">3 CPT</span>
-          
-          <span class="ctag ctag-p">4 Tips</span>
-        </div>
-      </div>
-    </div></div>
+<div id="cardContainer"></div>
 </div>
 
 <!-- ═══ EDITOR ═══ -->
-<div class="editor on" id="editorView">
+<div class="editor" id="editorView">
 <div class="tpage">
-<div class="tmain" id="editorMain">
-    <div class="ed-back" onclick="closeEditor()">← Back to conditions</div>
-    <div class="ed-title">Hemorrhoids</div>
-    <div class="ed-icd">K64.0-Grade I | K64.1-Grade II | K64.2-Grade III | K64.3-Grade IV</div>
-    <div class="pat-strip">
-      <div><label class="fl">Patient</label><input type="text" value="" oninput="D.name=this.value;renderSidebar()"></div>
-      <div><label class="fl">DOB</label><input type="date" value="" oninput="D.dob=this.value"></div>
-      <div><label class="fl">MRN</label><input type="text" value="" oninput="D.mrn=this.value"></div>
-      <div><label class="fl">DOS</label><input type="date" value="2026-04-21" oninput="D.dos=this.value"></div>
-      <div><label class="fl">Provider</label><input type="text" value="" oninput="D.provider=this.value;renderSidebar()"></div>
-    </div>
-    <div class="voice-bar">
-      <button class="mic-btn-sm" onclick="toggleVoice()">🎙</button>
-      <div class="voice-info">Tap mic to record encounter → auto-populate fields</div>
-    </div>
-    <div class="stabs"><button class="stab" onclick="sec=&#39;hpi&#39;;renderEditor();renderSidebar()">📋 HPI</button><button class="stab" onclick="sec=&#39;exam&#39;;renderEditor();renderSidebar()">🩺 Exam</button><button class="stab" onclick="sec=&#39;ax&#39;;renderEditor();renderSidebar()">📊 Assess</button><button class="stab" onclick="sec=&#39;plan&#39;;renderEditor();renderSidebar()">📝 Plan</button><button class="stab" onclick="sec=&#39;surg&#39;;renderEditor();renderSidebar()">🔪 Surgery</button><button class="stab on" onclick="sec=&#39;proc&#39;;renderEditor();renderSidebar()">🩺 Procedures</button><button class="stab" onclick="sec=&#39;billing&#39;;renderEditor();renderSidebar()">💰 Billing</button></div>
-  <div class="sec"><div class="sect">Select Procedure(s) Performed Today</div><div class="ci " onclick="togProc(&#39;Anoscopy (46600)&#39;,&#39;46600&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">Anoscopy (46600)</div></div></div><div class="ci " onclick="togProc(&#39;Anoscopy with biopsy (46606)&#39;,&#39;46606&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">Anoscopy with biopsy (46606)</div></div></div><div class="ci " onclick="togProc(&#39;Rubber band ligation — 1 column (46221)&#39;,&#39;46221&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">Rubber band ligation — 1 column (46221)</div></div></div><div class="ci " onclick="togProc(&#39;RBL — 2 columns (46221+46945)&#39;,&#39;46221,46945&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">RBL — 2 columns (46221+46945)</div></div></div><div class="ci " onclick="togProc(&#39;RBL — 3 columns (46221+46945+46946)&#39;,&#39;46221,46945,46946&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">RBL — 3 columns (46221+46945+46946)</div></div></div><div class="ci " onclick="togProc(&#39;Flexible sigmoidoscopy (45330)&#39;,&#39;45330&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">Flexible sigmoidoscopy (45330)</div></div></div><div class="ci " onclick="togProc(&#39;Flex sig with biopsy (45331)&#39;,&#39;45331&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">Flex sig with biopsy (45331)</div></div></div><div class="ci " onclick="togProc(&#39;Rigid proctoscopy (45300)&#39;,&#39;45300&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">Rigid proctoscopy (45300)</div></div></div><div class="ci " onclick="togProc(&#39;Rigid proctoscopy with biopsy (45305)&#39;,&#39;45305&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">Rigid proctoscopy with biopsy (45305)</div></div></div><div class="ci " onclick="togProc(&#39;High resolution anoscopy with biopsy (46607)&#39;,&#39;46607&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">High resolution anoscopy with biopsy (46607)</div></div></div><div class="ci " onclick="togProc(&#39;HRA with ablation (46607+46916)&#39;,&#39;46607,46916&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">HRA with ablation (46607+46916)</div></div></div><div class="ci " onclick="togProc(&#39;I&amp;D perianal abscess (46040)&#39;,&#39;46040&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">I&amp;D perianal abscess (46040)</div></div></div><div class="ci " onclick="togProc(&#39;I&amp;D ischiorectal abscess (46060)&#39;,&#39;46060&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">I&amp;D ischiorectal abscess (46060)</div></div></div><div class="ci " onclick="togProc(&#39;Excision thrombosed hemorrhoid (46320)&#39;,&#39;46320&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">Excision thrombosed hemorrhoid (46320)</div></div></div><div class="ci " onclick="togProc(&#39;Cryotherapy anal condyloma — Verruca Freeze (46916)&#39;,&#39;46916&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">Cryotherapy anal condyloma — Verruca Freeze (46916)</div></div></div><div class="ci " onclick="togProc(&#39;Extensive condyloma destruction (46924)&#39;,&#39;46924&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">Extensive condyloma destruction (46924)</div></div></div><div class="ci " onclick="togProc(&#39;Botox injection — sphincter (46505)&#39;,&#39;46505&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">Botox injection — sphincter (46505)</div></div></div><div class="ci " onclick="togProc(&#39;No procedure performed today&#39;,&#39;&#39;)"><div class="cb">✓</div><div class="cc"><div class="clbl">No procedure performed today</div></div></div></div><button class="abtn abtn-gold" onclick="generateAndPreview()">⚡ Generate Note &amp; Analyze Billing</button></div>
-<div class="tsidebar" id="editorSidebar">
-    <div class="slbl">AI Billing Level</div>
-    <div class="src">
-      <div class="scode">99215</div>
-      <div class="sdesc">High complexity</div>
-      <div class="slvlrow"><div class="spips"><div class="spip l5"></div><div class="spip l5"></div><div class="spip l5"></div><div class="spip l5"></div><div class="spip l5"></div></div><div class="slvllbl">Level 5</div></div>
-      <div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:6px;"><span style="font-size:10px;padding:2px 7px;border-radius:12px;background:rgba(250,199,117,0.18);color:#FAC775;font-weight:600;">-57 Decision for major surgery</span></div>
-    </div>
-    <div class="slbl">MDM Breakdown</div>
-    <div class="mdmr"><span class="mdml">Problems</span><span class="mdmv">High</span></div>
-    <div class="mdmr"><span class="mdml">Data</span><span class="mdmv">Limited</span></div>
-    <div class="mdmr"><span class="mdml">Risk</span><span class="mdmv">High</span></div>
-    
-    <div class="sdiv"></div>
-    <div class="slbl">Payer Estimates</div>
-    <div class="ptbl"><div class="pr act"><span class="pn">Medicare</span><span class="pa">$140</span></div><div class="pr"><span class="pn">Medicaid</span><span class="pa">$98</span></div><div class="pr"><span class="pn">BCBS</span><span class="pa">$154</span></div><div class="pr"><span class="pn">UHC</span><span class="pa">$150</span></div><div class="pr"><span class="pn">Aetna</span><span class="pa">$147</span></div><div class="pr"><span class="pn">Commercial</span><span class="pa">$157</span></div></div>
-    <div style="font-size:9px;color:rgba(255,255,255,0.2);margin-top:3px;">2025 CF: $33.89 × RVU 4.14</div>
-    <div class="sdiv"></div><div class="slbl">Alerts</div><div class="sal"><div class="sa sao">✓ Modifier -57 auto-applied: Decision for major surgery at this visit</div></div>
-    <div class="sdiv"></div>
-    <div class="slbl">Generated Note</div>
-    <div class="snote-pre">COLORECTAL SURGERY CLINIC NOTE
-════════════════════════════════════════════
-Patient: [NAME]  |  DOB: [DOB]  |  MRN: [MRN]
-DOS: 2026-04-21  |  Provider: [PROVIDER]
-Dx: Hemorrhoids  |  ICD-10: K64.3-Grade IV
-
-── HPI ──
-Patient presents for hemorrhoids. Grade: Grade IV - irreducible. Location: Mixed. Symptoms: Painless BRBPR, Pain, Prolapse, Mucous discharge. Duration: 6 months. Severity: Severe - constant, failed conservative tx. Prior Treatments: Fiber/dietary modification, Topical agents, Sitz baths, IRC. Bowel Habits: Constipation. Anticoagulation: None.
-
-── PHYSICAL EXAM ──
-General: Alert, oriented, NAD.
-External Exam: Normal external exam. External hemorrhoid(s). Prolapsing internal hemorrhoids. Excoriation.
-DRE: Normal sphincter tone. No masses. Internal hemorrhoids palpated.
-Anoscopy: Grade IV.
-
-── ASSESSMENT ──
-1. Mixed hemorrhoidal disease
-   ICD-10: K64.3-Grade IV
-
-── E/M BILLING: 99215 (High complexity) ──
-MDM: Problems High | Data Ltd | Risk High | Score 9
-
-── PLAN ──
-1. Schedule hemorrhoidectomy (excisional)
-
-── SURGICAL PLAN &amp; INFORMED CONSENT ──
-Procedure: Excisional hemorrhoidectomy (Ferguson)
-Risks discussed: Bleeding (immediate and delayed); Pain (2-4 weeks expected); Urinary retention; Anal stenosis; Fecal incontinence (rare); Infection; Recurrence; Need for reoperation
-Alternatives: medical/conservative management, observation.
-Written informed consent obtained and signed.
-Verbal and written preoperative instructions given per ERAS protocol.
-
-── BILLING ──
-E/M Level: 99215 (High complexity)
-MDM: Problems High | Data Ltd | Risk High
-Additional Modifiers: -57 Decision for major surgery
-
-── PAYER ESTIMATES ──
-  Medicare: $140
-  Medicaid: $98
-  BCBS: $154
-  UHC: $150
-  Aetna: $147
-  Commercial: $157
-
-════════════════════════════════════════════
-Signed: [PROVIDER] | April 20, 2026</div>
-    <div class="push">
-      <button class="sbtn sbtn-g" onclick="copyNote()">📋 Copy Note</button>
-      <button class="sbtn sbtn-p" onclick="saveNote()">💾 Save</button>
-      <button class="sbtn sbtn-r" onclick="window.print()">🖨 Print</button>
-      <button class="sbtn sbtn-r" onclick="closeEditor()">← Back</button>
-    </div>
-  </div>
+<div class="tmain" id="editorMain"></div>
+<div class="tsidebar" id="editorSidebar"></div>
 </div>
 </div>
 
@@ -1008,6 +749,8 @@ function renderEditor() {
   const c = cur;
   const sections = [
     {id:'hpi',l:'HPI',i:'📋'},
+    {id:'hx',l:'History',i:'📂'},
+    {id:'ros',l:'ROS',i:'🔍'},
     {id:'exam',l:'Exam',i:'🩺'},
     {id:'ax',l:'Assess',i:'📊'},
     {id:'plan',l:'Plan',i:'📝'},
@@ -1043,6 +786,72 @@ function renderEditor() {
       else html += `<input type="text" value="${D['hpi_'+p.k]||''}" placeholder="${p.p||''}" oninput="D['hpi_${p.k}']=this.value;renderSidebar()">`;
       html += '</div>';
     });
+  }
+
+  // History (PMH, PSH, Allergies, Medications, FH, SH)
+  if (sec === 'hx') {
+    html += `<div class="sec"><div class="sect">Visit Type</div>`;
+    html += ['New patient consultation','Preoperative visit','Established patient — include history','Established patient — history on file'].map(o => `<div class="ri ${D.visit_type===o?'sel':''}" onclick="D.visit_type='${esc(o)}';renderEditor();renderSidebar()"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('');
+    html += '</div>';
+
+    html += `<div class="sec"><div class="sect">Past Medical History</div>`;
+    const pmhOpts = ['Hypertension','Diabetes mellitus type 2','Diabetes mellitus type 1','Hyperlipidemia','Coronary artery disease','Atrial fibrillation','CHF','COPD','Asthma','CKD','ESRD on dialysis','DVT/PE history','Hypothyroidism','GERD','Obesity (BMI >30)','Morbid obesity (BMI >40)','OSA / on CPAP','Depression','Anxiety','HIV','Hepatitis B','Hepatitis C','Crohn\'s disease','Ulcerative colitis','Prior VTE','Anemia','Liver cirrhosis','None significant'];
+    html += pmhOpts.map(o => `<div class="ci ${(D.pmh||[]).includes(o)?'ck':''}" onclick="tog('pmh','${esc(o)}')"><div class="cb">✓</div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('');
+    html += `<div style="margin-top:6px;"><label class="fl">Other PMH</label><textarea rows="2" placeholder="Other medical history..." oninput="D.pmh_other=this.value;renderSidebar()">${D.pmh_other||''}</textarea></div></div>`;
+
+    html += `<div class="sec"><div class="sect">Past Surgical History</div>`;
+    const pshOpts = ['Appendectomy','Cholecystectomy','Hysterectomy','C-section','Hernia repair','Knee/hip replacement','Cardiac surgery / CABG','Prior abdominal surgery','Prior colorectal surgery','Prior anorectal surgery','Bariatric surgery','Spinal surgery','No prior surgeries'];
+    html += pshOpts.map(o => `<div class="ci ${(D.psh||[]).includes(o)?'ck':''}" onclick="tog('psh','${esc(o)}')"><div class="cb">✓</div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('');
+    html += `<div style="margin-top:6px;"><label class="fl">Other PSH / Details</label><textarea rows="2" placeholder="Other surgical history, dates..." oninput="D.psh_other=this.value;renderSidebar()">${D.psh_other||''}</textarea></div></div>`;
+
+    html += `<div class="sec"><div class="sect">Allergies</div>`;
+    html += ['NKDA (No Known Drug Allergies)','Penicillin','Sulfa drugs','Cephalosporins','Latex','Iodine/contrast dye','Aspirin/NSAIDs','Codeine/opioids','Fluoroquinolones','Metronidazole (Flagyl)','Adhesive/tape'].map(o => `<div class="ci ${(D.allergies||[]).includes(o)?'ck':''}" onclick="tog('allergies','${esc(o)}')"><div class="cb">✓</div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('');
+    html += `<div style="margin-top:6px;"><label class="fl">Other allergies / reactions</label><textarea rows="1" placeholder="Other allergies and reaction types..." oninput="D.allergies_other=this.value;renderSidebar()">${D.allergies_other||''}</textarea></div></div>`;
+
+    html += `<div class="sec"><div class="sect">Current Medications</div>`;
+    html += `<textarea rows="4" placeholder="List current medications, one per line:&#10;e.g., Metformin 1000mg BID&#10;Lisinopril 10mg daily&#10;Aspirin 81mg daily&#10;Metoprolol 25mg BID" oninput="D.medications=this.value;renderSidebar()">${D.medications||''}</textarea></div>`;
+
+    html += `<div class="sec"><div class="sect">Anticoagulation / Antiplatelet</div>`;
+    html += ['None','Aspirin 81mg','Aspirin 325mg','Clopidogrel (Plavix)','Warfarin (Coumadin)','Apixaban (Eliquis)','Rivaroxaban (Xarelto)','Enoxaparin (Lovenox)','Dabigatran (Pradaxa)','Dual antiplatelet therapy'].map(o => `<div class="ci ${(D.anticoag||[]).includes(o)?'ck':''}" onclick="tog('anticoag','${esc(o)}')"><div class="cb">✓</div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('');
+    html += '</div>';
+
+    html += `<div class="sec"><div class="sect">Family History</div>`;
+    html += ['No significant family history','Colorectal cancer','Colorectal polyps','Breast cancer','Ovarian cancer','Endometrial cancer','Gastric cancer','Lynch syndrome / hereditary CRC syndrome','FAP','IBD (Crohn\'s or UC)','Heart disease','Diabetes','Other cancer: ___'].map(o => `<div class="ci ${(D.fhx||[]).includes(o)?'ck':''}" onclick="tog('fhx','${esc(o)}')"><div class="cb">✓</div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('');
+    html += `<div style="margin-top:6px;"><label class="fl">Family history details</label><textarea rows="2" placeholder="Details: who, age at diagnosis..." oninput="D.fhx_detail=this.value;renderSidebar()">${D.fhx_detail||''}</textarea></div></div>`;
+
+    html += `<div class="sec"><div class="sect">Social History</div>`;
+    html += ['Never smoker','Former smoker (quit date: ___)','Current smoker — __ pack-years','No alcohol use','Social alcohol use','Heavy alcohol use','No recreational drug use','Recreational drug use','Married/partnered','Single','Lives alone','Lives with family/support','Employed','Retired','Disabled','Sedentary lifestyle','Active lifestyle'].map(o => `<div class="ci ${(D.shx||[]).includes(o)?'ck':''}" onclick="tog('shx','${esc(o)}')"><div class="cb">✓</div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('');
+    html += '</div>';
+  }
+
+  // Review of Systems
+  if (sec === 'ros') {
+    html += `<div class="sec"><div class="sect">Review of Systems — Focused</div>`;
+    html += `<div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Select positive findings. All other systems reviewed and negative unless documented.</div>`;
+
+    const rosSystems = [
+      {name:'Constitutional',opts:['Fever','Chills','Night sweats','Weight loss','Weight gain','Fatigue','Malaise']},
+      {name:'HEENT',opts:['No complaints']},
+      {name:'Cardiovascular',opts:['Chest pain','Palpitations','Edema','Dyspnea on exertion','Claudication','No complaints']},
+      {name:'Respiratory',opts:['Cough','Shortness of breath','Wheezing','No complaints']},
+      {name:'Gastrointestinal',opts:['Abdominal pain','Nausea','Vomiting','Diarrhea','Constipation','Rectal bleeding','Melena','Hematochezia','Change in bowel habits','Bloating','Dysphagia','Heartburn','Incomplete evacuation','Fecal incontinence','Mucous discharge','Rectal pain','Tenesmus','Anorexia']},
+      {name:'Genitourinary',opts:['Dysuria','Hematuria','Frequency','Urgency','Incontinence','Pneumaturia','Fecaluria','Vaginal discharge','No complaints']},
+      {name:'Musculoskeletal',opts:['Joint pain','Back pain','No complaints']},
+      {name:'Neurological',opts:['Headache','Dizziness','Numbness/tingling','Weakness','No complaints']},
+      {name:'Psychiatric',opts:['Depression','Anxiety','Insomnia','No complaints']},
+      {name:'Hematologic',opts:['Easy bruising','Bleeding tendency','History of blood clots','Anemia symptoms','No complaints']},
+      {name:'Endocrine',opts:['Polyuria','Polydipsia','Heat/cold intolerance','No complaints']},
+    ];
+
+    rosSystems.forEach(sys => {
+      html += `<div class="sec" style="margin-bottom:8px;"><div class="sect" style="font-size:11px;">${sys.name}</div>`;
+      html += sys.opts.map(o => `<div class="ci ${(D['ros_'+sys.name]||[]).includes(o)?'ck':''}" onclick="tog('ros_${sys.name}','${esc(o)}')"><div class="cb">✓</div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('');
+      html += '</div>';
+    });
+
+    html += `<div class="sec"><div class="sect">ROS Summary</div>`;
+    html += ['All other systems reviewed and negative','10-point ROS performed, pertinent positives as noted above','Complete 14-point ROS performed'].map(o => `<div class="ri ${D.ros_summary===o?'sel':''}" onclick="D.ros_summary='${esc(o)}';renderEditor();renderSidebar()"><div class="rdot"><div class="rin"></div></div><div class="cc"><div class="clbl">${o}</div></div></div>`).join('');
+    html += '</div>';
   }
 
   // Exam
@@ -1206,13 +1015,18 @@ function renderSidebar() {
   const pips = [1,2,3,4,5].map(i => `<div class="spip ${i<=b.lvl?'l'+b.lvl:''}"></div>`).join('');
   const note = genNote();
 
+  const hasProc = (D.proc_performed||[]).length && !(D.proc_performed||[]).includes('No procedure performed today');
+
   document.getElementById('editorSidebar').innerHTML = `
     <div class="slbl">AI Billing Level</div>
     <div class="src">
-      <div class="scode">${b.code}</div>
-      <div class="sdesc">${b.desc}</div>
+      <div class="scode">${b.code}${hasProc ? '-25' : ''}</div>
+      <div class="sdesc">${b.desc}${hasProc ? ' + Same-day procedure' : ''}</div>
       <div class="slvlrow"><div class="spips">${pips}</div><div class="slvllbl">Level ${b.lvl}</div></div>
-      ${b.modifiers.length ? `<div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:6px;">${b.modifiers.map(m => `<span style="font-size:10px;padding:2px 7px;border-radius:12px;background:rgba(250,199,117,0.18);color:#FAC775;font-weight:600;">${m}</span>`).join('')}</div>` : ''}
+      <div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:6px;">
+        ${hasProc ? '<span style="font-size:10px;padding:2px 7px;border-radius:12px;background:rgba(46,196,143,0.18);color:#6EE7B7;font-weight:600;">-25 Separate E/M</span>' : ''}
+        ${b.modifiers.filter(m=>!m.includes('-25')).map(m => `<span style="font-size:10px;padding:2px 7px;border-radius:12px;background:rgba(250,199,117,0.18);color:#FAC775;font-weight:600;">${m}</span>`).join('')}
+      </div>
     </div>
     <div class="slbl">MDM Breakdown</div>
     <div class="mdmr"><span class="mdml">Problems</span><span class="mdmv">${['Minimal','Minimal','Low','Moderate','High'][b.prob]||'High'}</span></div>
@@ -1260,6 +1074,49 @@ function genNote() {
   });
   L.push(hpi.trim());
   L.push('');
+  // History (PMH, PSH, Allergies, Meds, FH, SH) — include if documented
+  const hasHistory = (D.pmh||[]).length || D.pmh_other || (D.psh||[]).length || (D.allergies||[]).length || D.medications || (D.fhx||[]).length || (D.shx||[]).length;
+  if (hasHistory) {
+    if ((D.pmh||[]).length || D.pmh_other) {
+      L.push('PMH: ' + [...(D.pmh||[]), D.pmh_other].filter(Boolean).join(', '));
+    }
+    if ((D.psh||[]).length || D.psh_other) {
+      L.push('PSH: ' + [...(D.psh||[]), D.psh_other].filter(Boolean).join(', '));
+    }
+    if ((D.allergies||[]).length || D.allergies_other) {
+      L.push('Allergies: ' + [...(D.allergies||[]), D.allergies_other].filter(Boolean).join(', '));
+    }
+    if ((D.anticoag||[]).length) {
+      L.push('Anticoagulation/Antiplatelet: ' + D.anticoag.join(', '));
+    }
+    if (D.medications) {
+      L.push('Medications: ' + D.medications.replace(/\n/g, '; '));
+    }
+    if ((D.fhx||[]).length || D.fhx_detail) {
+      L.push('Family History: ' + [...(D.fhx||[]), D.fhx_detail].filter(Boolean).join(', '));
+    }
+    if ((D.shx||[]).length) {
+      L.push('Social History: ' + D.shx.join(', '));
+    }
+    L.push('');
+  }
+  // ROS — include if documented
+  const rosSystems = ['Constitutional','Cardiovascular','Respiratory','Gastrointestinal','Genitourinary','Musculoskeletal','Neurological','Psychiatric','Hematologic','Endocrine'];
+  const rosPositives = [];
+  rosSystems.forEach(sys => {
+    const vals = D['ros_'+sys]||[];
+    const positives = vals.filter(v => v !== 'No complaints');
+    if (positives.length) rosPositives.push(`${sys}: ${positives.join(', ')}`);
+  });
+  if (rosPositives.length || D.ros_summary) {
+    L.push('── REVIEW OF SYSTEMS ──');
+    if (rosPositives.length) {
+      L.push('Pertinent positives:');
+      rosPositives.forEach(r => L.push(`  ${r}`));
+    }
+    L.push(D.ros_summary || 'All other systems reviewed and negative.');
+    L.push('');
+  }
   // Exam
   L.push('── PHYSICAL EXAM ──');
   L.push('General: Alert, oriented, NAD.');
@@ -1358,7 +1215,36 @@ function tog(field, val) {
   if (!D[field]) D[field] = [];
   const i = D[field].indexOf(val);
   if (i >= 0) D[field].splice(i,1); else D[field].push(val);
+  // Auto-upgrade CPT when biopsy/polypectomy findings selected
+  if (field === 'proc_findings_list') {
+    autoCPTUpgrade();
+  }
   renderEditor(); renderSidebar();
+}
+
+// CPT auto-upgrade rules: if biopsy findings are checked, upgrade diagnostic to biopsy CPT
+function autoCPTUpgrade() {
+  const findings = D.proc_findings_list || [];
+  const cpts = D.proc_cpts || [];
+  const procs = D.proc_performed || [];
+  const hasBiopsyFinding = findings.some(f => /biopsy|biopsies|specimen.*pathology/i.test(f));
+  const hasPolypFinding = findings.some(f => /polypectomy|polyp.*removed/i.test(f));
+
+  // Flex sig: 45330 → 45331 (biopsy) or 45333/45338 (polypectomy)
+  if (cpts.includes('45330') && hasBiopsyFinding) {
+    D.proc_cpts = cpts.map(c => c === '45330' ? '45331' : c);
+  }
+  if (cpts.includes('45330') && hasPolypFinding) {
+    D.proc_cpts = cpts.map(c => c === '45330' ? '45338' : c);
+  }
+  // Rigid procto: 45300 → 45305 (biopsy)
+  if (cpts.includes('45300') && hasBiopsyFinding) {
+    D.proc_cpts = cpts.map(c => c === '45300' ? '45305' : c);
+  }
+  // Anoscopy: 46600 → 46606 (biopsy)
+  if (cpts.includes('46600') && hasBiopsyFinding) {
+    D.proc_cpts = cpts.map(c => c === '46600' ? '46606' : c);
+  }
 }
 
 function togProc(val, cpts) {
@@ -1489,6 +1375,5 @@ function escH(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/
 // ══════════════════════════════════════════════════════════════════════════
 renderPicker();
 </script>
-
-
-</body></html>
+</body>
+</html>
