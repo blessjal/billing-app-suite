@@ -9,8 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-:root{--bg:#fff;--bg2:#f7f7f5;--bg3:#f0efe9;--text:#1a1a1a;--text2:#555;--text3:#999;--border:rgba(0,0,0,0.11);--border2:rgba(0,0,0,0.22);--gd:#0a3d2e;--g7:#1D9E75;--g6:#2EC48F;--gbg:#EAF3DE;--gtxt:#27500A;--bbg:#E6F1FB;--btxt:#0C447C;--abg:#FAEEDA;--atxt:#633806;--tbg:#E1F5EE;--ttxt:#085041;--rebg:#FCEBEB;--retxt:#791F1F;--r:8px;--rlg:12px;}
-@media(prefers-color-scheme:dark){:root{--bg:#1c1c1e;--bg2:#242424;--bg3:#2e2e2e;--text:#f0f0ee;--text2:#aaa;--text3:#666;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);--gbg:#173404;--gtxt:#C0DD97;--bbg:#042C53;--btxt:#B5D4F4;--abg:#412402;--atxt:#FAC775;--tbg:#04342C;--ttxt:#9FE1CB;--rebg:#501313;--retxt:#F7C1C1;}}
+:root{--bg:#fff;--bg2:#f7f7f5;--bg3:#f0efe9;--text:#1a1a1a;--text2:#555;--text3:#999;--border:rgba(0,0,0,0.11);--border2:rgba(0,0,0,0.22);--gd:#0a3d2e;--g8:#0F6E56;--g7:#1D9E75;--g6:#2EC48F;--gbg:#EAF3DE;--gtxt:#27500A;--bbg:#E6F1FB;--btxt:#0C447C;--abg:#FAEEDA;--atxt:#633806;--pbg:#EEEDFE;--ptxt:#3C3489;--tbg:#E1F5EE;--ttxt:#085041;--rebg:#FCEBEB;--retxt:#791F1F;--r:8px;--rlg:12px;}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1c1e;--bg2:#242424;--bg3:#2e2e2e;--text:#f0f0ee;--text2:#aaa;--text3:#666;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);--gbg:#173404;--gtxt:#C0DD97;--bbg:#042C53;--btxt:#B5D4F4;--abg:#412402;--atxt:#FAC775;--pbg:#26215C;--ptxt:#CECBF6;--tbg:#04342C;--ttxt:#9FE1CB;--rebg:#501313;--retxt:#F7C1C1;}}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
 .tnav{background:var(--gd);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:50px;flex-shrink:0;}
 .tnav-l{display:flex;align-items:center;gap:4px;overflow-x:auto;}
@@ -18,52 +18,84 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .ntab{background:transparent;border:none;color:rgba(255,255,255,0.45);padding:7px 13px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;}.ntab:hover{color:#fff;background:rgba(255,255,255,0.08);}.ntab.on{color:#fff;background:rgba(255,255,255,0.14);}
 .page{display:flex;flex-direction:column;min-height:100vh;}
 .tpage{display:grid;grid-template-columns:1fr 340px;flex:1;}
-.tmain{padding:20px 24px 48px;overflow-y:auto;}
+.tmain{padding:22px 24px 48px;overflow-y:auto;}
 .tsidebar{background:var(--gd);padding:18px 16px;position:sticky;top:0;height:calc(100vh - 50px);overflow-y:auto;display:flex;flex-direction:column;}
-label.fl{font-size:10px;color:var(--text2);display:block;margin-bottom:2px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;}
-select,input[type=text],textarea{width:100%;padding:7px 9px;border:0.5px solid var(--border);border-radius:var(--r);font-size:12px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--bg);}
-select:focus,input:focus,textarea:focus{outline:none;border-color:var(--g7);}
-textarea{resize:vertical;line-height:1.6;}
-.sec{margin-bottom:14px;}
-.sect{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
-.pat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:0.5px solid var(--border);}
 
-/* Mic area */
-.mic-area{text-align:center;padding:28px 20px;border:2px dashed var(--border);border-radius:20px;background:var(--bg2);margin-bottom:18px;transition:all 0.3s;}
-.mic-area.recording{border-color:#c0392b;background:rgba(192,57,43,0.04);animation:glow 2s ease-in-out infinite;}
-.mic-area.processing{border-color:var(--g7);background:rgba(29,158,117,0.04);}
-@keyframes glow{0%,100%{box-shadow:0 0 8px rgba(192,57,43,0.15);}50%{box-shadow:0 0 24px rgba(192,57,43,0.3);}}
-.mic-btn{width:90px;height:90px;border-radius:50%;border:3px solid #c0392b;background:rgba(192,57,43,0.06);cursor:pointer;font-size:36px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.2s;margin-bottom:10px;}
-.mic-btn:hover{background:rgba(192,57,43,0.12);transform:scale(1.05);}
-.mic-btn.recording{background:#c0392b;border-color:#a93226;animation:pulse 1.5s infinite;}
-.mic-btn.processing{border-color:var(--g7);background:var(--g7);cursor:wait;}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.7;transform:scale(1.05);}}
-.mic-label{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
-.mic-sublabel{font-size:12px;color:var(--text3);}
-.mic-sublabel.rec{color:#c0392b;font-weight:600;}
-.mic-sublabel.proc{color:var(--g7);font-weight:600;}
-.mic-timer{font-family:'DM Mono',monospace;font-size:20px;font-weight:700;color:#c0392b;margin-top:6px;}
+/* Scribe area */
+.scribe-hero{text-align:center;padding:40px 20px 20px;}
+.scribe-hero h1{font-size:28px;font-weight:700;letter-spacing:-0.5px;margin-bottom:4px;}
+.scribe-hero p{font-size:13px;color:var(--text2);max-width:500px;margin:0 auto 24px;}
+
+/* Mic button */
+.mic-container{display:flex;flex-direction:column;align-items:center;margin-bottom:20px;}
+.mic-btn-lg{width:100px;height:100px;border-radius:50%;border:3px solid #c0392b;background:rgba(192,57,43,0.06);cursor:pointer;font-size:40px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;position:relative;}
+.mic-btn-lg:hover{background:rgba(192,57,43,0.12);transform:scale(1.05);}
+.mic-btn-lg.recording{background:#c0392b;border-color:#e74c3c;animation:pulse 1.5s infinite;box-shadow:0 0 0 8px rgba(192,57,43,0.15);}
+.mic-btn-lg.processing{border-color:var(--g7);background:rgba(29,158,117,0.1);animation:none;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 8px rgba(192,57,43,0.15);}50%{box-shadow:0 0 0 16px rgba(192,57,43,0.05);}}
+.mic-status{font-size:14px;font-weight:600;margin-top:12px;color:var(--text3);}
+.mic-status.rec{color:#c0392b;}
+.mic-status.proc{color:var(--g7);}
+.mic-timer{font-family:'DM Mono',monospace;font-size:20px;font-weight:700;color:#c0392b;margin-top:4px;display:none;}
+.mic-timer.on{display:block;}
+
+/* Waveform */
+.waveform{display:flex;align-items:center;justify-content:center;gap:3px;height:30px;margin-top:8px;display:none;}
+.waveform.on{display:flex;}
+.wave-bar{width:4px;background:#c0392b;border-radius:2px;animation:wave 0.5s ease-in-out infinite alternate;}
+.wave-bar:nth-child(1){height:8px;animation-delay:0s;}
+.wave-bar:nth-child(2){height:16px;animation-delay:0.1s;}
+.wave-bar:nth-child(3){height:24px;animation-delay:0.2s;}
+.wave-bar:nth-child(4){height:16px;animation-delay:0.3s;}
+.wave-bar:nth-child(5){height:8px;animation-delay:0.4s;}
+.wave-bar:nth-child(6){height:20px;animation-delay:0.15s;}
+.wave-bar:nth-child(7){height:12px;animation-delay:0.25s;}
+@keyframes wave{to{height:4px;}}
+
+/* Patient strip */
+.pat-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px;padding-bottom:14px;border-bottom:0.5px solid var(--border);}
+label.fl{font-size:10px;color:var(--text2);display:block;margin-bottom:2px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;}
+input[type=text],input[type=date],select,textarea{width:100%;padding:7px 9px;border:0.5px solid var(--border);border-radius:var(--r);font-size:12px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--bg);}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--g7);}
+textarea{resize:vertical;line-height:1.6;}
 
 /* Transcript */
-.transcript-box{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--rlg);padding:14px;min-height:120px;max-height:300px;overflow-y:auto;font-size:13px;line-height:1.7;color:var(--text);white-space:pre-wrap;margin-bottom:14px;}
-.transcript-box .interim{color:var(--text3);font-style:italic;}
-.transcript-box .final{color:var(--text);}
-.transcript-empty{color:var(--text3);text-align:center;padding:30px;font-size:13px;}
+.transcript-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rlg);padding:16px;min-height:120px;max-height:300px;overflow-y:auto;font-size:13px;line-height:1.7;color:var(--text);margin-bottom:16px;white-space:pre-wrap;}
+.transcript-box.empty{color:var(--text3);font-style:italic;display:flex;align-items:center;justify-content:center;min-height:120px;}
+.interim{color:var(--text3);font-style:italic;}
+.transcript-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;}
+.transcript-actions{display:flex;gap:6px;}
+.transcript-actions button{font-size:11px;padding:3px 10px;border-radius:var(--r);border:0.5px solid var(--border);background:var(--bg);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;}.transcript-actions button:hover{background:var(--bg3);}
 
-/* Buttons */
-.abtn{width:100%;background:var(--gd);color:#fff;border:none;padding:12px;border-radius:var(--rlg);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;}.abtn:active{opacity:0.85;}.abtn:disabled{opacity:0.4;cursor:not-allowed;}
-.abtn-gold{background:#B8860B;}.abtn-red{background:#c0392b;}
-.btn-row{display:flex;gap:8px;margin-top:8px;}
-.btn-row .abtn{flex:1;}
+/* Visit type */
+.visit-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+.visit-opt{padding:10px 14px;border-radius:var(--rlg);border:1px solid var(--border);text-align:center;cursor:pointer;transition:all 0.15s;}
+.visit-opt:hover{border-color:var(--g7);}
+.visit-opt.sel{background:var(--gbg);border-color:rgba(63,139,17,0.3);color:var(--gtxt);}
+.visit-opt-icon{font-size:20px;margin-bottom:4px;}
+.visit-opt-label{font-size:12px;font-weight:600;}
+.visit-opt-sub{font-size:10px;color:var(--text3);}
+.visit-opt.sel .visit-opt-sub{color:var(--gtxt);}
 
-/* Specialty selector */
-.spec-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+/* Generate button */
+.gen-btn{width:100%;background:var(--gd);color:#fff;border:none;padding:14px;border-radius:var(--rlg);font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;transition:background 0.15s;}
+.gen-btn:hover{background:#0d4f3a;}
+.gen-btn:active{opacity:0.85;}
+.gen-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.gen-btn-gold{background:#B8860B;}.gen-btn-gold:hover{background:#9A7209;}
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:sp 0.7s linear infinite;display:inline-block;}
+@keyframes sp{to{transform:rotate(360deg);}}
 
 /* Generated note */
-.note-output{background:var(--bg);border:1px solid var(--border);border-radius:var(--rlg);overflow:hidden;margin-top:14px;}
-.note-header{background:var(--tbg);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;}
-.note-header-title{font-size:13px;font-weight:600;color:var(--ttxt);}
-.note-body{padding:14px;font-family:'DM Mono',monospace;font-size:11.5px;line-height:1.7;white-space:pre-wrap;color:var(--text);max-height:500px;overflow-y:auto;}
+.note-output{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rlg);padding:20px;margin-top:16px;display:none;}
+.note-output.on{display:block;}
+.note-output pre{font-family:'DM Mono',monospace;font-size:12px;line-height:1.7;white-space:pre-wrap;color:var(--text);}
+.note-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.note-actions button{padding:8px 18px;border-radius:var(--r);border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.note-actions .copy-btn{background:var(--gd);color:#fff;}
+.note-actions .save-btn{background:var(--g7);color:#fff;}
+.note-actions .print-btn{background:var(--bg3);color:var(--text);border:0.5px solid var(--border);}
+.note-actions .edit-btn{background:var(--abg);color:var(--atxt);}
 
 /* Sidebar */
 .slbl{font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:6px;}
@@ -71,31 +103,39 @@ textarea{resize:vertical;line-height:1.6;}
 .src{background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.11);border-radius:var(--rlg);padding:12px;margin-bottom:8px;}
 .scode{font-family:'DM Mono',monospace;font-size:22px;font-weight:700;color:#fff;margin-bottom:2px;}
 .sdesc{font-size:11px;color:rgba(255,255,255,0.4);line-height:1.4;}
+.slvlrow{display:flex;align-items:center;gap:6px;margin:6px 0 4px;}
+.spips{display:flex;gap:2px;flex:1;}.spip{height:4px;flex:1;border-radius:2px;background:rgba(255,255,255,0.1);}.spip.l3{background:#2EC48F;}.spip.l4{background:#F59E0B;}.spip.l5{background:#EF4444;}
+.slvllbl{font-size:10px;color:rgba(255,255,255,0.35);}
 .ptbl{display:flex;flex-direction:column;gap:1px;}
 .pr{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;border-radius:var(--r);}
 .pr.act{background:rgba(46,196,143,0.14);}
 .pn{font-size:11px;color:rgba(255,255,255,0.45);}.pr.act .pn{color:#2EC48F;font-weight:600;}
 .pa{font-size:12px;font-weight:700;color:#fff;}.pr.act .pa{color:#2EC48F;}
-.code-tag{display:inline-block;font-size:11px;padding:3px 8px;border-radius:12px;font-weight:600;font-family:'DM Mono',monospace;margin:2px;}
-.code-icd{background:rgba(46,196,143,0.18);color:#6EE7B7;}
-.code-cpt{background:rgba(250,199,117,0.18);color:#FAC775;}
-.code-mod{background:rgba(206,203,246,0.18);color:#CECBF6;}
-.snote-pre{background:rgba(0,0,0,0.25);border-radius:var(--r);padding:10px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,0.7);white-space:pre-wrap;line-height:1.55;max-height:300px;overflow-y:auto;margin-top:6px;}
+.mdmr{display:flex;align-items:center;gap:6px;margin-bottom:3px;}
+.mdml{font-size:10px;color:rgba(255,255,255,0.35);width:55px;}.mdmv{font-size:11px;font-weight:600;color:#fff;}
+.sal{display:flex;flex-direction:column;gap:3px;}
+.sa{font-size:10px;padding:5px 7px;border-radius:var(--r);line-height:1.35;}
+.sao{background:rgba(46,196,143,0.15);color:#6EE7B7;}
+.sai{background:rgba(96,165,250,0.15);color:#93C5FD;}
+.saw{background:rgba(245,158,11,0.15);color:#FDE68A;}
 .sbtn{width:100%;border:none;padding:8px;border-radius:var(--r);font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px;}
-.sbtn-p{background:#fff;color:var(--gd);}.sbtn-g{background:#1D9E75;color:#fff;}.sbtn-r{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.55);border:0.5px solid rgba(255,255,255,0.14);}.sbtn:active{opacity:0.8;}
+.sbtn-p{background:#fff;color:var(--gd);}.sbtn-g{background:#1D9E75;color:#fff;}.sbtn-r{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.55);border:0.5px solid rgba(255,255,255,0.14);}
+.sbtn:active{opacity:0.8;}
 .push{margin-top:auto;padding-top:10px;}
 
-/* Status indicators */
-.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
-.status-idle{background:var(--text3);}.status-rec{background:#c0392b;animation:pulse 1s infinite;}.status-proc{background:var(--g7);animation:pulse 1.5s infinite;}.status-done{background:#2EC48F;}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:sp 0.6s linear infinite;}
-@keyframes sp{to{transform:rotate(360deg);}}
+/* TTS */
+.tts-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r);margin-top:8px;}
+.tts-bar button{padding:6px 14px;border-radius:var(--r);border:0.5px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;}
+.tts-bar button:hover{background:var(--bg3);}
+.tts-bar span{font-size:11px;color:var(--text3);}
 
-.disc{font-size:10px;color:var(--text3);padding:10px;line-height:1.5;text-align:center;margin-top:10px;}
+/* Error */
+.err-box{background:var(--rebg);border:1px solid rgba(121,31,31,0.2);border-radius:var(--r);padding:10px 14px;font-size:12px;color:var(--retxt);margin-top:12px;display:none;}
+.err-box.on{display:block;}
 
-@media(max-width:960px){.tpage{grid-template-columns:1fr;}.tsidebar{position:static;height:auto;}.pat-strip{grid-template-columns:1fr 1fr;}}
-@media(max-width:560px){.pat-strip{grid-template-columns:1fr;}.tnav-l .ntab:not(.on){display:none;}}
-@media print{.tnav,.mic-area,.btn-row,.push,.disc{display:none!important;}.tsidebar{position:static;height:auto;background:#0a3d2e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.tpage{grid-template-columns:1fr 280px;}}
+/* Responsive */
+@media(max-width:960px){.tpage{grid-template-columns:1fr;}.tsidebar{position:static;height:auto;}.pat-strip{grid-template-columns:1fr 1fr;}.visit-strip{grid-template-columns:1fr;}}
+@media print{.tnav,.mic-container,.waveform,.gen-btn,.transcript-actions,.note-actions,.tts-bar,.push,.visit-strip,.pat-strip,.scribe-hero,.transcript-box,.transcript-label,.err-box{display:none!important;}.tsidebar{position:static;height:auto;background:#0a3d2e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.tpage{grid-template-columns:1fr 280px;}.note-output{border:none;padding:0;background:none;}}
 </style>
 </head>
 <body>
@@ -109,118 +149,147 @@ textarea{resize:vertical;line-height:1.6;}
 <a class="ntab" href="/checklist.html">✅ Checklist</a>
 <a class="ntab" href="/procedures.html">🩺 Procedures</a>
 <a class="ntab" href="/staging.html">🎗 Staging</a>
-<a class="ntab" href="/notes.html">📄 Clinic Notes</a>
+<a class="ntab" href="/notes.html">📄 Notes</a>
 <a class="ntab on" href="/scribe.html">🎙 AI Scribe</a>
 </div>
 </div>
+
 <div class="tpage">
 <div class="tmain">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-<div style="font-size:20px;font-weight:700;letter-spacing:-0.4px;">🎙 AI Scribe</div>
-<div style="font-size:11px;padding:3px 10px;border-radius:20px;background:var(--abg);color:var(--atxt);font-weight:600;">BETA</div>
-</div>
-<div style="font-size:13px;color:var(--text2);margin-bottom:16px;">Record the patient encounter → AI generates a structured H&P note with ICD-10 and CPT codes</div>
 
-<!-- Patient info -->
+<div class="scribe-hero">
+<h1>🎙 AI Scribe</h1>
+<p>Record your patient encounter. The AI listens to the conversation, transcribes it in real-time, and generates a complete structured clinic note with ICD-10, CPT codes, and billing level.</p>
+</div>
+
+<!-- Patient Info -->
 <div class="pat-strip">
 <div><label class="fl">Patient Name</label><input type="text" id="f-name" placeholder="Patient Name"></div>
-<div><label class="fl">DOB</label><input type="text" id="f-dob" placeholder="DOB"></div>
+<div><label class="fl">DOB</label><input type="date" id="f-dob"></div>
 <div><label class="fl">MRN</label><input type="text" id="f-mrn" placeholder="MRN"></div>
+<div><label class="fl">DOS</label><input type="date" id="f-dos"></div>
 <div><label class="fl">Provider</label><input type="text" id="f-prov" placeholder="Provider Name"></div>
 </div>
 
-<!-- Settings -->
-<div class="spec-row">
-<div><label class="fl">Specialty</label>
+<!-- Visit Type -->
+<div class="visit-strip">
+<div class="visit-opt sel" onclick="setVisit('new')" id="vt-new">
+<div class="visit-opt-icon">🩺</div>
+<div class="visit-opt-label">New Patient</div>
+<div class="visit-opt-sub">Full H&P with PMH/PSH/ROS</div>
+</div>
+<div class="visit-opt" onclick="setVisit('established')" id="vt-established">
+<div class="visit-opt-icon">📋</div>
+<div class="visit-opt-label">Established Patient</div>
+<div class="visit-opt-sub">Focused visit note</div>
+</div>
+<div class="visit-opt" onclick="setVisit('preop')" id="vt-preop">
+<div class="visit-opt-icon">🔪</div>
+<div class="visit-opt-label">Preoperative Visit</div>
+<div class="visit-opt-sub">Full H&P + surgical consent</div>
+</div>
+</div>
+
+<!-- Specialty -->
+<div style="margin-bottom:16px;">
+<label class="fl">Specialty Focus</label>
 <select id="f-specialty">
 <option value="colorectal" selected>Colorectal Surgery</option>
-<option value="general_surgery">General Surgery</option>
-<option value="gastroenterology">Gastroenterology</option>
-</select></div>
-<div><label class="fl">Visit Type</label>
-<select id="f-visit-type">
-<option value="new_consult">New Patient Consultation</option>
-<option value="followup" selected>Follow-up Visit</option>
-<option value="preop">Pre-operative Visit</option>
-<option value="postop">Post-operative Visit</option>
-<option value="procedure">Procedure Visit</option>
-<option value="surveillance">Surveillance Visit</option>
-</select></div>
+<option value="general">General Surgery</option>
+<option value="other">Other</option>
+</select>
 </div>
 
 <!-- Microphone -->
-<div class="mic-area" id="micArea">
-<button class="mic-btn" id="micBtn" onclick="toggleRecording()">🎙</button>
-<div class="mic-label" id="micLabel">Tap to start recording</div>
-<div class="mic-sublabel" id="micSub">Place device between you and the patient. The AI will listen and generate a note.</div>
-<div class="mic-timer" id="micTimer" style="display:none;">00:00</div>
+<div class="mic-container">
+<button class="mic-btn-lg" id="micBtn" onclick="toggleRecording()">🎙</button>
+<div class="waveform" id="waveform">
+<div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+</div>
+<div class="mic-status" id="micStatus">Tap to start recording</div>
+<div class="mic-timer" id="micTimer">00:00</div>
 </div>
 
 <!-- Transcript -->
-<div class="sec">
-<div class="sect">Live Transcript <span id="transcriptStatus" style="font-weight:400;text-transform:none;letter-spacing:0;"></span></div>
-<div class="transcript-box" id="transcriptBox">
-<div class="transcript-empty">Transcript will appear here as you speak...</div>
-</div>
-<div class="btn-row">
-<button class="abtn" onclick="clearTranscript()" style="background:var(--bg2);color:var(--text2);border:0.5px solid var(--border);">Clear</button>
-<button class="abtn" onclick="editTranscript()">✏️ Edit Transcript</button>
+<div class="transcript-label">
+<span>Live Transcript</span>
+<div class="transcript-actions">
+<button onclick="clearTranscript()">Clear</button>
+<button onclick="editTranscript()">Edit</button>
+<button onclick="pasteTranscript()">Paste text</button>
 </div>
 </div>
-
-<!-- Manual input -->
-<div class="sec">
-<div class="sect">Or paste/type transcript manually</div>
-<textarea id="manualInput" rows="4" placeholder="Paste a conversation transcript, dictation, or notes here if you prefer not to use voice recording..."></textarea>
+<div class="transcript-box empty" id="transcriptBox">
+Transcript will appear here as you speak...
 </div>
 
 <!-- Generate -->
-<button class="abtn abtn-gold" id="genBtn" onclick="generateNote()" disabled>
-<span id="genLabel">⚡ Generate H&P Note</span>
+<button class="gen-btn gen-btn-gold" id="genBtn" onclick="generateNote()" disabled>
+<span id="genLabel">⚡ Generate Clinical Note from Transcript</span>
 <span id="genSpin" style="display:none;" class="spin"></span>
 </button>
 
-<!-- Output -->
-<div id="noteOutput"></div>
+<div class="err-box" id="errBox"></div>
 
-<div class="disc">
-AI Scribe uses your browser's speech recognition (Web Speech API) for transcription. Audio is processed locally — no audio is sent to any server. Only the text transcript is sent to Claude AI for note structuring. Always review and verify the generated note before signing. De-identify all patient data before use in non-clinical settings.
+<!-- Generated Note Output -->
+<div class="note-output" id="noteOutput">
+<div class="transcript-label" style="margin-bottom:8px;">
+<span>Generated Clinical Note</span>
+</div>
+<pre id="noteContent"></pre>
+<div class="note-actions">
+<button class="copy-btn" onclick="copyNote()">📋 Copy to Clipboard</button>
+<button class="save-btn" onclick="saveNote()">💾 Save Note</button>
+<button class="edit-btn" onclick="editNote()">✏️ Edit Note</button>
+<button class="print-btn" onclick="window.print()">🖨 Print</button>
+</div>
+<!-- Text to Speech -->
+<div class="tts-bar">
+<button onclick="speakNote()">🔊 Read Aloud</button>
+<button onclick="stopSpeaking()">⏹ Stop</button>
+<span id="ttsStatus">Text-to-speech ready</span>
 </div>
 </div>
 
-<!-- SIDEBAR -->
+</div>
+
+<!-- Sidebar -->
 <div class="tsidebar">
-<div class="slbl">Scribe Status</div>
+<div class="slbl">AI Scribe Status</div>
 <div class="src">
-<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-<span class="status-dot status-idle" id="statusDot"></span>
-<span style="font-size:12px;color:rgba(255,255,255,0.6);font-weight:500;" id="statusText">Ready</span>
-</div>
-<div class="sdesc" id="statusDetail">Tap the microphone to begin recording the patient encounter</div>
+<div class="scode" id="sb-code">—</div>
+<div class="sdesc" id="sb-desc">Record a conversation to generate billing</div>
 </div>
 
 <div class="sdiv"></div>
-<div class="slbl">Billing Codes</div>
-<div id="sb-codes" style="font-size:12px;color:rgba(255,255,255,0.3);">Generate a note to see codes</div>
+<div class="slbl">Detected Codes</div>
+<div id="sb-codes" style="font-size:11px;color:rgba(255,255,255,0.35);">Generate note to see codes</div>
 
 <div class="sdiv"></div>
-<div class="slbl">E/M Level</div>
-<div class="src" id="sb-em">
-<div class="scode" id="sb-em-code">—</div>
-<div class="sdesc" id="sb-em-desc">Generate note to see recommendation</div>
-</div>
+<div class="slbl">MDM Breakdown</div>
+<div class="mdmr"><span class="mdml">Problems</span><span class="mdmv" id="sb-prob">—</span></div>
+<div class="mdmr"><span class="mdml">Data</span><span class="mdmv" id="sb-data">—</span></div>
+<div class="mdmr"><span class="mdml">Risk</span><span class="mdmv" id="sb-risk">—</span></div>
 
 <div class="sdiv"></div>
 <div class="slbl">Payer Estimates</div>
-<div id="sb-payer" style="font-size:12px;color:rgba(255,255,255,0.3);">Generate note to see estimates</div>
+<div class="ptbl" id="sb-payer">
+<div style="font-size:11px;color:rgba(255,255,255,0.3);">Generate note to see estimates</div>
+</div>
 
 <div class="sdiv"></div>
-<div class="slbl">Generated Note</div>
-<div class="snote-pre" id="sb-note">Generate note to see preview...</div>
+<div class="slbl">Modifiers</div>
+<div id="sb-mods" style="font-size:11px;color:rgba(255,255,255,0.3);">—</div>
+
+<div class="sdiv"></div>
+<div class="slbl">Alerts</div>
+<div class="sal" id="sb-alerts">
+<div class="sa sai">ℹ Record encounter to get started</div>
+</div>
 
 <div class="push">
-<button class="sbtn sbtn-g" id="copyBtn" onclick="copyNote()" style="display:none;">📋 Copy Note</button>
-<button class="sbtn sbtn-p" id="saveBtn" onclick="saveNote()" style="display:none;">💾 Save Note</button>
+<button class="sbtn sbtn-g" onclick="copyNote()">📋 Copy Note</button>
+<button class="sbtn sbtn-p" onclick="saveNote()">💾 Save Note</button>
 <button class="sbtn sbtn-r" onclick="window.print()">🖨 Print</button>
 </div>
 </div>
@@ -234,72 +303,31 @@ AI Scribe uses your browser's speech recognition (Web Speech API) for transcript
 let isRecording = false;
 let recognition = null;
 let transcript = '';
-let interimText = '';
+let interimTranscript = '';
 let timerInterval = null;
 let seconds = 0;
+let visitType = 'new';
 let generatedNote = '';
-let billingData = null;
+let billingResult = null;
 
-// Auth token from SurgiBill login
+// Auth token from localStorage (set by main SurgiBill login)
 const tok = localStorage.getItem('sb_t') || '';
 
+// Set defaults
+document.getElementById('f-dos').value = new Date().toISOString().split('T')[0];
+
 // ══════════════════════════════════════════════════════════════════════════
-// SPEECH RECOGNITION
+// VISIT TYPE
 // ══════════════════════════════════════════════════════════════════════════
-
-function initSpeechRecognition() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) {
-    alert('Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.');
-    return null;
-  }
-  const r = new SR();
-  r.continuous = true;
-  r.interimResults = true;
-  r.lang = 'en-US';
-  r.maxAlternatives = 1;
-
-  r.onresult = (event) => {
-    let interim = '';
-    let final = '';
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      const t = event.results[i][0].transcript;
-      if (event.results[i].isFinal) {
-        final += t + ' ';
-      } else {
-        interim += t;
-      }
-    }
-    if (final) {
-      transcript += final;
-    }
-    interimText = interim;
-    updateTranscriptDisplay();
-  };
-
-  r.onerror = (event) => {
-    console.error('Speech recognition error:', event.error);
-    if (event.error === 'not-allowed') {
-      alert('Microphone access denied. Please allow microphone access in your browser settings and try again.');
-      stopRecording();
-    } else if (event.error !== 'no-speech' && event.error !== 'aborted') {
-      // Auto-restart on transient errors
-      if (isRecording) {
-        try { r.start(); } catch(e) {}
-      }
-    }
-  };
-
-  r.onend = () => {
-    // Auto-restart if still recording (browser stops after silence)
-    if (isRecording) {
-      try { r.start(); } catch(e) {}
-    }
-  };
-
-  return r;
+function setVisit(type) {
+  visitType = type;
+  document.querySelectorAll('.visit-opt').forEach(el => el.classList.remove('sel'));
+  document.getElementById('vt-' + type).classList.add('sel');
 }
 
+// ══════════════════════════════════════════════════════════════════════════
+// SPEECH RECOGNITION (Web Speech API — free, runs in browser)
+// ══════════════════════════════════════════════════════════════════════════
 function toggleRecording() {
   if (isRecording) {
     stopRecording();
@@ -309,458 +337,552 @@ function toggleRecording() {
 }
 
 function startRecording() {
-  if (!recognition) {
-    recognition = initSpeechRecognition();
-    if (!recognition) return;
+  // Check browser support
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    showError('Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.');
+    return;
   }
+
+  recognition = new SpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = 'en-US';
+  recognition.maxAlternatives = 1;
+
+  recognition.onstart = () => {
+    isRecording = true;
+    updateMicUI();
+    startTimer();
+  };
+
+  recognition.onresult = (event) => {
+    let interim = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const result = event.results[i];
+      if (result.isFinal) {
+        transcript += result[0].transcript + ' ';
+      } else {
+        interim += result[0].transcript;
+      }
+    }
+    interimTranscript = interim;
+    updateTranscriptUI();
+    // Enable generate button when we have transcript
+    document.getElementById('genBtn').disabled = !transcript.trim();
+  };
+
+  recognition.onerror = (event) => {
+    console.error('Speech recognition error:', event.error);
+    if (event.error === 'not-allowed') {
+      showError('Microphone access denied. Please allow microphone access in your browser settings and try again.');
+    } else if (event.error === 'no-speech') {
+      // Auto-restart on no-speech
+      if (isRecording) {
+        try { recognition.start(); } catch(e) {}
+      }
+    } else if (event.error !== 'aborted') {
+      showError('Speech recognition error: ' + event.error + '. Try again.');
+    }
+  };
+
+  recognition.onend = () => {
+    // Auto-restart if still recording (handles Chrome's auto-stop)
+    if (isRecording) {
+      try { recognition.start(); } catch(e) {}
+    }
+  };
+
   try {
     recognition.start();
-    isRecording = true;
-    seconds = 0;
-    updateUI('recording');
-    timerInterval = setInterval(() => {
-      seconds++;
-      const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-      const s = (seconds % 60).toString().padStart(2, '0');
-      document.getElementById('micTimer').textContent = `${m}:${s}`;
-    }, 1000);
   } catch(e) {
-    alert('Could not start recording: ' + e.message);
+    showError('Could not start recording: ' + e.message);
   }
 }
 
 function stopRecording() {
   isRecording = false;
   if (recognition) {
-    try { recognition.stop(); } catch(e) {}
+    recognition.stop();
+    recognition = null;
   }
-  clearInterval(timerInterval);
-  updateUI('stopped');
-  // Enable generate button if we have transcript
-  document.getElementById('genBtn').disabled = !(transcript.trim() || document.getElementById('manualInput').value.trim());
+  stopTimer();
+  interimTranscript = '';
+  updateMicUI();
+  updateTranscriptUI();
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// UI UPDATES
+// ══════════════════════════════════════════════════════════════════════════
+function updateMicUI() {
+  const btn = document.getElementById('micBtn');
+  const status = document.getElementById('micStatus');
+  const wave = document.getElementById('waveform');
+  const timer = document.getElementById('micTimer');
+
+  btn.className = 'mic-btn-lg' + (isRecording ? ' recording' : '');
+  btn.textContent = isRecording ? '⏹' : '🎙';
+  status.className = 'mic-status' + (isRecording ? ' rec' : '');
+  status.textContent = isRecording ? 'Recording… tap to stop' : (transcript ? 'Recording stopped. Tap to resume or generate note.' : 'Tap to start recording');
+  wave.className = 'waveform' + (isRecording ? ' on' : '');
+  timer.className = 'mic-timer' + (isRecording ? ' on' : '');
+}
+
+function updateTranscriptUI() {
+  const box = document.getElementById('transcriptBox');
+  if (!transcript && !interimTranscript) {
+    box.className = 'transcript-box empty';
+    box.textContent = 'Transcript will appear here as you speak...';
+  } else {
+    box.className = 'transcript-box';
+    box.innerHTML = escH(transcript) + (interimTranscript ? '<span class="interim">' + escH(interimTranscript) + '</span>' : '');
+    box.scrollTop = box.scrollHeight;
+  }
+}
+
+function startTimer() {
+  seconds = 0;
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    seconds++;
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+  const s = (seconds % 60).toString().padStart(2, '0');
+  document.getElementById('micTimer').textContent = m + ':' + s;
 }
 
 function clearTranscript() {
   transcript = '';
-  interimText = '';
-  document.getElementById('transcriptBox').innerHTML = '<div class="transcript-empty">Transcript will appear here as you speak...</div>';
+  interimTranscript = '';
+  updateTranscriptUI();
   document.getElementById('genBtn').disabled = true;
+  document.getElementById('noteOutput').classList.remove('on');
+  resetSidebar();
 }
 
 function editTranscript() {
   const box = document.getElementById('transcriptBox');
   box.contentEditable = box.contentEditable === 'true' ? 'false' : 'true';
   if (box.contentEditable === 'true') {
-    box.style.border = '2px solid var(--g7)';
+    box.style.border = '2px solid ' + 'var(--g7)';
     box.focus();
-    box.textContent = transcript;
   } else {
     box.style.border = '';
-    transcript = box.textContent;
+    transcript = box.innerText;
+    document.getElementById('genBtn').disabled = !transcript.trim();
   }
 }
 
-function updateTranscriptDisplay() {
-  const box = document.getElementById('transcriptBox');
-  if (box.contentEditable === 'true') return; // Don't overwrite while editing
-  if (!transcript && !interimText) {
-    box.innerHTML = '<div class="transcript-empty">Listening... speak naturally</div>';
-  } else {
-    box.innerHTML = `<span class="final">${escH(transcript)}</span><span class="interim">${escH(interimText)}</span>`;
-    box.scrollTop = box.scrollHeight;
+function pasteTranscript() {
+  const text = prompt('Paste or type the encounter conversation text:');
+  if (text) {
+    transcript = text;
+    updateTranscriptUI();
+    document.getElementById('genBtn').disabled = false;
   }
-  document.getElementById('genBtn').disabled = !transcript.trim();
 }
 
-function updateUI(state) {
-  const btn = document.getElementById('micBtn');
-  const area = document.getElementById('micArea');
-  const label = document.getElementById('micLabel');
-  const sub = document.getElementById('micSub');
-  const timer = document.getElementById('micTimer');
-  const dot = document.getElementById('statusDot');
-  const stxt = document.getElementById('statusText');
-  const sdet = document.getElementById('statusDetail');
-  const tstat = document.getElementById('transcriptStatus');
-
-  if (state === 'recording') {
-    btn.className = 'mic-btn recording';
-    btn.textContent = '⏹';
-    area.className = 'mic-area recording';
-    label.textContent = 'Recording... tap to stop';
-    sub.textContent = 'Listening to conversation';
-    sub.className = 'mic-sublabel rec';
-    timer.style.display = '';
-    dot.className = 'status-dot status-rec';
-    stxt.textContent = 'Recording';
-    sdet.textContent = 'Listening to patient encounter...';
-    tstat.textContent = '● LIVE';
-    tstat.style.color = '#c0392b';
-  } else if (state === 'processing') {
-    btn.className = 'mic-btn processing';
-    btn.textContent = '⚙';
-    area.className = 'mic-area processing';
-    label.textContent = 'Generating note...';
-    sub.textContent = 'AI is structuring your clinical note';
-    sub.className = 'mic-sublabel proc';
-    dot.className = 'status-dot status-proc';
-    stxt.textContent = 'Processing';
-    sdet.textContent = 'Claude AI is analyzing the transcript and generating a structured note...';
-    tstat.textContent = '⚙ Processing';
-    tstat.style.color = 'var(--g7)';
-  } else if (state === 'done') {
-    btn.className = 'mic-btn';
-    btn.textContent = '🎙';
-    area.className = 'mic-area';
-    label.textContent = 'Note generated! Tap to record again';
-    sub.textContent = 'Review the note below and in the sidebar';
-    sub.className = 'mic-sublabel';
-    timer.style.display = 'none';
-    dot.className = 'status-dot status-done';
-    stxt.textContent = 'Complete';
-    sdet.textContent = 'Note generated successfully. Review and copy.';
-    tstat.textContent = '✓ Complete';
-    tstat.style.color = 'var(--g7)';
-  } else {
-    btn.className = 'mic-btn';
-    btn.textContent = '🎙';
-    area.className = 'mic-area';
-    label.textContent = 'Tap to start recording';
-    sub.textContent = 'Place device between you and the patient';
-    sub.className = 'mic-sublabel';
-    timer.style.display = 'none';
-    dot.className = 'status-dot status-idle';
-    stxt.textContent = 'Ready';
-    sdet.textContent = transcript ? 'Transcript captured. Click Generate to create note.' : 'Tap the microphone to begin';
-    tstat.textContent = '';
-  }
+function showError(msg) {
+  const el = document.getElementById('errBox');
+  el.textContent = msg;
+  el.classList.add('on');
+  setTimeout(() => el.classList.remove('on'), 8000);
 }
 
 // ══════════════════════════════════════════════════════════════════════════
-// AI NOTE GENERATION
+// AI NOTE GENERATION — calls /api/analyze (your Claude backend)
 // ══════════════════════════════════════════════════════════════════════════
-
 async function generateNote() {
-  const inputTranscript = transcript.trim() || document.getElementById('manualInput').value.trim();
-  if (!inputTranscript) { alert('No transcript available. Record a conversation or paste text first.'); return; }
+  const text = transcript.trim();
+  if (!text) { showError('No transcript available. Record a conversation or paste text first.'); return; }
 
   const name = document.getElementById('f-name').value || '[PATIENT NAME]';
   const dob = document.getElementById('f-dob').value || '[DOB]';
   const mrn = document.getElementById('f-mrn').value || '[MRN]';
-  const prov = document.getElementById('f-prov').value || '[PROVIDER]';
+  const dos = document.getElementById('f-dos').value || new Date().toLocaleDateString();
+  const provider = document.getElementById('f-prov').value || '[PROVIDER]';
   const specialty = document.getElementById('f-specialty').value;
-  const visitType = document.getElementById('f-visit-type').value;
-  const visitLabel = document.getElementById('f-visit-type').selectedOptions[0].text;
 
-  // Show processing state
-  updateUI('processing');
+  // Show loading
   document.getElementById('genBtn').disabled = true;
-  document.getElementById('genLabel').textContent = 'Generating...';
-  document.getElementById('genSpin').style.display = '';
+  document.getElementById('genLabel').textContent = 'Generating clinical note...';
+  document.getElementById('genSpin').style.display = 'inline-block';
+  document.getElementById('errBox').classList.remove('on');
 
-  const systemPrompt = `You are an expert medical scribe AI for a ${specialty.replace('_',' ')} practice. You will receive a transcript of a doctor-patient encounter (${visitLabel}).
+  const visitTypeLabel = visitType === 'new' ? 'New patient consultation' : visitType === 'preop' ? 'Preoperative visit' : 'Established patient follow-up';
 
-Generate a comprehensive, structured clinical note from this transcript. The note must be thorough and clinically accurate.
+  const prompt = `You are an expert medical scribe for a ${specialty === 'colorectal' ? 'colorectal surgery' : specialty === 'general' ? 'general surgery' : 'surgical'} clinic. 
 
-RESPOND ONLY WITH A VALID JSON OBJECT (no markdown, no backticks, no preamble). The JSON must have these exact keys:
+Given the following transcript of a doctor-patient encounter, generate a complete, structured clinical note.
 
+PATIENT INFO:
+- Name: ${name}
+- DOB: ${dob}
+- MRN: ${mrn}
+- Date of Service: ${dos}
+- Provider: ${provider}
+- Visit Type: ${visitTypeLabel}
+
+TRANSCRIPT:
+"""
+${text}
+"""
+
+Generate a response in EXACT JSON format with these fields:
 {
-  "chief_complaint": "Brief CC in patient's words",
-  "hpi": "Detailed HPI paragraph synthesized from conversation. Include onset, location, duration, character, associated symptoms, relieving/aggravating factors, prior treatments, and severity. Write as a flowing clinical narrative, not a list.",
-  "pmh": ["List of past medical history items mentioned or discussed"],
-  "psh": ["List of past surgical history items mentioned"],
-  "medications": ["Current medications mentioned"],
-  "allergies": ["Drug allergies mentioned, or NKDA"],
-  "family_history": "Family history as mentioned in conversation",
-  "social_history": "Social history as mentioned (smoking, alcohol, occupation, living situation)",
-  "ros": {
-    "constitutional": "positive/negative findings",
-    "cardiovascular": "positive/negative findings",
-    "respiratory": "positive/negative findings",
-    "gastrointestinal": "positive/negative findings - be thorough for colorectal",
-    "genitourinary": "positive/negative findings",
-    "musculoskeletal": "positive/negative findings",
-    "neurological": "positive/negative findings",
-    "psychiatric": "positive/negative findings"
+  "chief_complaint": "brief CC",
+  "hpi": "detailed history of present illness narrative paragraph",
+  ${visitType !== 'established' ? `"pmh": "past medical history as comma-separated list",
+  "psh": "past surgical history as comma-separated list",
+  "medications": "current medications as comma-separated list",
+  "allergies": "allergies and reactions",
+  "family_history": "relevant family history",
+  "social_history": "smoking, alcohol, occupation, living situation",` : ''}
+  "ros": "review of systems - list pertinent positives and negatives by system",
+  "exam": {
+    "general": "general appearance",
+    "abdomen": "abdominal exam findings",
+    "rectal": "rectal/anorectal exam findings if applicable",
+    "other": "other relevant exam findings"
   },
-  "ros_summary": "All other systems reviewed and negative",
-  "physical_exam": {
-    "general": "General appearance",
-    "abdomen": "Abdominal exam findings",
-    "rectal": "Rectal/anorectal exam findings if discussed",
-    "other": "Any other exam findings mentioned"
-  },
-  "assessment": ["List each diagnosis/problem identified, with specificity"],
-  "plan": ["List each plan item discussed"],
-  "icd10_codes": [{"code": "K64.1", "description": "Grade II internal hemorrhoids"}],
-  "cpt_codes": [{"code": "99214", "description": "E/M established, moderate complexity"}],
+  "assessment": "numbered assessment list with diagnoses",
+  "plan": "numbered plan items",
+  ${visitType === 'preop' ? `"surgical_plan": "planned procedure with approach",
+  "informed_consent": "risks discussed, consent obtained, ERAS instructions given",` : ''}
+  "icd10_codes": [{"code": "K64.1", "description": "Grade II hemorrhoids"}],
+  "cpt_codes": [{"code": "99215", "description": "Office visit, high complexity"}],
   "em_level": "99213 or 99214 or 99215",
-  "em_rationale": "Brief explanation of why this E/M level based on MDM: problems complexity, data reviewed, risk",
-  "modifiers": ["-25 if procedure same day", "-57 if decision for major surgery"],
-  "procedures_performed": ["Any procedures done during visit"],
-  "procedure_cpts": [{"code": "46221", "description": "Hemorrhoid banding"}],
-  "billing_alerts": ["Any billing optimization tips specific to this encounter"]
+  "em_justification": "brief MDM justification",
+  "mdm_problems": "Minimal or Low or Moderate or High",
+  "mdm_data": "Minimal or Limited or Moderate or Extensive",
+  "mdm_risk": "Minimal or Low or Moderate or High",
+  "modifiers": ["-25 if applicable", "-57 if applicable"],
+  "billing_alerts": ["any billing alerts or tips"]
 }
 
-${visitType === 'new_consult' || visitType === 'preop' ? 'This is a NEW PATIENT or PREOP visit — be sure to include comprehensive PMH, PSH, medications, allergies, family history, social history, and a thorough ROS.' : ''}
-${visitType === 'postop' ? 'This is a POST-OP visit — focus on surgical recovery, wound status, pathology results if discussed, and return to activity.' : ''}
-${visitType === 'procedure' ? 'A PROCEDURE was performed — generate a procedure note section with indication, consent, technique, findings, complications, and specimen.' : ''}
-
-If information was not discussed in the transcript, write "Not discussed" for that section. Do NOT fabricate clinical information.
-For ICD-10 codes, be as specific as possible based on the conversation.
-For E/M level, use 2021 AMA MDM guidelines: assess problems, data, risk, apply 2-of-3 rule.`;
+IMPORTANT RULES:
+1. Extract ONLY information that was actually discussed in the transcript. Do not fabricate.
+2. If information was not discussed, write "Not discussed" or omit.
+3. Use standard medical terminology and abbreviations.
+4. For colorectal surgery, focus on relevant ICD-10 codes (K64.x hemorrhoids, K60.x fissure, K61.x abscess, C18-C20 cancer, K57.x diverticular, K50/K51 IBD, etc.)
+5. Apply 2021 AMA MDM guidelines for E/M level determination.
+6. Include modifier -57 if decision for major surgery was made, -25 if same-day procedure.
+7. Respond ONLY with the JSON object. No markdown, no backticks, no explanation.`;
 
   try {
     const response = await fetch('/api/analyze', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + tok,
+        'Authorization': 'Bearer ' + tok
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 4000,
-        system: systemPrompt,
-        messages: [
-          { role: 'user', content: `Patient: ${name} | DOB: ${dob} | MRN: ${mrn} | Provider: ${prov} | Visit: ${visitLabel}\n\nTRANSCRIPT:\n${inputTranscript}` }
-        ]
+        max_tokens: 3000,
+        messages: [{ role: 'user', content: prompt }]
       })
     });
 
-    const data = await response.json();
-
     if (response.status === 401) {
-      alert('Session expired. Please sign in again at the main SurgiBill page.');
+      showError('Session expired. Please sign in again on the main SurgiBill page.');
+      resetGenBtn();
       return;
     }
 
+    const data = await response.json();
+
     if (data.error) {
-      throw new Error(data.error.message || JSON.stringify(data.error));
+      showError('API error: ' + (data.error.message || JSON.stringify(data.error)));
+      resetGenBtn();
+      return;
     }
 
-    // Parse response
+    // Parse Claude's response
     const raw = data.content.map(i => i.text || '').join('');
     const clean = raw.replace(/```json|```/g, '').trim();
-    billingData = JSON.parse(clean);
+    let parsed;
+    try {
+      parsed = JSON.parse(clean);
+    } catch(e) {
+      showError('Failed to parse AI response. The AI may have returned an unexpected format. Try again.');
+      console.error('Parse error:', e, 'Raw:', raw);
+      resetGenBtn();
+      return;
+    }
 
-    // Format the note
-    generatedNote = formatNote(billingData, name, dob, mrn, prov, visitLabel);
-
+    // Build the formatted note
+    billingResult = parsed;
+    generatedNote = formatNote(parsed, name, dob, mrn, dos, provider);
+    
     // Display
-    displayNote(generatedNote);
-    updateSidebar(billingData);
-    updateUI('done');
+    document.getElementById('noteContent').textContent = generatedNote;
+    document.getElementById('noteOutput').classList.add('on');
+    updateSidebar(parsed);
+    resetGenBtn();
 
-  } catch(err) {
-    console.error('Generate error:', err);
-    alert('Error generating note: ' + err.message + '\n\nMake sure you are signed in to SurgiBill.');
-    updateUI('stopped');
-  } finally {
-    document.getElementById('genBtn').disabled = false;
-    document.getElementById('genLabel').textContent = '⚡ Generate H&P Note';
-    document.getElementById('genSpin').style.display = 'none';
+    // Scroll to note
+    document.getElementById('noteOutput').scrollIntoView({ behavior: 'smooth' });
+
+  } catch(e) {
+    showError('Connection error: ' + e.message + '. Check your internet connection and try again.');
+    resetGenBtn();
   }
 }
 
-function formatNote(d, name, dob, mrn, prov, visitLabel) {
-  const now = new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
+function resetGenBtn() {
+  document.getElementById('genBtn').disabled = !transcript.trim();
+  document.getElementById('genLabel').textContent = '⚡ Generate Clinical Note from Transcript';
+  document.getElementById('genSpin').style.display = 'none';
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// FORMAT NOTE
+// ══════════════════════════════════════════════════════════════════════════
+function formatNote(p, name, dob, mrn, dos, provider) {
   const L = [];
+  const d = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const isNew = visitType === 'new' || visitType === 'preop';
+
   L.push('COLORECTAL SURGERY CLINIC NOTE');
   L.push('═'.repeat(50));
   L.push(`Patient: ${name}  |  DOB: ${dob}  |  MRN: ${mrn}`);
-  L.push(`DOS: ${now}  |  Provider: ${prov}`);
-  L.push(`Visit Type: ${visitLabel}`);
+  L.push(`DOS: ${dos}  |  Provider: ${provider}`);
+  L.push(`Visit Type: ${visitType === 'new' ? 'New Patient Consultation' : visitType === 'preop' ? 'Preoperative Visit' : 'Established Patient Follow-up'}`);
   L.push('');
 
-  L.push(`CHIEF COMPLAINT: ${d.chief_complaint || 'Not documented'}`);
+  L.push(`CHIEF COMPLAINT: ${p.chief_complaint || 'See HPI'}`);
   L.push('');
 
   L.push('── HISTORY OF PRESENT ILLNESS ──');
-  L.push(d.hpi || 'Not documented');
+  L.push(p.hpi || '[Not documented]');
   L.push('');
 
-  // History sections
-  if (d.pmh?.length && d.pmh[0] !== 'Not discussed') {
-    L.push('PMH: ' + d.pmh.join(', '));
-  }
-  if (d.psh?.length && d.psh[0] !== 'Not discussed') {
-    L.push('PSH: ' + d.psh.join(', '));
-  }
-  if (d.medications?.length && d.medications[0] !== 'Not discussed') {
-    L.push('MEDICATIONS: ' + d.medications.join(', '));
-  }
-  if (d.allergies?.length) {
-    L.push('ALLERGIES: ' + d.allergies.join(', '));
-  }
-  if (d.family_history && d.family_history !== 'Not discussed') {
-    L.push('FAMILY HISTORY: ' + d.family_history);
-  }
-  if (d.social_history && d.social_history !== 'Not discussed') {
-    L.push('SOCIAL HISTORY: ' + d.social_history);
-  }
-  L.push('');
-
-  // ROS
-  if (d.ros) {
-    L.push('── REVIEW OF SYSTEMS ──');
-    Object.entries(d.ros).forEach(([sys, val]) => {
-      if (val && val !== 'Not discussed') {
-        L.push(`${sys.charAt(0).toUpperCase()+sys.slice(1)}: ${val}`);
-      }
-    });
-    if (d.ros_summary) L.push(d.ros_summary);
-    L.push('');
+  if (isNew) {
+    if (p.pmh) { L.push('── PAST MEDICAL HISTORY ──'); L.push(p.pmh); L.push(''); }
+    if (p.psh) { L.push('── PAST SURGICAL HISTORY ──'); L.push(p.psh); L.push(''); }
+    if (p.medications) { L.push('── MEDICATIONS ──'); L.push(p.medications); L.push(''); }
+    if (p.allergies) { L.push('── ALLERGIES ──'); L.push(p.allergies); L.push(''); }
+    if (p.family_history) { L.push('── FAMILY HISTORY ──'); L.push(p.family_history); L.push(''); }
+    if (p.social_history) { L.push('── SOCIAL HISTORY ──'); L.push(p.social_history); L.push(''); }
   }
 
-  // Exam
+  if (p.ros) { L.push('── REVIEW OF SYSTEMS ──'); L.push(p.ros); L.push(''); }
+
   L.push('── PHYSICAL EXAMINATION ──');
-  if (d.physical_exam) {
-    Object.entries(d.physical_exam).forEach(([area, val]) => {
-      if (val && val !== 'Not discussed' && val !== 'Not performed') {
-        L.push(`${area.charAt(0).toUpperCase()+area.slice(1)}: ${val}`);
-      }
-    });
+  if (p.exam) {
+    if (p.exam.general) L.push(`General: ${p.exam.general}`);
+    if (p.exam.abdomen) L.push(`Abdomen: ${p.exam.abdomen}`);
+    if (p.exam.rectal) L.push(`Anorectal: ${p.exam.rectal}`);
+    if (p.exam.other) L.push(`Other: ${p.exam.other}`);
   }
   L.push('');
 
-  // Assessment
   L.push('── ASSESSMENT ──');
-  (d.assessment || []).forEach((a, i) => L.push(`${i+1}. ${a}`));
+  L.push(p.assessment || '[Assessment]');
   L.push('');
 
-  // Plan
   L.push('── PLAN ──');
-  (d.plan || []).forEach((p, i) => L.push(`${i+1}. ${p}`));
+  L.push(p.plan || '[Plan]');
   L.push('');
 
-  // Procedures
-  if (d.procedures_performed?.length && d.procedures_performed[0] !== 'None') {
-    L.push('── PROCEDURE(S) PERFORMED ──');
-    d.procedures_performed.forEach(p => L.push(`  • ${p}`));
+  if (visitType === 'preop' && p.surgical_plan) {
+    L.push('── SURGICAL PLAN & INFORMED CONSENT ──');
+    L.push(p.surgical_plan);
+    if (p.informed_consent) L.push(p.informed_consent);
     L.push('');
   }
 
   // Billing
   L.push('── BILLING ──');
-  const hasProcCPT = d.procedure_cpts?.length > 0;
-  L.push(`E/M Level: ${d.em_level || '99214'}${hasProcCPT ? '-25' : ''}${(d.modifiers||[]).filter(m=>!m.includes('-25')).length ? ' ' + d.modifiers.filter(m=>!m.includes('-25')).join(' ') : ''}`);
-  L.push(`Rationale: ${d.em_rationale || ''}`);
-  if (d.icd10_codes?.length) {
-    L.push('ICD-10: ' + d.icd10_codes.map(c => `${c.code} (${c.description})`).join(', '));
-  }
-  if (d.cpt_codes?.length) {
-    L.push('E/M CPT: ' + d.cpt_codes.map(c => c.code).join(', '));
-  }
-  if (hasProcCPT) {
-    L.push('Procedure CPT: ' + d.procedure_cpts.map(c => `${c.code} (${c.description})`).join(', '));
-  }
+  const mods = (p.modifiers || []).filter(m => m && m !== 'N/A' && m !== 'None');
+  L.push(`E/M Level: ${p.em_level || '99213'}${mods.length ? ' ' + mods.join(' ') : ''}`);
+  L.push(`MDM: Problems ${p.mdm_problems||'—'} | Data ${p.mdm_data||'—'} | Risk ${p.mdm_risk||'—'}`);
+  L.push(`Justification: ${p.em_justification || ''}`);
   L.push('');
 
+  if (p.icd10_codes && p.icd10_codes.length) {
+    L.push('ICD-10 Codes:');
+    p.icd10_codes.forEach(c => L.push(`  ${c.code} — ${c.description}`));
+    L.push('');
+  }
+
+  if (p.cpt_codes && p.cpt_codes.length) {
+    L.push('CPT Codes:');
+    p.cpt_codes.forEach(c => L.push(`  ${c.code} — ${c.description}`));
+    L.push('');
+  }
+
+  // Payer estimates
+  const emCode = p.em_level || '99213';
+  const CF = 33.89;
+  const EM_RVU = {'99212':1.22,'99213':2.04,'99214':2.99,'99215':4.14,'99205':4.83};
+  const rvu = EM_RVU[emCode] || 2.04;
+  const PAY_MULT = {Medicare:1.0,Medicaid:0.70,BCBS:1.10,UHC:1.07,Aetna:1.05,Commercial:1.12};
+  L.push('── PAYER ESTIMATES ──');
+  Object.entries(PAY_MULT).forEach(([n,m]) => {
+    L.push(`  ${n}: $${(rvu * CF * m).toFixed(0)}`);
+  });
+  L.push('');
+
+  if (p.billing_alerts && p.billing_alerts.length) {
+    L.push('── BILLING ALERTS ──');
+    p.billing_alerts.forEach(a => L.push(`  ⚠ ${a}`));
+    L.push('');
+  }
+
   L.push('═'.repeat(50));
-  L.push(`Electronically signed: ${prov}  |  Date: ${now}`);
-  L.push('AI-assisted documentation — reviewed and approved by provider');
+  L.push(`Electronically signed: ${provider}`);
+  L.push(`Date: ${d}`);
+  L.push('');
+  L.push('Generated by SurgiBill AI Scribe — verify all content before signing.');
 
   return L.join('\n');
 }
 
-function displayNote(noteText) {
-  document.getElementById('noteOutput').innerHTML = `
-    <div class="note-output">
-      <div class="note-header">
-        <div class="note-header-title">📄 Generated Clinical Note</div>
-        <div style="display:flex;gap:6px;">
-          <button onclick="copyNote()" style="font-size:11px;padding:4px 10px;border-radius:6px;border:0.5px solid rgba(8,80,65,0.2);background:var(--tbg);color:var(--ttxt);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;">📋 Copy</button>
-          <button onclick="regenerateNote()" style="font-size:11px;padding:4px 10px;border-radius:6px;border:0.5px solid rgba(8,80,65,0.2);background:var(--tbg);color:var(--ttxt);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;">🔄 Regenerate</button>
-        </div>
-      </div>
-      <div class="note-body">${escH(noteText)}</div>
-    </div>
-  `;
-}
+// ══════════════════════════════════════════════════════════════════════════
+// SIDEBAR UPDATE
+// ══════════════════════════════════════════════════════════════════════════
+function updateSidebar(p) {
+  const emCode = p.em_level || '99213';
+  const mods = (p.modifiers || []).filter(m => m && m !== 'N/A' && m !== 'None');
+  
+  document.getElementById('sb-code').textContent = emCode + (mods.length ? ' ' + mods[0] : '');
+  document.getElementById('sb-desc').textContent = p.em_justification || 'AI-generated billing level';
 
-function updateSidebar(d) {
+  // MDM
+  document.getElementById('sb-prob').textContent = p.mdm_problems || '—';
+  document.getElementById('sb-data').textContent = p.mdm_data || '—';
+  document.getElementById('sb-risk').textContent = p.mdm_risk || '—';
+
   // Codes
-  const codesEl = document.getElementById('sb-codes');
   let codesHTML = '';
-  if (d.icd10_codes?.length) {
-    codesHTML += '<div style="margin-bottom:6px;font-size:10px;color:rgba(255,255,255,0.3);font-weight:600;">ICD-10</div>';
-    codesHTML += d.icd10_codes.map(c => `<span class="code-tag code-icd">${c.code}</span>`).join('');
+  if (p.icd10_codes && p.icd10_codes.length) {
+    codesHTML += '<div style="margin-bottom:6px;"><div style="font-size:9px;color:rgba(255,255,255,0.25);margin-bottom:3px;">ICD-10</div>';
+    p.icd10_codes.forEach(c => {
+      codesHTML += `<div style="font-size:11px;color:rgba(255,255,255,0.6);padding:2px 0;"><span style="font-family:'DM Mono',monospace;color:#6EE7B7;font-weight:600;">${c.code}</span> ${c.description}</div>`;
+    });
+    codesHTML += '</div>';
   }
-  if (d.cpt_codes?.length || d.procedure_cpts?.length) {
-    codesHTML += '<div style="margin:8px 0 6px;font-size:10px;color:rgba(255,255,255,0.3);font-weight:600;">CPT</div>';
-    (d.cpt_codes||[]).forEach(c => codesHTML += `<span class="code-tag code-cpt">${c.code}</span>`);
-    (d.procedure_cpts||[]).forEach(c => codesHTML += `<span class="code-tag code-cpt">${c.code}</span>`);
+  if (p.cpt_codes && p.cpt_codes.length) {
+    codesHTML += '<div><div style="font-size:9px;color:rgba(255,255,255,0.25);margin-bottom:3px;">CPT</div>';
+    p.cpt_codes.forEach(c => {
+      codesHTML += `<div style="font-size:11px;color:rgba(255,255,255,0.6);padding:2px 0;"><span style="font-family:'DM Mono',monospace;color:#FAC775;font-weight:600;">${c.code}</span> ${c.description}</div>`;
+    });
+    codesHTML += '</div>';
   }
-  if (d.modifiers?.length) {
-    codesHTML += '<div style="margin:8px 0 6px;font-size:10px;color:rgba(255,255,255,0.3);font-weight:600;">MODIFIERS</div>';
-    d.modifiers.forEach(m => codesHTML += `<span class="code-tag code-mod">${m}</span>`);
-  }
-  codesEl.innerHTML = codesHTML || '<span style="color:rgba(255,255,255,0.3);">No codes generated</span>';
+  document.getElementById('sb-codes').innerHTML = codesHTML || '<div style="color:rgba(255,255,255,0.3);">No codes detected</div>';
 
-  // E/M
-  const emCode = d.em_level || '99214';
-  const hasProcCPT = d.procedure_cpts?.length > 0;
-  document.getElementById('sb-em-code').textContent = emCode + (hasProcCPT ? '-25' : '');
-  document.getElementById('sb-em-desc').textContent = d.em_rationale || '';
+  // Modifiers
+  if (mods.length) {
+    document.getElementById('sb-mods').innerHTML = mods.map(m => `<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:12px;background:rgba(250,199,117,0.18);color:#FAC775;font-weight:600;margin-right:4px;">${m}</span>`).join('');
+  } else {
+    document.getElementById('sb-mods').innerHTML = '<span style="color:rgba(255,255,255,0.3);">None</span>';
+  }
 
   // Payer estimates
   const CF = 33.89;
   const EM_RVU = {'99212':1.22,'99213':2.04,'99214':2.99,'99215':4.14,'99205':4.83};
+  const rvu = EM_RVU[emCode] || 2.04;
   const PAY_MULT = {Medicare:1.0,Medicaid:0.70,BCBS:1.10,UHC:1.07,Aetna:1.05,Commercial:1.12};
-  const rvu = EM_RVU[emCode] || 2.99;
-  const payHTML = Object.entries(PAY_MULT).map(([n,m]) => {
+  document.getElementById('sb-payer').innerHTML = Object.entries(PAY_MULT).map(([n,m]) => {
     const amt = (rvu * CF * m).toFixed(0);
     return `<div class="pr${n==='Medicare'?' act':''}"><span class="pn">${n}</span><span class="pa">$${amt}</span></div>`;
   }).join('');
-  document.getElementById('sb-payer').innerHTML = `<div class="ptbl">${payHTML}</div><div style="font-size:9px;color:rgba(255,255,255,0.2);margin-top:3px;">RVU: ${rvu} × $${CF} CF (2025)</div>`;
 
-  // Note preview
-  document.getElementById('sb-note').textContent = generatedNote;
+  // Alerts
+  const alerts = p.billing_alerts || [];
+  document.getElementById('sb-alerts').innerHTML = alerts.length
+    ? alerts.map(a => `<div class="sa saw">⚠ ${a}</div>`).join('')
+    : '<div class="sa sao">✓ Note generated successfully</div>';
+}
 
-  // Show buttons
-  document.getElementById('copyBtn').style.display = '';
-  document.getElementById('saveBtn').style.display = '';
+function resetSidebar() {
+  document.getElementById('sb-code').textContent = '—';
+  document.getElementById('sb-desc').textContent = 'Record a conversation to generate billing';
+  document.getElementById('sb-prob').textContent = '—';
+  document.getElementById('sb-data').textContent = '—';
+  document.getElementById('sb-risk').textContent = '—';
+  document.getElementById('sb-codes').innerHTML = '<div style="color:rgba(255,255,255,0.3);">Generate note to see codes</div>';
+  document.getElementById('sb-mods').innerHTML = '<span style="color:rgba(255,255,255,0.3);">—</span>';
+  document.getElementById('sb-payer').innerHTML = '<div style="color:rgba(255,255,255,0.3);">Generate note to see estimates</div>';
+  document.getElementById('sb-alerts').innerHTML = '<div class="sa sai">ℹ Record encounter to get started</div>';
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// TEXT TO SPEECH
+// ══════════════════════════════════════════════════════════════════════════
+function speakNote() {
+  if (!generatedNote) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(generatedNote);
+  utterance.rate = 1.0;
+  utterance.pitch = 1.0;
+  utterance.lang = 'en-US';
+  utterance.onstart = () => document.getElementById('ttsStatus').textContent = 'Reading aloud...';
+  utterance.onend = () => document.getElementById('ttsStatus').textContent = 'Done reading';
+  utterance.onerror = () => document.getElementById('ttsStatus').textContent = 'Speech error';
+  window.speechSynthesis.speak(utterance);
+}
+
+function stopSpeaking() {
+  window.speechSynthesis.cancel();
+  document.getElementById('ttsStatus').textContent = 'Stopped';
 }
 
 // ══════════════════════════════════════════════════════════════════════════
 // ACTIONS
 // ══════════════════════════════════════════════════════════════════════════
-
 function copyNote() {
+  if (!generatedNote) return;
   navigator.clipboard.writeText(generatedNote).then(() => {
-    const btn = document.getElementById('copyBtn');
-    btn.textContent = '✓ Copied!';
-    setTimeout(() => btn.textContent = '📋 Copy Note', 2000);
+    const btns = document.querySelectorAll('.copy-btn, .sbtn-g');
+    btns.forEach(b => { b.textContent = '✓ Copied!'; setTimeout(() => b.textContent = '📋 Copy to Clipboard', 2000); });
   });
 }
 
 function saveNote() {
+  if (!generatedNote) return;
   const notes = JSON.parse(localStorage.getItem('sb-scribe-notes') || '[]');
   notes.unshift({
     id: Date.now(),
-    ts: new Date().toISOString(),
+    timestamp: new Date().toISOString(),
     patient: document.getElementById('f-name').value || '',
-    visitType: document.getElementById('f-visit-type').selectedOptions[0]?.text || '',
+    visitType: visitType,
+    transcript: transcript,
     note: generatedNote,
-    billing: billingData,
+    billing: billingResult
   });
   if (notes.length > 30) notes.length = 30;
   localStorage.setItem('sb-scribe-notes', JSON.stringify(notes));
-  const btn = document.getElementById('saveBtn');
-  btn.textContent = '✓ Saved!';
-  setTimeout(() => btn.textContent = '💾 Save Note', 2000);
+  const btns = document.querySelectorAll('.save-btn, .sbtn-p');
+  btns.forEach(b => { b.textContent = '✓ Saved!'; setTimeout(() => b.textContent = '💾 Save Note', 2000); });
 }
 
-function regenerateNote() {
-  generateNote();
+function editNote() {
+  const el = document.getElementById('noteContent');
+  if (el.contentEditable === 'true') {
+    el.contentEditable = 'false';
+    el.style.border = '';
+    generatedNote = el.innerText;
+  } else {
+    el.contentEditable = 'true';
+    el.style.border = '2px solid var(--g7)';
+    el.style.borderRadius = 'var(--r)';
+    el.style.padding = '12px';
+    el.focus();
+  }
 }
 
-function escH(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-// Enable generate button when manual input has text
-document.getElementById('manualInput').addEventListener('input', function() {
-  document.getElementById('genBtn').disabled = !(this.value.trim() || transcript.trim());
-});
+function escH(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 </body>
 </html>
